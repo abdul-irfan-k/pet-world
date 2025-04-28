@@ -1,0 +1,26 @@
+# 1. Node.js & Next.js Dependencies
+node_modules/
+.pnpm-store/
+.next/
+
+# 2. Build Output
+dist/
+build/
+out/
+
+# 3. Logs & Debug Files
+logs/
+*.log
+pnpm-debug.log*
+vercel-debug.log*
+
+# 4. Environment Variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+
+# 5. Editor
+.vscode/
