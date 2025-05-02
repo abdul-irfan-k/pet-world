@@ -23,9 +23,9 @@ const SignInPage = () => {
               </span>
             </div>
 
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col gap-1.5">
+            <div className="w-full flex flex-col gap-6">
+              <div className="w-full flex flex-col gap-5">
+                <div className="w-full flex flex-col gap-1.5">
                   <span className="text-[#414651] text-sm font-medium leading-tight">
                     Email*
                   </span>
@@ -34,7 +34,7 @@ const SignInPage = () => {
                     name=""
                     id=""
                     placeholder="Enter your email"
-                    className="px-3.5 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)] outline outline-1 outline-offset-[-1px] outline-[#d5d6da]"
+                    className="w-full px-3.5 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)] outline outline-1 outline-offset-[-1px] outline-[#d5d6da]"
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -94,7 +94,34 @@ const SignInPage = () => {
         </div>
       </div>
 
-      <div className="w-full h-screen block"></div>
+      <div className="relative screen w-full h-screen rounded-tl-[56px] rounded-bl-[56px] overflow-hidden ">
+        <Image
+          src={'/authentication-background.jpg'}
+          fill
+          alt="image"
+          className="object-cover "
+        />
+        <div
+          className="absolute w-full h-full "
+          style={{ background: 'rgba(0, 0, 0, 0.2)' }}
+        ></div>
+
+        <div className="bottom-0 p-14 absolute flex flex-col gap-6">
+          <h1 className="text-white text-4xl font-medium leading-[44px]">
+            Adopted Bella last month. She's the joy of our home now!
+          </h1>
+          <div className="flex flex-col gap-3">
+            <h2 className="text-white text-3xl font-semibold leading-[38px]">
+              Aarav M. Delhi
+            </h2>
+            <div className="flex flex-col gap-0.5">
+              <span className="text-white text-base font-medium leading-normal">
+                Pet Adopter
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
