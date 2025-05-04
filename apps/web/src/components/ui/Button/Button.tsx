@@ -9,25 +9,30 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        primary:
+          'bg-brand-600 text-white hover:bg-brand-700 focus:bg-brand-600 disabled:bg-brand-200 disabled:text-white',
         destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+          'bg-error-600 text-white hover:bg-error-700 focus:bg-error-600 disabled:bg-error-200 disabled:text-white',
         outline:
-          'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+          'bg-background text-gray-700 border border-gray-300 border-[1px] hover:bg-accent hover:text-accent-foreground disabled:border-gray-200 disabled:text-gray-300',
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'bg-brand-50 text-brand-700 border border-brand-50 border-[1px] hover:bg-brand-100 hover:border-brand-100 focus:bg-brand-50 disabled:bg-brand-25 disabled:text-brand-300 disabled:border-brand-25',
+        ghost: 'hover:bg-brand-50 hover:text-brand-700',
+        link: 'text-brand-700 underline-offset-4 hover:underline',
       },
       size: {
-        default: 'h-10 px-4 py-2',
-        sm: 'h-9 rounded-md px-3',
-        lg: 'h-11 rounded-md px-8',
+        default: 'h-10 px-4 py-2.5',
+        sm: 'h-9 rounded-lg px-3.5 py-2',
+        lg: 'h-11 rounded-md px-[18px] py-2.5',
         icon: 'h-10 w-10',
+      },
+      fullWidth: {
+        true: 'w-full',
+        false: '',
       },
     },
     defaultVariants: {
-      variant: 'default',
+      variant: 'primary',
       size: 'default',
     },
   },
@@ -40,11 +45,11 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, fullWidth, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size, className, fullWidth }))}
         ref={ref}
         {...props}
       />
