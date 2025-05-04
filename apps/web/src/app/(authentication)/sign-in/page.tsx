@@ -73,7 +73,6 @@ const SignInPage = () => {
                       href={'/sign-up'}
                       className="text-[#6840c6] text-sm font-semibold  leading-tight"
                     >
-                      {' '}
                       Sign up
                     </Link>
                   </span>
@@ -88,7 +87,6 @@ const SignInPage = () => {
             © pet-world 2025
           </span>
           <span className="text-[#535862] text-sm font-normal leading-tight">
-            {' '}
             help@pet-world.com
           </span>
         </div>
@@ -108,7 +106,7 @@ const SignInPage = () => {
 
         <div className="bottom-0 p-14 absolute flex flex-col gap-6">
           <h1 className="text-white text-4xl font-medium leading-[44px]">
-            Adopted Bella last month. She's the joy of our home now!
+            Adopted Bella last month. She&apos;s the joy of our home now!
           </h1>
           <div className="flex flex-col gap-3">
             <h2 className="text-white text-3xl font-semibold leading-[38px]">
