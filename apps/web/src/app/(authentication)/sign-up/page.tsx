@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/Button';
+import { TextField } from '@/components/ui/form/Inputs';
 import { EmailField } from '@/components/ui/form/Inputs/EmailField';
 import { PasswordField } from '@/components/ui/form/Inputs/PasswordField';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-const SignInPage = () => {
+const SignUpPage = () => {
   return (
     <div className="flex">
       <div className=" flex flex-col justify-between h-screen w-full">
@@ -19,25 +20,33 @@ const SignInPage = () => {
           <div className="w-[360px] flex flex-col items-center gap-8">
             <div className="flex flex-col items-center gap-3">
               <h1 className="text-[#181d27] text-3xl font-semibold leading-[38px]">
-                Sign in
+                Sign up
               </h1>
               <span className="text-[#535862] text-base font-normal  leading-normal">
-                Sign in to get started
+                Create your account to get started
               </span>
             </div>
 
             <div className="w-full flex flex-col gap-6">
               <div className="w-full flex flex-col gap-5">
-                <EmailField label="Email*" />
-                <PasswordField label="Password*" />
+                <TextField
+                  label="Name*"
+                  placeholder="Enter your name"
+                  type="text"
+                />
+                <EmailField label="Email*" placeholder="Enter your email" />
+                <PasswordField
+                  label="Password*"
+                  placeholder="Enter your password"
+                />
                 <div className="flex flex-col gap-1.5"></div>
               </div>
 
               <div className="flex flex-col gap-4">
-                <Button size={'lg'}>Sign in </Button>
+                <Button size={'lg'}>Sign up </Button>
                 <div className="px-[18px] flex items-center justify-center py-2.5 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-[#d5d6da]  ">
                   <span className="text-[#414651] text-base font-semibold leading-normal">
-                    Sign in with Google
+                    Sign up with Google
                   </span>
                 </div>
               </div>
@@ -101,4 +110,4 @@ const SignInPage = () => {
   );
 };
 
-export default SignInPage;
+export default SignUpPage;
