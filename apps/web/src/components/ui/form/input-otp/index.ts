@@ -1,6 +1,3 @@
-export {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from './InputOtp';
+export { InputOTP } from './InputOtp';
+export { InputOTPGroup } from './InputOtpGroup';
+export { InputOTPSlot } from './InputOtpSlot';
