@@ -16,7 +16,9 @@ const EmailVerificationSuccess = () => {
             Email Verified
           </h1>
           <p className="text-[#535862] text-base">
-            You're password has been successfully reset. Click below to login
+            {
+              "You're password has been successfully reset. Click below to login"
+            }
           </p>
         </div>
 
@@ -26,7 +28,7 @@ const EmailVerificationSuccess = () => {
           </Button>
 
           <p className="text-base text-[#535862] text-center">
-            Didn't receive the email?{' '}
+            {"Didn't receive the email?"}
             <Link
               href="#"
               className="text-[#6840c6] font-semibold hover:underline"

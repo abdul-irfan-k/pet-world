@@ -41,7 +41,7 @@ const EnterVerificationCodePage = () => {
           </Button>
 
           <p className="text-base text-[#535862] text-center">
-            Didn't receive the email?{' '}
+            {"Didn't receive the email?"}
             <Link
               href="#"
               className="text-[#6840c6] font-semibold hover:underline"
