@@ -3,8 +3,8 @@ import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-white text-gray-700">
-      <div className="container mx-auto flex gap-8 border-b border-gray-200 px-6 py-12">
+    <footer className="bg-white text-gray-700 py-24">
+      <div className="container mx-auto flex gap-8 border-b border-gray-200 ">
         <div className="flex w-[63%] justify-between">
           <div>
             <h4 className="mb-6 text-[14px] font-medium uppercase leading-[21px] tracking-wider text-black">
@@ -163,7 +163,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between px-6 py-6 text-xs text-gray-500 md:flex-row">
+      <div className="mt-16 mx-auto flex max-w-7xl flex-col items-center justify-between  text-sm text-gray-500 md:flex-row">
         <p className="mb-4 md:mb-0">
           &copy; {new Date().getFullYear()} PetAdopt. All rights reserved.
         </p>
