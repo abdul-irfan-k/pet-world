@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Button, ButtonIcon } from '@/components/ui/Button';
+import { Button, ButtonIcon } from '@/components/ui/button';
 import CheckCircleIcon from '@/assets/icons/check-circle.svg';
 
 const EmailVerificationSuccess = () => {

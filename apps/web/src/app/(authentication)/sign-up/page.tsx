@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { TextField } from '@/components/ui/form/Inputs';
 import { EmailField } from '@/components/ui/form/Inputs/EmailField';
 import { PasswordField } from '@/components/ui/form/Inputs/PasswordField';
