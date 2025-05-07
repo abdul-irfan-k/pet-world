@@ -1,6 +1,6 @@
 import { PetCard } from '@/components/pets';
 import { Footer, Header } from '@/components/shared';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { Video } from '@/components/ui/video/Video';
 import { dogs } from '@/lib/data/dummyDogs';
 
