@@ -17,7 +17,7 @@ export default function Home() {
 
       <div className="container mx-auto py-16 ">
         <div className="flex flex-col gap-6">
-          <h2 className="text-xl font-medium">Don't miss</h2>
+          <h2 className="text-xl font-medium">{"Don't miss"}</h2>
 
           <div>
             <Video
