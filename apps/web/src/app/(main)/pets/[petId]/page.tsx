@@ -7,7 +7,7 @@ const PetDetailsPage = () => {
     species: 'Dog',
     breed: 'Cockapoo',
     color: 'Brown / Chocolate',
-    sex: 'Female',
+    gender: 'Female',
     size: 'Small',
     age: '3 years',
     microchipped: true,
@@ -71,7 +71,7 @@ const PetDetailsPage = () => {
           <PetMediaCarousel images={pet.images} />
         </div>
         <div className="flex-1">
-          <PetDetailsContent />
+          <PetDetailsContent pet={pet} />
         </div>
       </div>
     </div>
