@@ -9,6 +9,7 @@ type PetCardProps = {
   location: string;
   fee: number;
   image: string;
+  tag?: string; // e.g. "Bestseller", "Just In"
 };
 
 const PetCard = ({
@@ -19,9 +20,10 @@ const PetCard = ({
   location,
   fee,
   image,
+  tag,
 }: PetCardProps) => {
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer">
+    <div className="bg-white rounded-lg overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-300 max-w-sm">
       <div className="relative w-full aspect-square">
         <Image
           src={image}
@@ -32,24 +34,20 @@ const PetCard = ({
         />
       </div>
 
-      <div className="p-4 flex flex-col gap-1">
-        <h2 className="text-lg font-semibold text-gray-900">
+      <div className="p-3 space-y-1">
+        {tag && <p className="text-sm text-red-600 font-semibold">{tag}</p>}
+
+        <h2 className="text-base text-gray-900 font-medium leading-tight">
           {name} – {breed}
         </h2>
+
         <p className="text-sm text-gray-600">
           {age} · {gender} · {location}
         </p>
-        <p className="text-sm text-gray-800 font-medium mt-1">
-          Adoption Fee: ₹{fee}
+
+        <p className="text-sm text-gray-900 font-semibold mt-1">
+          Adoption Fee: ₹{fee.toLocaleString('en-IN')}
         </p>
-
-        <span className="mt-2 inline-block text-xs bg-green-100 text-green-700 font-medium px-2 py-1 rounded-full w-max">
-          Verified Owner
-        </span>
-
-        <button className="mt-4 text-sm font-medium text-blue-600 hover:underline w-fit">
-          View Details →
-        </button>
       </div>
     </div>
   );
