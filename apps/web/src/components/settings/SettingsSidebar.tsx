@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import {
   User,
   MapPin,
@@ -7,11 +9,10 @@ import {
   Eye,
   Link2,
 } from 'lucide-react';
-import Link from 'next/link';
 
 const settingsLinks = [
   { label: 'Account Details', icon: User, href: '/settings/account' },
-  { label: 'Delivery Addresses', icon: MapPin, href: '/settings/delivery' },
+  { label: 'My Addresses', icon: MapPin, href: '/settings/addresses' },
   { label: 'Shop Preferences', icon: ShoppingBag, href: '/settings/shop' },
   {
     label: 'Communication Preferences',
@@ -31,9 +32,9 @@ const SettingsSidebar = () => {
           <li key={label}>
             <Link
               href={href}
-              className="flex items-center space-x-4 text-[16px] font-medium text-foreground hover:text-foreground transition-colors"
+              className="text-foreground hover:text-foreground flex items-center space-x-4 text-[16px] font-medium transition-colors"
             >
-              <Icon className="w-5 h-5" />
+              <Icon className="h-5 w-5" />
               <span>{label}</span>
             </Link>
           </li>

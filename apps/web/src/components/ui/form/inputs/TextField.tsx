@@ -56,7 +56,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
           {icon}
           <Input
             ref={ref}
-            className="flex-1 border-none bg-transparent outline-none focus:ring-0"
+            className="w-full flex-1 border-none bg-transparent outline-none focus:ring-0"
             type="text"
             disabled={isDisabled}
             aria-invalid={hasError}
