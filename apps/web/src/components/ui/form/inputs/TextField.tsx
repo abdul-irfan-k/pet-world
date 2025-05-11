@@ -1,8 +1,11 @@
-import { cn } from '@/lib/utils';
-import { cva } from 'class-variance-authority';
 import React from 'react';
+
+import { cva } from 'class-variance-authority';
+
 import { Input } from './Input';
 import { Label } from './Label';
+
+import { cn } from '@/lib/utils';
 
 const textFieldVariants = cva(
   'flex items-center gap-2 overflow-hidden rounded-lg border border-[1px] bg-white px-3.5 py-2.5',
@@ -53,7 +56,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
           {icon}
           <Input
             ref={ref}
-            className="flex-1 bg-transparent outline-none border-none focus:ring-0"
+            className="flex-1 border-none bg-transparent outline-none focus:ring-0"
             type="text"
             disabled={isDisabled}
             aria-invalid={hasError}
