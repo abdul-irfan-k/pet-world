@@ -109,7 +109,7 @@ const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
               className="border-none py-3"
             >
               <AccordionTrigger className="text-[20px] font-medium leading-[24px]">
-                <span>Owner's Description</span>
+                <span>{"Owner's Description"}</span>
               </AccordionTrigger>
               <AccordionContent>
                 <div className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2">
