@@ -19,11 +19,15 @@ const buttonVariants = cva(
           'bg-brand-50 text-brand-700 border border-brand-50 border-[1px] hover:bg-brand-100 hover:border-brand-100 focus:bg-brand-50 disabled:bg-brand-25 disabled:text-brand-300 disabled:border-brand-25',
         ghost: 'hover:bg-brand-50 hover:text-brand-700',
         link: 'text-brand-700 underline-offset-4 hover:underline',
+
+        black:
+          'bg-black text-white hover:bg-black/90 focus:bg-black/90 disabled:bg-gray-200 disabled:text-white',
       },
       size: {
         default: 'h-10 px-4 py-2.5',
         sm: 'h-9 rounded-lg px-3.5 py-2',
         lg: 'h-11 rounded-md px-[18px] py-2.5',
+        xl: 'text-[16px] leading-[24px] rounded-md px-4 py-5',
         icon: 'h-10 w-10',
       },
       fullWidth: {
@@ -49,7 +53,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className, fullWidth }))}
+        className={cn(buttonVariants({ variant, size, fullWidth, className }))}
         ref={ref}
         {...props}
       />

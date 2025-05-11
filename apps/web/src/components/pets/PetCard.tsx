@@ -9,6 +9,7 @@ type PetCardProps = {
   location: string;
   fee: number;
   image: string;
+  tag?: string; // e.g. "Bestseller", "Just In"
 };
 
 const PetCard = ({
@@ -19,10 +20,11 @@ const PetCard = ({
   location,
   fee,
   image,
+  tag,
 }: PetCardProps) => {
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer">
-      <div className="relative w-full aspect-square">
+    <div className="w-full cursor-pointer overflow-hidden rounded-lg bg-white transition-shadow duration-300 hover:shadow-md lg:max-w-sm">
+      <div className="relative aspect-square w-full">
         <Image
           src={image}
           alt={name}
@@ -32,24 +34,20 @@ const PetCard = ({
         />
       </div>
 
-      <div className="p-4 flex flex-col gap-1">
-        <h2 className="text-lg font-semibold text-gray-900">
+      <div className="space-y-1 p-3">
+        {tag && <p className="text-sm font-semibold text-red-600">{tag}</p>}
+
+        <h2 className="text-base font-medium leading-tight text-gray-900">
           {name} – {breed}
         </h2>
+
         <p className="text-sm text-gray-600">
           {age} · {gender} · {location}
         </p>
-        <p className="text-sm text-gray-800 font-medium mt-1">
-          Adoption Fee: ₹{fee}
+
+        <p className="mt-1 text-sm font-semibold text-gray-900">
+          Adoption Fee: ₹{fee.toLocaleString('en-IN')}
         </p>
-
-        <span className="mt-2 inline-block text-xs bg-green-100 text-green-700 font-medium px-2 py-1 rounded-full w-max">
-          Verified Owner
-        </span>
-
-        <button className="mt-4 text-sm font-medium text-blue-600 hover:underline w-fit">
-          View Details →
-        </button>
       </div>
     </div>
   );

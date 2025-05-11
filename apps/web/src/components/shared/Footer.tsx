@@ -3,14 +3,14 @@ import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-white text-gray-700 py-24">
-      <div className="container mx-auto flex gap-8 border-b border-gray-200 ">
-        <div className="flex w-[63%] justify-between">
+    <footer className="bg-white py-12 text-gray-700 lg:py-24">
+      <div className="container mx-auto flex flex-col gap-8 border-b border-gray-200 pb-8 lg:flex-row lg:pb-12">
+        <div className="flex w-full flex-col justify-between gap-8 md:flex-row lg:w-[50%] lg:flex-row lg:gap-0">
           <div>
-            <h4 className="mb-6 text-[14px] font-medium uppercase leading-[21px] tracking-wider text-black">
+            <h4 className="mb-4 text-sm font-medium uppercase leading-snug tracking-wider text-black lg:mb-6">
               Customer Service
             </h4>
-            <div className="space-y-2 text-[14px] font-medium text-gray-500">
+            <div className="space-y-2 text-sm font-medium text-gray-500">
               <div>
                 <Link href="/help" className="hover:text-gray-900">
                   Help Center
@@ -35,10 +35,10 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="mb-6 text-[14px] font-medium uppercase leading-[21px] tracking-wider text-black">
+            <h4 className="mb-4 text-sm font-medium uppercase leading-snug tracking-wider text-black lg:mb-6">
               About
             </h4>
-            <div className="space-y-2 text-[14px] font-medium text-gray-500">
+            <div className="space-y-2 text-sm font-medium text-gray-500">
               <div>
                 <Link href="/about" className="hover:text-gray-900">
                   Our Mission
@@ -62,38 +62,38 @@ const Footer = () => {
             </div>
           </div>
           <div>
-            <h4 className="mb-6 text-[14px] font-medium uppercase leading-[21px] tracking-wider text-black">
-              About
+            <h4 className="mb-4 text-sm font-medium uppercase leading-snug tracking-wider text-black lg:mb-6">
+              Resources
             </h4>
-            <div className="space-y-2 text-[14px] font-medium text-gray-500">
+            <div className="space-y-2 text-sm font-medium text-gray-500">
               <div>
-                <Link href="/about" className="hover:text-gray-900">
-                  Our Mission
+                <Link href="/blog" className="hover:text-gray-900">
+                  Blog
                 </Link>
               </div>
               <div>
-                <Link href="/how-it-works" className="hover:text-gray-900">
-                  How It Works
+                <Link href="/guides" className="hover:text-gray-900">
+                  Pet Care Guides
                 </Link>
               </div>
               <div>
-                <Link href="/team" className="hover:text-gray-900">
-                  Meet the Team
+                <Link href="/faq" className="hover:text-gray-900">
+                  FAQs
                 </Link>
               </div>
               <div>
-                <Link href="/careers" className="hover:text-gray-900">
-                  Careers
+                <Link href="/events" className="hover:text-gray-900">
+                  Events
                 </Link>
               </div>
             </div>
           </div>
 
           <div>
-            <h4 className="mb-6 text-[14px] font-medium uppercase leading-[21px] tracking-wider text-black">
+            <h4 className="mb-4 text-sm font-medium uppercase leading-snug tracking-wider text-black lg:mb-6">
               Pet Adoption
             </h4>
-            <div className="space-y-2 text-[14px] font-medium text-gray-500">
+            <div className="space-y-2 text-sm font-medium text-gray-500">
               <div>
                 <Link href="/adopt" className="hover:text-gray-900">
                   Browse Pets
@@ -117,65 +117,51 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="ml-auto">
-          <h4 className="mb-6 text-[14px] font-medium uppercase leading-[21px] tracking-wider text-black">
-            Connect
+
+        <div className="w-full lg:ml-auto lg:w-[37%]">
+          <h4 className="mb-4 text-sm font-medium uppercase leading-snug tracking-wider text-black lg:mb-6">
+            Stay Connected
           </h4>
-          <div className="mb-4 flex space-x-4">
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-900"
+          <p className="mb-4 text-sm text-gray-500">
+            Subscribe to our newsletter for the latest updates and offers.
+          </p>
+          <form className="mb-6 flex flex-col gap-2 sm:flex-row">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="focus:border-brand-500 focus:ring-brand-500 flex-grow rounded-md border border-gray-300 px-3 py-2 text-sm"
+            />
+            <button
+              type="submit"
+              className="bg-brand-600 hover:bg-brand-700 focus:ring-brand-500 rounded-md px-4 py-2 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2"
             >
+              Subscribe
+            </button>
+          </form>
+          <div className="flex space-x-4">
+            <Link href="#" className="text-gray-500 hover:text-gray-900">
               <Facebook size={20} />
-            </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-900"
-            >
+            </Link>
+            <Link href="#" className="text-gray-500 hover:text-gray-900">
               <Twitter size={20} />
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-900"
-            >
+            </Link>
+            <Link href="#" className="text-gray-500 hover:text-gray-900">
               <Instagram size={20} />
-            </a>
-            <a
-              href="https://youtube.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-900"
-            >
+            </Link>
+            <Link href="#" className="text-gray-500 hover:text-gray-900">
               <Youtube size={20} />
-            </a>
+            </Link>
           </div>
-          <select className="w-fdivl rounded bg-gray-100 p-2 text-xs text-gray-700">
-            <option>English (EN)</option>
-            <option>हिंदी (HI)</option>
-            <option>Español (ES)</option>
-          </select>
         </div>
       </div>
-
-      <div className="mt-16 mx-auto flex max-w-7xl flex-col items-center justify-between  text-sm text-gray-500 md:flex-row">
-        <p className="mb-4 md:mb-0">
-          &copy; {new Date().getFullYear()} PetAdopt. All rights reserved.
-        </p>
-        <div className="flex space-x-4">
-          <Link href="/terms" className="hover:text-gray-700">
-            Terms of Use
-          </Link>
-          <Link href="/privacy" className="hover:text-gray-700">
+      <div className="container mx-auto mt-8 flex flex-col items-center justify-between text-sm text-gray-500 lg:flex-row">
+        <p>&copy; {new Date().getFullYear()} Pet World. All rights reserved.</p>
+        <div className="mt-4 flex space-x-4 lg:mt-0">
+          <Link href="/privacy-policy" className="hover:text-gray-900">
             Privacy Policy
           </Link>
-          <Link href="/sitemap" className="hover:text-gray-700">
-            Sitemap
+          <Link href="/terms-of-service" className="hover:text-gray-900">
+            Terms of Service
           </Link>
         </div>
       </div>
