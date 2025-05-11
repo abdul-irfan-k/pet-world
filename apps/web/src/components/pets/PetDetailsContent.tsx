@@ -16,7 +16,7 @@ interface PetDetailsContentProps {
 const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex w-[400px] flex-col space-y-6">
+      <div className="flex w-full flex-col space-y-6 lg:w-[400px]">
         <PetDetails {...pet} />
 
         <div>
@@ -88,15 +88,15 @@ const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
               </AccordionTrigger>
               <AccordionContent>
                 <div className="mt-2 flex flex-col gap-4">
-                  <div className="rounded-md bg-gray-200 p-3">
+                  <div className="rounded-lg bg-gray-200 p-3">
                     <p className="text-sm text-gray-600">Household Activity</p>
                     <p className="font-medium">{pet.homeLife?.activity}</p>
                   </div>
-                  <div className="rounded-md bg-gray-200 p-3">
+                  <div className="rounded-lg bg-gray-200 p-3">
                     <p className="text-sm text-gray-600">Environment</p>
                     <p className="font-medium">{pet.homeLife?.environment}</p>
                   </div>
-                  <div className="rounded-md bg-gray-200 p-3">
+                  <div className="rounded-lg bg-gray-200 p-3">
                     <p className="text-sm text-gray-600">Other Pets</p>
                     <p className="font-medium">{pet.homeLife?.otherPets}</p>
                   </div>
@@ -112,7 +112,7 @@ const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
                 <span>{"Owner's Description"}</span>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2">
+                <div className="mt-2 grid grid-cols-1 gap-2 lg:grid-cols-2">
                   {//eslint-disable-next-line
                   pet.ownerDescription?.map((desc: any, index: number) => (
                     <div key={index} className="flex items-center gap-2">
@@ -139,7 +139,7 @@ const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
                 <span>Medical Information</span>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="mt-2 grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
                   <div className="flex items-center gap-2">
                     {pet.medicalInfo?.fleaTreatment ? (
                       <Check size={18} className="text-green-500" />

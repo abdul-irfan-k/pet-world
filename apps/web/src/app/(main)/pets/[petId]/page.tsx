@@ -66,11 +66,11 @@ const PetDetailsPage = () => {
   };
   return (
     <div className="container mx-auto px-4">
-      <div className="flex w-full gap-8 py-12">
-        <div className="flex">
+      <div className="flex w-full flex-col gap-8 py-12 lg:flex-row">
+        <div className="w-full lg:w-1/2">
           <PetMediaCarousel images={pet.images} />
         </div>
-        <div className="flex-1">
+        <div className="w-full lg:flex-1">
           <PetDetailsContent pet={pet} />
         </div>
       </div>

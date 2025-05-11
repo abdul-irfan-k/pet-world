@@ -15,11 +15,11 @@ interface PetMediaCarouselProps {
 
 const PetMediaCarousel: React.FC<PetMediaCarouselProps> = ({ images }) => {
   return (
-    <div className="flex gap-4">
-      <ScrollArea className="h-[600px] max-h-[600px]">
-        <div className="flex flex-col gap-2 p-2">
+    <div className="flex w-full flex-col-reverse gap-4 lg:flex-row">
+      <ScrollArea className="h-auto max-h-[300px] w-full lg:h-[600px] lg:max-h-[600px] lg:w-auto">
+        <div className="flex flex-row gap-2 p-2 lg:flex-col">
           {images.map((src, index) => (
-            <div key={index} className="h-[60px] w-[60px]">
+            <div key={index} className="h-[60px] w-[60px] flex-shrink-0">
               <div className="relative h-full w-full overflow-hidden rounded">
                 <Image
                   fill
@@ -33,7 +33,7 @@ const PetMediaCarousel: React.FC<PetMediaCarouselProps> = ({ images }) => {
         </div>
       </ScrollArea>
 
-      <div className="w-[480px]">
+      <div className="w-full lg:min-w-[480px] lg:flex-1">
         <Carousel>
           <CarouselContent>
             {images.map((src, index) => (
@@ -52,7 +52,7 @@ const PetMediaCarousel: React.FC<PetMediaCarouselProps> = ({ images }) => {
             ))}
           </CarouselContent>
 
-          <div className="absolute bottom-0 z-50 flex w-[480px] justify-end px-4 py-3">
+          <div className="absolute bottom-0 z-50 flex w-full justify-end px-4 py-3">
             <div className="ml-auto flex gap-2">
               <CarouselPrevious className="relative left-0 top-0" />
               <CarouselNext className="relative right-0 top-0" />
