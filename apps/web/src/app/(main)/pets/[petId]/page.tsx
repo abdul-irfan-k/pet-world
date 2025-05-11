@@ -1,5 +1,10 @@
 import React from 'react';
-import { PetMediaCarousel, PetDetailsContent } from '@/components/pets';
+import {
+  PetMediaCarousel,
+  PetDetailsContent,
+  SimilarPetSection,
+} from '@/components/pets';
+import { dogs } from '@/lib/data/dummyDogs';
 
 const PetDetailsPage = () => {
   const pet = {
@@ -74,6 +79,7 @@ const PetDetailsPage = () => {
           <PetDetailsContent pet={pet} />
         </div>
       </div>
+      <SimilarPetSection similarPets={dogs} />
     </div>
   );
 };

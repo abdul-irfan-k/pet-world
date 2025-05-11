@@ -23,8 +23,8 @@ const PetCard = ({
   tag,
 }: PetCardProps) => {
   return (
-    <div className="bg-white rounded-lg overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-300 max-w-sm">
-      <div className="relative w-full aspect-square">
+    <div className="w-full cursor-pointer overflow-hidden rounded-lg bg-white transition-shadow duration-300 hover:shadow-md lg:max-w-sm">
+      <div className="relative aspect-square w-full">
         <Image
           src={image}
           alt={name}
@@ -34,10 +34,10 @@ const PetCard = ({
         />
       </div>
 
-      <div className="p-3 space-y-1">
-        {tag && <p className="text-sm text-red-600 font-semibold">{tag}</p>}
+      <div className="space-y-1 p-3">
+        {tag && <p className="text-sm font-semibold text-red-600">{tag}</p>}
 
-        <h2 className="text-base text-gray-900 font-medium leading-tight">
+        <h2 className="text-base font-medium leading-tight text-gray-900">
           {name} – {breed}
         </h2>
 
@@ -45,7 +45,7 @@ const PetCard = ({
           {age} · {gender} · {location}
         </p>
 
-        <p className="text-sm text-gray-900 font-semibold mt-1">
+        <p className="mt-1 text-sm font-semibold text-gray-900">
           Adoption Fee: ₹{fee.toLocaleString('en-IN')}
         </p>
       </div>

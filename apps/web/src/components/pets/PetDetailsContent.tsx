@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { PetDetails } from './pet-details';
 import { Button } from '../ui/button';
 import {
   Accordion,
@@ -8,6 +7,7 @@ import {
   AccordionTrigger,
 } from '../ui/accordion';
 import { Check, X } from 'lucide-react';
+import { PetPrimaryInfo } from './PetPrimaryInfo';
 
 interface PetDetailsContentProps {
   // eslint-disable-next-line
@@ -17,7 +17,7 @@ const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex w-full flex-col space-y-6 lg:w-[400px]">
-        <PetDetails {...pet} />
+        <PetPrimaryInfo {...pet} />
 
         <div>
           <p className="text-sm text-gray-600">Adoption Fee</p>

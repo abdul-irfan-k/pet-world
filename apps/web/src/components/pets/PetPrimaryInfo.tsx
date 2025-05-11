@@ -1,7 +1,7 @@
 import { MapPin } from 'lucide-react';
 import React, { FC } from 'react';
 
-interface PetDetailsProps {
+interface PetPrimaryInfoProps {
   name: string;
   species: string;
   breed: string;
@@ -12,7 +12,7 @@ interface PetDetailsProps {
   age: string;
 }
 
-const PetDetails: FC<PetDetailsProps> = props => {
+const PetPrimaryInfo: FC<PetPrimaryInfoProps> = props => {
   return (
     <div className="flex flex-col">
       <div className="mb-2 flex items-center justify-between">
@@ -51,4 +51,4 @@ const PetDetails: FC<PetDetailsProps> = props => {
   );
 };
 
-export { PetDetails };
+export { PetPrimaryInfo };
