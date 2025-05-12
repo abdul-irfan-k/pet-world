@@ -12,16 +12,16 @@
         "moduleResolution": "node",
         "baseUrl": ".",
         "paths": {
-            "*": [
-                "node_modules/*"
+            "@/*": [
+                "./src/*"
             ]
         }
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "prisma"
     ],
     "exclude": [
-        "node_modules",
-        "**/*.spec.ts"
+        "node_modules"
     ]
 }

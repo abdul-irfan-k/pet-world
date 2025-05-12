@@ -27,3 +27,5 @@ vercel-debug.log*
 
 # Prisma Client
 **/generated/prisma/
+
+scripts/
