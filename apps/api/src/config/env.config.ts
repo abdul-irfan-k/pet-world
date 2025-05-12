@@ -13,6 +13,9 @@ const envSchema = z.object({
   SALT_ROUNDS: z.coerce.number().int().min(1).default(10),
   CORS_ORIGIN: z.string().default('*'),
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
+  CLOUDINARY_CLOUD_NAME: z.string(),
+  CLOUDINARY_API_KEY: z.string(),
+  CLOUDINARY_API_SECRET: z.string(),
 });
 
 const env = envSchema.parse(process.env);
@@ -28,4 +31,7 @@ export const {
   SALT_ROUNDS,
   CORS_ORIGIN,
   LOG_LEVEL,
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
 } = env;
