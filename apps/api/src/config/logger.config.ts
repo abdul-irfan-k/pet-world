@@ -5,7 +5,7 @@ import winston, {
   Logger as WinstonLogger,
 } from 'winston';
 
-import { NODE_ENV } from './env';
+import { NODE_ENV } from './env.config';
 
 class LoggerService {
   private logger: WinstonLogger;
