@@ -1,4 +1,4 @@
-export interface signUpArgs {
+export interface ISignUpDTO {
   firstName: string;
   lastName: string;
   userId: string;
@@ -6,16 +6,16 @@ export interface signUpArgs {
   password: string;
 }
 
-export interface signInArgs {
+export interface ISignInDTO {
   email: string;
   password: string;
 }
 
-export interface signInResponse {
+export interface ISignInResponseDTO {
   accessToken: string;
   refreshToken: string;
 }
-export interface signUpResponse {
+export interface ISignUpResponseDTO {
   id: string;
   userId: string;
   email: string;
@@ -25,11 +25,11 @@ export interface signUpResponse {
   updatedAt: Date;
 }
 
-export interface signOutArgs {
+export interface ISignOutDTO {
   userId: string;
 }
 export interface IAuthService {
-  signup(args: signUpArgs): Promise<signUpResponse>;
-  signin(args: signInArgs): Promise<signInResponse>;
-  signout(args: signOutArgs): Promise<void>;
+  signup(args: ISignUpDTO): Promise<ISignUpResponseDTO>;
+  signin(args: ISignInDTO): Promise<ISignInResponseDTO>;
+  signout(args: ISignOutDTO): Promise<void>;
 }

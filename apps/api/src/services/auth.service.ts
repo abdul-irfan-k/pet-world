@@ -1,10 +1,10 @@
-import {
+import type {
   IAuthService,
-  signInArgs,
-  signInResponse,
-  signOutArgs,
-  signUpArgs,
-  signUpResponse,
+  ISignInDTO,
+  ISignInResponseDTO,
+  ISignOutDTO,
+  ISignUpDTO,
+  ISignUpResponseDTO,
 } from './interfaces/IAuthService';
 
 import { prisma } from '@/config';
@@ -19,7 +19,7 @@ import {
 } from '@/utils';
 
 export class AuthService implements IAuthService {
-  public async signup(args: signUpArgs): Promise<signUpResponse> {
+  public async signup(args: ISignUpDTO): Promise<ISignUpResponseDTO> {
     const { email, password, firstName, lastName, userId } = args;
 
     const isEmailValid = await checkEmailExists(email);
@@ -60,7 +60,7 @@ export class AuthService implements IAuthService {
     };
   }
 
-  public async signin(args: signInArgs): Promise<signInResponse> {
+  public async signin(args: ISignInDTO): Promise<ISignInResponseDTO> {
     const { email, password } = args;
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -88,7 +88,7 @@ export class AuthService implements IAuthService {
     };
   }
 
-  public async signout(args: signOutArgs): Promise<void> {
+  public async signout(args: ISignOutDTO): Promise<void> {
     const { userId } = args;
     console.log(`User ${userId} signed out.`);
     return Promise.resolve();

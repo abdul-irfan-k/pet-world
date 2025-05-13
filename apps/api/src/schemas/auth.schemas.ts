@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-import type { signUpArgs } from '@/services/interfaces/IAuthService';
+import type { ISignUpDTO } from '@/services/interfaces/IAuthService';
 
-export const signUpSchema: z.ZodType<signUpArgs> = z.object({
+export const signUpSchema: z.ZodType<ISignUpDTO> = z.object({
   firstName: z.string().trim().min(2, 'First Name cannot be empty'),
   lastName: z.string().trim().min(2, 'Last Name cannot be empty'),
   email: z
