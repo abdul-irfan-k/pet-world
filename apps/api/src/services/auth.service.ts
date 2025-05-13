@@ -5,6 +5,11 @@ import type {
   ISignOutDTO,
   ISignUpDTO,
   ISignUpResponseDTO,
+  IRefreshTokenDTO,
+  IRefreshTokenResponseDTO,
+  IForgotPasswordDTO,
+  IResetPasswordDTO,
+  ILogoutDTO,
 } from './interfaces/IAuthService';
 
 import { prisma } from '@/config';
@@ -88,9 +93,36 @@ export class AuthService implements IAuthService {
     };
   }
 
+  public async refreshToken(
+    args: IRefreshTokenDTO,
+  ): Promise<IRefreshTokenResponseDTO> {
+    const { refreshToken } = args;
+    const newAccessToken = generateAccessToken({ userId: 'someUserId' });
+    const newRefreshToken = generateRefreshToken({ userId: 'someUserId' });
+
+    return {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    };
+  }
+
+  public async forgotPassword(args: IForgotPasswordDTO): Promise<void> {
+    const { email } = args;
+    return Promise.resolve();
+  }
+
+  public async resetPassword(args: IResetPasswordDTO): Promise<void> {
+    const { resetToken, newPassword } = args;
+    return Promise.resolve();
+  }
+
+  public async logout(args: ILogoutDTO): Promise<void> {
+    const { userId } = args;
+    return Promise.resolve();
+  }
+
   public async signout(args: ISignOutDTO): Promise<void> {
     const { userId } = args;
-    console.log(`User ${userId} signed out.`);
     return Promise.resolve();
   }
 }
