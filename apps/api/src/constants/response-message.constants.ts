@@ -10,6 +10,7 @@ export enum ResponseMessages {
   INTERNAL_SERVER_ERROR = 'An unexpected error occurred.',
   CONFLICT = 'Resource already exists.',
   VALIDATION_FAILED = 'Validation failed for one or more fields.',
+  INVALID_EMAIL = 'Invalid email address.',
   INVALID_CREDENTIALS = 'Email or password is incorrect.',
   TOKEN_EXPIRED = 'Token has expired.',
   TOKEN_INVALID = 'Token is invalid.',
