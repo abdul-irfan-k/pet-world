@@ -1,17 +1,21 @@
-import express from 'express';
-import helmet from 'helmet';
+import { logger } from './config';
+import { ExpressServer } from './server';
 
-const app = express();
-const port = process.env.PORT || 3001;
+async function bootstrap() {
+  try {
+    new ExpressServer().start();
+  } catch (error) {
+    logger.error('Failed to start the application:', error);
+    process.exit(1);
+  }
+}
 
-app.use(helmet());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.get('/', (req, res) => {
-  res.send('API is running!');
+process.on('SIGTERM', async () => {
+  logger.info('SIGTERM received. Starting graceful shutdown...');
+  process.exit(0);
 });
 
-app.listen(port, () => {
-  console.log(`API server listening on port ${port}`);
+bootstrap().catch(error => {
+  logger.error('Unhandled error during bootstrap:', error);
+  process.exit(1);
 });
