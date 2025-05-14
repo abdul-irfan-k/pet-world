@@ -2,6 +2,7 @@ import { createServer, Server } from 'http';
 
 import express, { Application } from 'express';
 import helmet from 'helmet';
+import morgan from 'morgan';
 
 import { logger, PORT } from './config';
 import { AuthRoutes } from './routes';
@@ -24,6 +25,7 @@ export class ExpressServer {
   private configureMiddlewares(): void {
     this.app.use(express.json());
     this.app.use(helmet());
+    this.app.use(morgan('dev'));
   }
 
   private configureRoutes(): void {

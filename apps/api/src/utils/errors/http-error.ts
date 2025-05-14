@@ -1,4 +1,4 @@
-import { BaseHttpError } from './base-http-error';
+import { BaseHttpError } from './base-http.error';
 
 export class HttpError extends BaseHttpError {
   constructor(params: {
