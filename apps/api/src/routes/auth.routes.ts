@@ -53,6 +53,12 @@ export class AuthRoutes {
       this._authController.logout.bind(this._authController),
     );
 
+    router.get(
+      '/me',
+      authMiddleware,
+      this._authController.me.bind(this._authController),
+    );
+
     return router;
   }
 }

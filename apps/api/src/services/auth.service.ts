@@ -9,6 +9,8 @@ import type {
   IForgotPasswordDTO,
   IResetPasswordDTO,
   ILogoutDTO,
+  IGetUserDetailsDTO,
+  IGetUserDetailsResponseDTO,
 } from './interfaces/IAuthService';
 
 import { prisma } from '@/config';
@@ -129,5 +131,29 @@ export class AuthService implements IAuthService {
   public async logout(args: ILogoutDTO): Promise<void> {
     // const { userId } = args;
     return Promise.resolve();
+  }
+
+  public async me(
+    args: IGetUserDetailsDTO,
+  ): Promise<IGetUserDetailsResponseDTO> {
+    const { id } = args;
+
+    const user = await prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.USER_NOT_FOUND,
+      });
+    }
+
+    return {
+      id: user.id,
+      userId: user.userId,
+      email: user.email,
+      name: user.name,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
   }
 }

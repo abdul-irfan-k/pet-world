@@ -47,6 +47,19 @@ export interface ILogoutDTO {
   id: string;
 }
 
+export interface IGetUserDetailsDTO {
+  id: string;
+}
+
+export interface IGetUserDetailsResponseDTO {
+  id: string;
+  userId: string;
+  email: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface IAuthService {
   signup(args: ISignUpDTO): Promise<ISignUpResponseDTO>;
   signin(args: ISignInDTO): Promise<ISignInResponseDTO>;
@@ -54,4 +67,5 @@ export interface IAuthService {
   forgotPassword(args: IForgotPasswordDTO): Promise<void>;
   resetPassword(args: IResetPasswordDTO): Promise<void>;
   logout(args: ILogoutDTO): Promise<void>;
+  me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponseDTO>;
 }

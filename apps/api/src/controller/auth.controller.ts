@@ -158,4 +158,31 @@ export class AuthController implements IAuthController {
       next(error);
     }
   }
+
+  public async me(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const id = req.user?.id;
+
+      if (!id) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: ResponseMessages.UNAUTHORIZED,
+        });
+      }
+
+      const result = await this._authService.me({ id });
+
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
