@@ -16,11 +16,13 @@ import type {
 } from 'jsonwebtoken';
 
 interface IAccessTokenPayload {
-  userId: string;
+  id: string;
+  email: string;
 }
 
 interface IRefreshTokenPayload {
-  userId: string;
+  id: string;
+  email: string;
   jti?: string;
 }
 
@@ -68,7 +70,6 @@ export const generateRefreshToken = (
     //@ts-ignore
     expiresIn: JWT_REFRESH_TOKEN_EXPIRES_IN,
     algorithm: JWT_ALGORITHM,
-    jwtid: jti,
     ...overrides,
   };
 

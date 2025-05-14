@@ -47,5 +47,5 @@ export const resetPasswordSchema: z.ZodType<IResetPasswordDTO> = z.object({
 });
 
 export const logoutSchema: z.ZodType<ILogoutDTO> = z.object({
-  userId: z.string().min(1, 'User ID cannot be empty'),
+  id: z.string().min(1, 'User ID cannot be empty'),
 });

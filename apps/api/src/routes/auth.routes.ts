@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { AuthController } from '@/controller';
-import { schemaValidator } from '@/middleware';
+import { authMiddleware, schemaValidator } from '@/middleware';
 import {
   signInSchema,
   signUpSchema,
@@ -48,7 +48,8 @@ export class AuthRoutes {
     );
     router.post(
       '/logout',
-      schemaValidator(logoutSchema),
+      authMiddleware,
+      // schemaValidator(logoutSchema),
       this._authController.logout.bind(this._authController),
     );
 

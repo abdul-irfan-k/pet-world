@@ -141,11 +141,11 @@ export class AuthController implements IAuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const refreshToken = req.cookies.refreshToken;
-      const userId = req.user?.id;
+      // const refreshToken = req.cookies.refreshToken;
+      const id = req.user?.id;
 
-      if (refreshToken && userId) {
-        await this._authService.logout({ userId });
+      if (id) {
+        await this._authService.logout({ id });
       }
 
       res.clearCookie('refreshToken');

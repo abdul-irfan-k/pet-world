@@ -44,7 +44,7 @@ export interface ISignUpResponseDTO {
   updatedAt: Date;
 }
 export interface ILogoutDTO {
-  userId: string;
+  id: string;
 }
 
 export interface IAuthService {
