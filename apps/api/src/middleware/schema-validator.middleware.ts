@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
 
 import { logger } from '@/config';
+import { HttpStatusCode, ResponseMessages } from '@/constants';
 
 /**
  * Middleware to validate request body using Zod schema.
@@ -19,29 +20,32 @@ export const schemaValidator = (validationSchema: z.ZodSchema) => {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const validatedData = await validationSchema.parseAsync(req.body);
-      req.body = validatedData;
+      const parsed = await validationSchema.parseAsync(req.body);
+      req.body = parsed;
       next();
     } catch (error) {
-      let validationError = error;
+      let issues = error;
 
       if (error instanceof z.ZodError) {
-        validationError = error.issues.map(issue => ({
+        issues = error.issues.map(issue => ({
           path: issue.path[0],
           message: issue.message,
         }));
 
         logger.debug('Schema validation failed', {
           path: req.path,
-          errors: validationError,
+          issues,
         });
+
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: 'failed',
+          error: issues,
+          message: ResponseMessages.VALIDATION_FAILED,
+        });
+        return;
       }
 
-      res.status(400).json({
-        status: 'failed',
-        error: validationError,
-      });
-      return;
+      return next(error);
     }
   };
 };

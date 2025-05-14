@@ -43,11 +43,6 @@ export interface ISignUpResponseDTO {
   createdAt: Date;
   updatedAt: Date;
 }
-
-export interface ISignOutDTO {
-  userId: string;
-}
-
 export interface ILogoutDTO {
   userId: string;
 }

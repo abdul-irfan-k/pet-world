@@ -1,9 +1,5 @@
-import jwt, {
-  SignOptions,
-  VerifyOptions,
-  JwtPayload,
-  Algorithm,
-} from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   JWT_ACCESS_TOKEN_SECRET,
@@ -11,6 +7,13 @@ import {
   JWT_ACCESS_TOKEN_EXPIRES_IN,
   JWT_REFRESH_TOKEN_EXPIRES_IN,
 } from '../config/env.config';
+
+import type {
+  SignOptions,
+  VerifyOptions,
+  JwtPayload,
+  Algorithm,
+} from 'jsonwebtoken';
 
 interface IAccessTokenPayload {
   userId: string;
@@ -23,47 +26,65 @@ interface IRefreshTokenPayload {
 
 const JWT_ALGORITHM: Algorithm = 'HS256';
 
+const accessSecret: jwt.Secret = JWT_ACCESS_TOKEN_SECRET!;
+const refreshSecret: jwt.Secret = JWT_REFRESH_TOKEN_SECRET!;
+
 export const generateAccessToken = (
   payload: IAccessTokenPayload,
-  options?: SignOptions,
+  overrides?: SignOptions,
 ): string => {
-  return jwt.sign(payload, JWT_ACCESS_TOKEN_SECRET, {
-    expiresIn: JWT_ACCESS_TOKEN_EXPIRES_IN,
+  const options: SignOptions = {
     algorithm: JWT_ALGORITHM,
-    ...options,
-  });
+    // eslint-disable-next-line
+    //@ts-ignore
+    expiresIn: JWT_ACCESS_TOKEN_EXPIRES_IN,
+    ...overrides,
+  };
+
+  return jwt.sign(payload, accessSecret, options);
 };
 
 export const verifyAccessToken = (
   token: string,
-  options?: VerifyOptions,
+  overrides?: VerifyOptions,
 ): IAccessTokenPayload & JwtPayload => {
-  const decoded = jwt.verify(token, JWT_ACCESS_TOKEN_SECRET, {
+  const options: VerifyOptions = {
     algorithms: [JWT_ALGORITHM],
-    ...options,
-  });
+    ...overrides,
+  };
+
+  const decoded = jwt.verify(token, accessSecret, options);
   return decoded as IAccessTokenPayload & JwtPayload;
 };
 
 export const generateRefreshToken = (
   payload: IRefreshTokenPayload,
-  options?: SignOptions,
+  overrides?: SignOptions,
 ): string => {
-  return jwt.sign(payload, JWT_REFRESH_TOKEN_SECRET, {
+  const jti = payload.jti ?? uuidv4();
+
+  const options: SignOptions = {
+    // eslint-disable-next-line
+    //@ts-ignore
     expiresIn: JWT_REFRESH_TOKEN_EXPIRES_IN,
-    ...options,
-  });
+    algorithm: JWT_ALGORITHM,
+    jwtid: jti,
+    ...overrides,
+  };
+
+  return jwt.sign({ ...payload, jti }, refreshSecret, options);
 };
 
 export const verifyRefreshToken = (
   token: string,
-  options?: VerifyOptions,
+  overrides?: VerifyOptions,
 ): IRefreshTokenPayload & JwtPayload => {
-  // Removed unnecessary try/catch
-  const decoded = jwt.verify(token, JWT_REFRESH_TOKEN_SECRET, {
+  const options: VerifyOptions = {
     algorithms: [JWT_ALGORITHM],
-    ...options,
-  });
+    ...overrides,
+  };
+
+  const decoded = jwt.verify(token, refreshSecret, options);
   return decoded as IRefreshTokenPayload & JwtPayload;
 };
 

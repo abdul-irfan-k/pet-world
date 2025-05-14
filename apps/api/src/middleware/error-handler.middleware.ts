@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { logger } from '@/config';
-import { HttpStatusCode } from '@/constants';
+import { HttpStatusCode, ResponseMessages } from '@/constants';
 import { BaseHttpError } from '@/utils/errors';
 
 /**
@@ -25,24 +25,29 @@ export const globalErrorHandler = (
         logger.error(`${name}: ${message}`);
       }
 
-      res.status(statusCode).json({
+      return res.status(statusCode).json({
         code: statusCode,
         message: message,
         errors,
       });
-    } else {
-      logger.error(`Internal Server Error: ${error.message}`);
-      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
-        code: HttpStatusCode.INTERNAL_SERVER_ERROR,
-        message: 'Internal Server Error',
-        status: 'error',
-      });
     }
-  } catch (error) {
-    logger.error(`Error handling error: ${error}`);
+
+    if (error instanceof Error) {
+      logger.error(`[Error] ${error.message}`, { stack: error.stack });
+    } else {
+      logger.error('[Error] Unexpected throw:', error);
+    }
+
     res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
       code: HttpStatusCode.INTERNAL_SERVER_ERROR,
-      message: 'Internal Server Error',
+      message: ResponseMessages.INTERNAL_SERVER_ERROR,
+      status: 'error',
+    });
+  } catch (error) {
+    logger.error('[ErrorHandler] Failed to process error:', error);
+    res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+      code: HttpStatusCode.INTERNAL_SERVER_ERROR,
+      message: ResponseMessages.INTERNAL_SERVER_ERROR,
       status: 'error',
     });
   }

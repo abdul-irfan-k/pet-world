@@ -2,7 +2,6 @@ import type {
   IAuthService,
   ISignInDTO,
   ISignInResponseDTO,
-  ISignOutDTO,
   ISignUpDTO,
   ISignUpResponseDTO,
   IRefreshTokenDTO,
@@ -117,11 +116,6 @@ export class AuthService implements IAuthService {
   }
 
   public async logout(args: ILogoutDTO): Promise<void> {
-    const { userId } = args;
-    return Promise.resolve();
-  }
-
-  public async signout(args: ISignOutDTO): Promise<void> {
     const { userId } = args;
     return Promise.resolve();
   }
