@@ -63,6 +63,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
             {...props}
           />
         </div>
+        {error && <span className="text-error-500">{error}</span>}
       </div>
     );
   },
