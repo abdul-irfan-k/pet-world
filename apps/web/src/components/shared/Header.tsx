@@ -1,11 +1,20 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { Search, ShoppingBag, User2 } from 'lucide-react';
 
+import { Button } from '../ui/button';
+
+import { useAuthStore } from '@/stores/authStore';
+
 const Header = () => {
+  const { isAuthenticated, user } = useAuthStore();
+
   return (
     <header className="w-full bg-white shadow-sm">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+      <div className="container mx-auto flex items-center justify-between px-4 py-3">
         <Link href="/">
           <Image
             src="/logo/nike.svg"
@@ -16,7 +25,7 @@ const Header = () => {
           />
         </Link>
 
-        <nav className="hidden md:flex gap-6 font-medium text-sm text-black">
+        <nav className="hidden gap-6 text-sm font-medium text-black md:flex">
           <Link href="/explore">Explore</Link>
           <Link href="/stories">Stories</Link>
           <Link href="/add-pet">Add Pet</Link>
@@ -26,23 +35,38 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-4 py-2 border border-gray-700 rounded-full">
+          <div className="flex items-center gap-2 rounded-full border border-gray-700 px-4 py-2">
             <Search size={16} className="text-gray-500" />
             <span className="text-sm text-gray-600">Search all products</span>
           </div>
 
-          <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gray-300">
-            <Image
-              src="/user-profile.png"
-              alt="Sparkle"
-              fill
-              className="object-cover"
-            />
-          </div>
+          {!isAuthenticated && (
+            <>
+              <Link href="/sign-up" className="text-sm font-medium text-black">
+                Sign Up
+              </Link>
+              <Button variant={'primary'} size={'lg'}>
+                <Link href="/sign-in" className="text-sm font-medium">
+                  Sign In
+                </Link>
+              </Button>
+            </>
+          )}
 
-          <User2 className="w-5 h-5 text-black cursor-pointer" />
-
-          <ShoppingBag className="w-5 h-5 text-black cursor-pointer" />
+          {isAuthenticated && user && (
+            <>
+              <div className="relative h-10 w-10 overflow-hidden rounded-full border border-gray-300">
+                <Image
+                  src={'/user-profile.png'}
+                  alt={user.name || 'User Profile'}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <User2 className="h-5 w-5 cursor-pointer text-black" />
+              <ShoppingBag className="h-5 w-5 cursor-pointer text-black" />
+            </>
+          )}
         </div>
       </div>
     </header>

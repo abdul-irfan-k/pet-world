@@ -1,8 +1,8 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -11,9 +11,14 @@ import { Button } from '@/components/ui/button';
 import { EmailField, PasswordField } from '@/components/ui/form/inputs';
 import { useSignInMutation } from '@/lib/api/authApi';
 import { SignInInput, signInSchema } from '@/lib/schemas';
+import { useAuthStore } from '@/stores/authStore';
 
 const SignInForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const { login } = useAuthStore();
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
@@ -24,15 +29,18 @@ const SignInForm = () => {
   });
 
   const signInMutation = useSignInMutation({
-    onSuccess: data => {
-      console.log('Sign in successful', data);
+    onSuccess: response => {
+      const { data } = response;
+      login(data.user);
+      const callbackUrl = searchParams.get('callbackUrl') || '/';
+      router.push(callbackUrl);
     },
     onError: error => {
       console.error('Sign in error', error);
+      setServerError(error.message);
     },
   });
   const onSubmit = (data: SignInInput) => {
-    console.log(data);
     signInMutation.mutate(data);
   };
   return (
@@ -59,6 +67,11 @@ const SignInForm = () => {
               {...register('password')}
               error={errors.password?.message}
             />
+            {serverError && (
+              <span className="text-sm font-normal leading-tight text-red-500">
+                {serverError}
+              </span>
+            )}
             <div className="flex flex-col gap-1.5"></div>
           </div>
 

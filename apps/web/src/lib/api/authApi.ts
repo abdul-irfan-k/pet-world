@@ -6,8 +6,10 @@ import type { SignInInput, SignUpInput } from '../schemas';
 
 import { User } from '@/types/User';
 
-interface AutheReponse {
-  user: User;
+interface AuthResponse {
+  data: {
+    user: User;
+  };
   message: string;
   status: string;
 }
@@ -17,8 +19,8 @@ const signIn = async (credentials: SignInInput) => {
   return data;
 };
 
-export const useSignInMutation = (option: MutationOptions<AutheReponse>) => {
-  return useMutation({ mutationFn: signIn });
+export const useSignInMutation = (option: MutationOptions<AuthResponse>) => {
+  return useMutation({ mutationFn: signIn, ...option });
 };
 
 const signup = async (credentials: SignUpInput) => {
