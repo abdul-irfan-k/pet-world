@@ -85,8 +85,11 @@ export class AuthService implements IAuthService {
       });
     }
 
-    const accessToken = generateAccessToken({ email: user.email, id: user.id });
-    const refreshToken = generateRefreshToken({
+    const accessToken = await generateAccessToken({
+      email: user.email,
+      id: user.id,
+    });
+    const refreshToken = await generateRefreshToken({
       email: user.email,
       id: user.id,
     });
@@ -94,13 +97,23 @@ export class AuthService implements IAuthService {
     return {
       accessToken,
       refreshToken,
+      user: {
+        id: user.id,
+        //eslint-disable-next-line
+        //@ts-ignore
+        userId: user.userId,
+        email: user.email,
+        name: user.name,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
     };
   }
 
   public async refreshToken(
     args: IRefreshTokenDTO,
   ): Promise<IRefreshTokenResponseDTO> {
-    // eslint-disable-next-line
+    //eslint-disable-next-line
     //@ts-ignore
     const { refreshToken, email, id } = args;
     const newAccessToken = generateAccessToken({

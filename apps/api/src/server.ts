@@ -1,13 +1,15 @@
 import { createServer, Server } from 'http';
 
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import express, { Application } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import { logger, PORT } from './config';
+import { logger, PORT, CORS_ORIGIN } from './config';
 import { AuthRoutes } from './routes';
 
-import { globalErrorHandler } from '@/middleware/error-handler.middleware';
+import { globalErrorHandler } from '@/middleware';
 
 export class ExpressServer {
   private app: Application;
@@ -23,6 +25,14 @@ export class ExpressServer {
   }
 
   private configureMiddlewares(): void {
+    this.app.use(
+      cors({
+        origin: CORS_ORIGIN,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        credentials: true,
+      }),
+    );
+    this.app.use(cookieParser());
     this.app.use(express.json());
     this.app.use(helmet());
     this.app.use(morgan('dev'));

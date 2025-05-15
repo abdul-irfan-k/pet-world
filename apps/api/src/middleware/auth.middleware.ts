@@ -10,22 +10,21 @@ export const authMiddleware = async (
   next: NextFunction,
 ) => {
   try {
+    let token: string | undefined;
+    console.log('cookie', req.cookies);
     const authHeader = req.headers.authorization;
-    if (!authHeader) {
+    if (authHeader?.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    } else if (req.cookies?.accessToken) {
+      token = req.cookies.accessToken;
+    }
+
+    if (!token) {
       throw new HttpError({
-        message: 'Authorization header is missing',
+        message: 'No access token provided',
         statusCode: HttpStatusCode.UNAUTHORIZED,
       });
     }
-
-    if (!authHeader.startsWith('Bearer ')) {
-      throw new HttpError({
-        message: 'Invalid authorization format',
-        statusCode: HttpStatusCode.UNAUTHORIZED,
-      });
-    }
-
-    const token = authHeader.split(' ')[1];
 
     const payload = await verifyAccessToken(token);
     if (!payload) {

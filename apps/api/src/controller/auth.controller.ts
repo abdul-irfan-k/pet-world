@@ -49,6 +49,12 @@ export class AuthController implements IAuthController {
 
       const result = await this._authService.signin({ email, password });
 
+      res.cookie('accessToken', result.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -61,6 +67,8 @@ export class AuthController implements IAuthController {
         message: ResponseMessages.LOGIN_SUCCESS,
         data: {
           accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+          user: result.user,
         },
       });
     } catch (error) {

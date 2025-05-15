@@ -1,3 +1,5 @@
+import { User } from '@/types/User';
+
 export interface ISignUpDTO {
   firstName: string;
   lastName: string;
@@ -14,6 +16,7 @@ export interface ISignInDTO {
 export interface ISignInResponseDTO {
   accessToken: string;
   refreshToken: string;
+  user: Omit<User, 'password'>;
 }
 
 export interface IRefreshTokenDTO {
