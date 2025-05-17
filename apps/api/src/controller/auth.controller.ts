@@ -19,20 +19,22 @@ export class AuthController implements IAuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { email, password, firstName, lastName, userId } = req.body;
+      const { email, password, firstName, lastName, userName } = req.body;
 
       const result = await this._authService.signup({
         email,
         password,
         firstName,
         lastName,
-        userId,
+        userName,
       });
 
       res.status(HttpStatusCode.CREATED).json({
-        success: true,
+        status: 'success',
+        data: {
+          user: result.user,
+        },
         message: ResponseMessages.USER_REGISTERED,
-        data: result,
       });
     } catch (error) {
       next(error);
@@ -63,13 +65,13 @@ export class AuthController implements IAuthController {
       });
 
       res.status(HttpStatusCode.OK).json({
-        success: true,
-        message: ResponseMessages.LOGIN_SUCCESS,
+        status: 'success',
         data: {
           accessToken: result.accessToken,
           refreshToken: result.refreshToken,
           user: result.user,
         },
+        message: ResponseMessages.LOGIN_SUCCESS,
       });
     } catch (error) {
       next(error);
@@ -94,11 +96,11 @@ export class AuthController implements IAuthController {
       const result = await this._authService.refreshToken({ refreshToken });
 
       res.status(HttpStatusCode.OK).json({
-        success: true,
-        message: ResponseMessages.SUCCESS,
+        status: 'success',
         data: {
           accessToken: result.accessToken,
         },
+        message: ResponseMessages.SUCCESS,
       });
     } catch (error) {
       next(error);
@@ -116,7 +118,7 @@ export class AuthController implements IAuthController {
       await this._authService.forgotPassword({ email });
 
       res.status(HttpStatusCode.OK).json({
-        success: true,
+        status: 'success',
         message: ResponseMessages.SUCCESS,
       });
     } catch (error) {
@@ -135,7 +137,7 @@ export class AuthController implements IAuthController {
       await this._authService.resetPassword({ resetToken: token, newPassword });
 
       res.status(HttpStatusCode.OK).json({
-        success: true,
+        status: 'success',
         message: ResponseMessages.SUCCESS,
       });
     } catch (error) {
@@ -159,7 +161,7 @@ export class AuthController implements IAuthController {
       res.clearCookie('refreshToken');
 
       res.status(HttpStatusCode.OK).json({
-        success: true,
+        status: 'success',
         message: ResponseMessages.LOGOUT_SUCCESS,
       });
     } catch (error) {
@@ -185,9 +187,11 @@ export class AuthController implements IAuthController {
       const result = await this._authService.me({ id });
 
       res.status(HttpStatusCode.OK).json({
-        success: true,
+        status: 'success',
+        data: {
+          user: result.user,
+        },
         message: ResponseMessages.SUCCESS,
-        data: result,
       });
     } catch (error) {
       next(error);

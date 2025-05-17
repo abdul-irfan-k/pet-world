@@ -3,7 +3,7 @@ import { User } from '@/types/User';
 export interface ISignUpDTO {
   firstName: string;
   lastName: string;
-  userId: string;
+  userName: string;
   email: string;
   password: string;
 }
@@ -38,14 +38,9 @@ export interface IResetPasswordDTO {
 }
 
 export interface ISignUpResponseDTO {
-  id: string;
-  userId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  createdAt: Date;
-  updatedAt: Date;
+  user: Omit<User, 'password'>;
 }
+
 export interface ILogoutDTO {
   id: string;
 }
@@ -55,12 +50,7 @@ export interface IGetUserDetailsDTO {
 }
 
 export interface IGetUserDetailsResponseDTO {
-  id: string;
-  userId: string;
-  email: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
+  user: Omit<User, 'password'>;
 }
 
 export interface IAuthService {

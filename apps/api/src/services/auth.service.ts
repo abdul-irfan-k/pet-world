@@ -26,7 +26,7 @@ import {
 
 export class AuthService implements IAuthService {
   public async signup(args: ISignUpDTO): Promise<ISignUpResponseDTO> {
-    const { email, password, firstName, lastName, userId } = args;
+    const { email, password, firstName, lastName, userName } = args;
 
     const isEmailValid = await checkEmailExists(email);
     if (!isEmailValid) {
@@ -48,7 +48,7 @@ export class AuthService implements IAuthService {
 
     const newUser = await prisma.user.create({
       data: {
-        userId: userId,
+        userName: userName,
         email,
         password: hashedPassword,
         name: `${firstName} ${lastName}`,
@@ -56,13 +56,14 @@ export class AuthService implements IAuthService {
     });
 
     return {
-      id: newUser.id,
-      userId: newUser.userId,
-      email: newUser.email,
-      firstName: newUser.name.split(' ')[0],
-      lastName: newUser.name.split(' ').slice(1).join(' '),
-      createdAt: newUser.createdAt,
-      updatedAt: newUser.updatedAt,
+      user: {
+        id: newUser.id,
+        userName: newUser.userName,
+        email: newUser.email,
+        name: newUser.name,
+        createdAt: newUser.createdAt,
+        updatedAt: newUser.updatedAt,
+      },
     };
   }
 
@@ -99,9 +100,7 @@ export class AuthService implements IAuthService {
       refreshToken,
       user: {
         id: user.id,
-        //eslint-disable-next-line
-        //@ts-ignore
-        userId: user.userId,
+        userName: user.userName,
         email: user.email,
         name: user.name,
         createdAt: user.createdAt,
@@ -161,12 +160,14 @@ export class AuthService implements IAuthService {
     }
 
     return {
-      id: user.id,
-      userId: user.userId,
-      email: user.email,
-      name: user.name,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      user: {
+        id: user.id,
+        userName: user.userName,
+        email: user.email,
+        name: user.name,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
     };
   }
 }

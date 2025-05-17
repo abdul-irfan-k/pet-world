@@ -16,7 +16,7 @@ export const signUpSchema: z.ZodType<ISignUpDTO> = z.object({
     .string()
     .email('Invalid email address')
     .min(1, 'Email cannot be empty'),
-  userId: z.string().trim().min(2, 'Username cannot be empty'),
+  userName: z.string().trim().min(2, 'Username cannot be empty'),
   password: z.string().min(8, 'Password must be at least 8 characters long'),
 });
 

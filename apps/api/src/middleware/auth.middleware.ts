@@ -11,7 +11,6 @@ export const authMiddleware = async (
 ) => {
   try {
     let token: string | undefined;
-    console.log('cookie', req.cookies);
     const authHeader = req.headers.authorization;
     if (authHeader?.startsWith('Bearer ')) {
       token = authHeader.split(' ')[1];

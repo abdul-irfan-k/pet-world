@@ -11,19 +11,19 @@ async function main() {
         name: 'Alice Johnson',
         email: 'alice.johnson@example.com',
         password: await hash('securepassword123', 10),
-        userId: 'user-1',
+        userName: 'alicejohnson',
       },
       {
         name: 'Bob Smith',
         email: 'bob.smith@example.com',
         password: await hash('anotherpassword456', 10),
-        userId: 'user-2',
+        userName: 'bobsmith',
       },
       {
         name: 'Charlie Brown',
         email: 'charlie.brown@example.com',
         password: await hash('password789', 10),
-        userId: 'user-3',
+        userName: 'charliebrown',
       },
     ],
   });
