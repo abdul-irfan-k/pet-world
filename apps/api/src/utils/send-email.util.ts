@@ -1,5 +1,3 @@
-import nodemailer from 'nodemailer';
-
 import { transporter, GMAIL_USER } from '../config';
 
 export const sendEmail = async (to: string, subject: string, html: string) => {
