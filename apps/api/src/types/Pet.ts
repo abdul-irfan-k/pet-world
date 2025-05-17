@@ -1,3 +1,8 @@
+export enum PetType {
+  DOG = 'dog',
+  CAT = 'cat',
+  RABBIT = 'rabbit',
+}
 export type Pet = {
   id: string;
   name: string;

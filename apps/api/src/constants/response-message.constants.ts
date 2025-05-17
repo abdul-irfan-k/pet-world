@@ -23,5 +23,8 @@ export enum ResponseMessages {
   EMAIL_SEND_FAILED = 'Failed to send email.',
   EMAIL_ALREADY_EXISTS = 'Email is already registered.',
   USER_NOT_FOUND = 'User not found.',
+  PET_NOT_FOUND = 'Pet not found.',
   PASSWORD_INCORRECT = 'Incorrect password.',
+  UNAUTHORIZED_PET_DELETION = 'Unauthorized to delete this pet.',
+  UNAUTHORIZED_PET_UPDATE = 'Unauthorized to update this pet.',
 }
