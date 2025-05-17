@@ -5,7 +5,7 @@ import type {
   ISignInDTO,
   IRefreshTokenDTO,
   IForgotPasswordDTO,
-  IResetPasswordDTO,
+  IVerifyForgotPasswordDTO,
   ILogoutDTO,
 } from '@/services/interfaces/IAuthService';
 
@@ -39,12 +39,17 @@ export const forgotPasswordSchema: z.ZodType<IForgotPasswordDTO> = z.object({
     .min(1, 'Email cannot be empty'),
 });
 
-export const resetPasswordSchema: z.ZodType<IResetPasswordDTO> = z.object({
-  resetToken: z.string().min(1, 'Reset token cannot be empty'),
-  newPassword: z
-    .string()
-    .min(8, 'New password must be at least 8 characters long'),
-});
+export const verifyForgotPasswordSchema: z.ZodType<IVerifyForgotPasswordDTO> =
+  z.object({
+    email: z
+      .string()
+      .email('Invalid email address')
+      .min(1, 'Email cannot be empty'),
+    code: z.string().length(6, 'Code must be 6 characters long'), // Assuming OTP code length is 6, adjust if necessary
+    newPassword: z
+      .string()
+      .min(8, 'New password must be at least 8 characters long'),
+  });
 
 export const logoutSchema: z.ZodType<ILogoutDTO> = z.object({
   id: z.string().min(1, 'User ID cannot be empty'),

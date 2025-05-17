@@ -7,14 +7,15 @@ import type {
   IRefreshTokenDTO,
   IRefreshTokenResponseDTO,
   IForgotPasswordDTO,
-  IResetPasswordDTO,
+  IVerifyForgotPasswordDTO,
+  IVerifyForgotPasswordResponseDTO,
   ILogoutDTO,
   IGetUserDetailsDTO,
   IGetUserDetailsResponseDTO,
 } from './interfaces/IAuthService';
 
-import { prisma } from '@/config';
-import { HttpStatusCode, ResponseMessages } from '@/constants';
+import { logger, prisma } from '@/config';
+import { HttpStatusCode, ResponseMessages, OtpAction } from '@/constants';
 import {
   verifyPassword,
   generateAccessToken,
@@ -22,6 +23,9 @@ import {
   hashPassword,
   HttpError,
   checkEmailExists,
+  generateOTP,
+  getPasswordChangeTemplate,
+  sendEmail,
 } from '@/utils';
 
 export class AuthService implements IAuthService {
@@ -132,12 +136,121 @@ export class AuthService implements IAuthService {
 
   public async forgotPassword(args: IForgotPasswordDTO): Promise<void> {
     const { email } = args;
-    return Promise.resolve();
+
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.USER_NOT_FOUND,
+      });
+    }
+
+    await prisma.otp.deleteMany({
+      where: {
+        userId: user.id,
+        action: OtpAction.RESET_PASSWORD,
+      },
+    });
+
+    const otp = generateOTP(6);
+
+    const OTP_EXPIRY_MINUTES = 15;
+    const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
+
+    await prisma.otp.create({
+      data: {
+        userId: user.id,
+        code: otp,
+        expiresAt: expiresAt,
+        action: OtpAction.RESET_PASSWORD,
+      },
+    });
+
+    const emailHtml = getPasswordChangeTemplate(otp);
+
+    try {
+      await sendEmail(email, 'Password Reset OTP', emailHtml);
+      logger.info('password reset email sent successfully');
+    } catch (error) {
+      logger.error('Error sending password reset email:', error);
+      throw new HttpError({
+        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        message: ResponseMessages.EMAIL_SEND_FAILED,
+      });
+    }
   }
 
-  public async resetPassword(args: IResetPasswordDTO): Promise<void> {
-    const { resetToken, newPassword } = args;
-    return Promise.resolve();
+  public async verifyForgotPassword(
+    args: IVerifyForgotPasswordDTO,
+  ): Promise<IVerifyForgotPasswordResponseDTO> {
+    try {
+      const { email, code, newPassword } = args;
+
+      const user = await prisma.user.findUnique({ where: { email } });
+
+      if (!user) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.NOT_FOUND,
+          message: ResponseMessages.USER_NOT_FOUND,
+        });
+      }
+
+      const otpRecord = await prisma.otp.findFirst({
+        where: {
+          userId: user.id,
+          action: OtpAction.RESET_PASSWORD,
+        },
+      });
+
+      if (!otpRecord) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: ResponseMessages.OTP_EXPIRED,
+        });
+      }
+
+      if (otpRecord.code !== code) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: ResponseMessages.INVALID_OTP,
+        });
+      }
+
+      if (new Date() > otpRecord.expiresAt) {
+        await prisma.otp.delete({ where: { id: otpRecord.id } });
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: ResponseMessages.OTP_EXPIRED,
+        });
+      }
+
+      const hashedPassword = await hashPassword(newPassword);
+
+      await prisma.$transaction([
+        prisma.user.update({
+          where: { id: user.id },
+          data: { password: hashedPassword },
+        }),
+        prisma.otp.delete({
+          where: { id: otpRecord.id },
+        }),
+      ]);
+      // Assuming ResponseMessages.SUCCESS is appropriate, or use/create a more specific one like PASSWORD_RESET_SUCCESSFUL
+      return { success: true, message: ResponseMessages.SUCCESS };
+    } catch (error) {
+      logger.error(
+        'Error verifying forgot password (resetting password):',
+        error,
+      );
+      if (error instanceof HttpError) {
+        throw error;
+      }
+      throw new HttpError({
+        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        message: ResponseMessages.INTERNAL_SERVER_ERROR,
+      });
+    }
   }
 
   public async logout(args: ILogoutDTO): Promise<void> {

@@ -126,19 +126,23 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async resetPassword(
+  public async verifyForgotPassword(
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { token, newPassword } = req.body;
+      const { email, code, newPassword } = req.body;
 
-      await this._authService.resetPassword({ resetToken: token, newPassword });
+      const result = await this._authService.verifyForgotPassword({
+        code,
+        newPassword,
+        email,
+      });
 
       res.status(HttpStatusCode.OK).json({
         status: 'success',
-        message: ResponseMessages.SUCCESS,
+        message: result.message,
       });
     } catch (error) {
       next(error);
@@ -158,6 +162,7 @@ export class AuthController implements IAuthController {
         await this._authService.logout({ id });
       }
 
+      res.clearCookie('accessToken');
       res.clearCookie('refreshToken');
 
       res.status(HttpStatusCode.OK).json({

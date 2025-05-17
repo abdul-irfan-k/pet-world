@@ -7,8 +7,7 @@ import {
   signUpSchema,
   refreshTokenSchema,
   forgotPasswordSchema,
-  resetPasswordSchema,
-  logoutSchema,
+  verifyForgotPasswordSchema,
 } from '@/schemas';
 
 export class AuthRoutes {
@@ -42,9 +41,9 @@ export class AuthRoutes {
       this._authController.forgotPassword.bind(this._authController),
     );
     router.post(
-      '/reset-password',
-      schemaValidator(resetPasswordSchema),
-      this._authController.resetPassword.bind(this._authController),
+      '/verify-forgot-password',
+      schemaValidator(verifyForgotPasswordSchema),
+      this._authController.verifyForgotPassword.bind(this._authController),
     );
     router.post(
       '/logout',

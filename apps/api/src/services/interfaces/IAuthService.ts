@@ -32,9 +32,15 @@ export interface IForgotPasswordDTO {
   email: string;
 }
 
-export interface IResetPasswordDTO {
-  resetToken: string;
+export interface IVerifyForgotPasswordDTO {
+  code: string;
+  email: string;
   newPassword: string;
+}
+
+export interface IVerifyForgotPasswordResponseDTO {
+  success: boolean;
+  message: string;
 }
 
 export interface ISignUpResponseDTO {
@@ -58,7 +64,9 @@ export interface IAuthService {
   signin(args: ISignInDTO): Promise<ISignInResponseDTO>;
   refreshToken(args: IRefreshTokenDTO): Promise<IRefreshTokenResponseDTO>;
   forgotPassword(args: IForgotPasswordDTO): Promise<void>;
-  resetPassword(args: IResetPasswordDTO): Promise<void>;
+  verifyForgotPassword(
+    args: IVerifyForgotPasswordDTO,
+  ): Promise<IVerifyForgotPasswordResponseDTO>;
   logout(args: ILogoutDTO): Promise<void>;
   me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponseDTO>;
 }
