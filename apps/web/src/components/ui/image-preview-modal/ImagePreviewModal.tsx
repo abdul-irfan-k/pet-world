@@ -20,7 +20,6 @@ const ImagePreviewModal: FC<ImagePreviewModalProps> = ({
   onClose,
   open,
   src,
-  aspectRatio = '16/9',
 }) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
