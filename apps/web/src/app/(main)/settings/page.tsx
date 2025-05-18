@@ -1,8 +1,12 @@
+import React from 'react';
+
 import { Button } from '@/components/ui/button';
-import { TextField } from '@/components/ui/form/Inputs';
-import { EmailField } from '@/components/ui/form/Inputs/EmailField';
-import { Label } from '@/components/ui/form/Inputs/Label';
-import { PasswordField } from '@/components/ui/form/Inputs/PasswordField';
+import {
+  TextField,
+  PasswordField,
+  EmailField,
+  Label,
+} from '@/components/ui/form/inputs';
 import {
   Select,
   SelectContent,
@@ -12,21 +16,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import React from 'react';
 
 const SettingPage = () => {
   return (
     <div className="">
-      <div className="flex flex-col gap-6 w-[400px]">
+      <div className="flex w-[400px] flex-col gap-6">
         <div>
           <h1 className="text-2xl">Account Details</h1>
         </div>
+
+        <div></div>
         <div className="flex flex-col gap-6">
           <EmailField label="Email" />
           <PasswordField label="Password" />
           <TextField label="Phone Number" type="text" />
 
-          <div className="flex flex-col gap-6 mt-6">
+          <div className="mt-6 flex flex-col gap-6">
             <span>Location</span>
             <div className="flex flex-col gap-1.5">
               <Label>Country/Region</Label>
@@ -71,7 +76,7 @@ const SettingPage = () => {
             <TextField label="Postcode" type="text" />
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <span>Delete Account</span>
             <Button variant={'outline'} size={'lg'}>
               Delete

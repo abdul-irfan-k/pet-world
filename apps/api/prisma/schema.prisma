@@ -1,0 +1,187 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(cuid())
+  name       String
+  userName   String    @unique
+  email      String    @unique
+  phone      String?
+  age        Int?
+  address    Json?
+  gender     String?
+  password   String
+  isDisabled Boolean   @default(false)
+  isVerified Boolean   @default(false)
+  lastLogin  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  pets                Pet[]
+  locations           Location[]
+  petAdopter          Pet_Adopter?
+  sentPayments        Payment[]              @relation("SentPayments")
+  receivedPayments    Payment[]              @relation("ReceivedPayments")
+  campaigns           Pet_Campaigns[]
+  petAdoptionRequests Pet_Adoption_Request[]
+  otp                 Otp[]
+}
+
+model Pet {
+  id             String   @id @default(cuid())
+  name           String
+  petBiometricId String?
+  species        String
+  images         String[]
+  videos         String[]
+  age            Int
+  breed          String
+  gender         String
+  profile        Json?
+  ownerId        String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+
+  owner            User                   @relation(fields: [ownerId], references: [id])
+  adoptionRequests Pet_Adoption_Request[]
+  adoptions        Pet_Adoption[]
+}
+
+model Location {
+  id        String   @id @default(cuid())
+  country   String
+  city      String
+  latitude  Float
+  longitude Float
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user             User                   @relation(fields: [userId], references: [id])
+  adoptionRequests Pet_Adoption_Request[]
+}
+
+model Pet_Adopter {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  adharNumber      String?  @unique
+  documents        Json?
+  yearOfExperience Int?
+  certifications   String[]
+  overview         Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now())
+
+  user      User           @relation(fields: [userId], references: [id])
+  adoptions Pet_Adoption[]
+}
+
+model Pet_Adoption_Request {
+  id         String   @id @default(cuid())
+  userId     String
+  petId      String
+  locationId String
+  status     String   @default("pending")
+  imageUrls  String[]
+  videoUrls  String[]
+  address    Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  pet      Pet      @relation(fields: [petId], references: [id])
+  location Location @relation(fields: [locationId], references: [id])
+}
+
+model Pet_Adoption {
+  id               String    @id @default(cuid())
+  petId            String    @unique
+  adopterId        String
+  adoptionDate     DateTime?
+  isAlreadyAdopted Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @default(now())
+
+  pet     Pet         @relation(fields: [petId], references: [id])
+  adopter Pet_Adopter @relation(fields: [adopterId], references: [id])
+  payment Payment?
+}
+
+model Pet_Campaigns {
+  id          String   @id @default(cuid())
+  ownerId     String
+  title       String
+  description String
+  imageUrls   String[]
+  videoUrls   String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  owner          User              @relation(fields: [ownerId], references: [id])
+  accountDetails Account_Details[]
+}
+
+model Account_Details {
+  id                String   @id @default(cuid())
+  campaignId        String
+  accountHolderName String
+  bankName          String
+  accountNumber     String
+  ifscCode          String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now())
+
+  campaign Pet_Campaigns @relation(fields: [campaignId], references: [id])
+
+  @@unique([campaignId, accountNumber])
+}
+
+enum PaymentStatus {
+  pending
+  completed
+  rejected
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  userId            String
+  receiverId        String
+  adoptionId        String?       @unique
+  transactionNumber String        @unique
+  isDonation        Boolean       @default(false)
+  platformFee       Float
+  totalPaid         Float
+  paymentStatus     PaymentStatus @default(pending)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @default(now())
+
+  user     User          @relation("SentPayments", fields: [userId], references: [id])
+  receiver User          @relation("ReceivedPayments", fields: [receiverId], references: [id])
+  adoption Pet_Adoption? @relation(fields: [adoptionId], references: [id])
+}
+
+enum OtpAction {
+  RESET_PASSWORD
+  VERIFY_EMAIL
+  TWO_FACTOR_AUTH
+  ACCOUNT_ACTIVATION
+}
+
+model Otp {
+  id        String    @id @default(cuid())
+  userId    String
+  code      String
+  action    OtpAction
+  expiresAt DateTime  @db.Timestamp
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}

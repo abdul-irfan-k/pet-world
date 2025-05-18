@@ -24,3 +24,8 @@ vercel-debug.log*
 
 # 5. Editor
 .vscode/
+
+# Prisma Client
+**/generated/prisma/
+
+scripts/

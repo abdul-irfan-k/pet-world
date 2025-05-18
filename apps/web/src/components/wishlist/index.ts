@@ -1,0 +1,1 @@
+export { WishlistGrid } from './WishlistGrid';
