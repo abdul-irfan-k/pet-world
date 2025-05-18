@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import Image from 'next/image';
 
@@ -14,7 +14,9 @@ const SignInPage = () => {
           </div>
         </div>
 
-        <SignInForm />
+        <Suspense>
+          <SignInForm />
+        </Suspense>
 
         <div className="flex justify-between p-8">
           <span className="text-sm font-normal leading-tight text-[#535862]">

@@ -36,6 +36,13 @@ export const useSignInMutation = (
   return useMutation<AuthResponse, AxiosError, SignInInput>({
     mutationFn: signIn,
     ...option,
+    onMutate: () => {
+      return {
+        meta: {
+          notify: true,
+        },
+      };
+    },
   });
 };
 
@@ -50,6 +57,13 @@ export const useSignUpMutation = (
   return useMutation<AuthResponse, AxiosError, SignUpInput>({
     mutationFn: signup,
     ...option,
+    onMutate: () => {
+      return {
+        meta: {
+          notify: true,
+        },
+      };
+    },
   });
 };
 
@@ -58,7 +72,7 @@ const logout = async () => {
   return data;
 };
 
-export const useLogoutMutation = (option?: AuthMutationOptions<{}>) => {
+export const useLogoutMutation = (option?: AuthMutationOptions<undefined>) => {
   return useMutation({ mutationFn: logout, ...option });
 };
 

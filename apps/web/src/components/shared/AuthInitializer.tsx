@@ -12,7 +12,7 @@ const AuthInitializer = () => {
     if (result) {
       setUser(result.data.user);
     }
-  }, [result, error]);
+  }, [result, error, setUser]);
 
   return null;
 };

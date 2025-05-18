@@ -28,7 +28,7 @@ const SignInForm = () => {
     resolver: zodResolver(signInSchema),
   });
 
-  const { isPending, mutate, error } = useSignInMutation({
+  const { isPending, mutate } = useSignInMutation({
     onSuccess: response => {
       const { data } = response;
 
@@ -40,13 +40,6 @@ const SignInForm = () => {
 
       const callbackUrl = searchParams.get('callbackUrl') || '/';
       router.push(callbackUrl);
-    },
-    onError: error => {
-      const message = error?.response?.data?.message || 'An error occurred';
-      toast.error(message, {
-        description: 'Please try again later.',
-        duration: 3000,
-      });
     },
   });
 
@@ -78,11 +71,6 @@ const SignInForm = () => {
               {...register('password')}
               error={errors.password?.message}
             />
-            {error?.response && (
-              <span className="text-sm font-normal leading-tight text-red-500">
-                {error.response?.data.message || 'An error occurred'}
-              </span>
-            )}
           </div>
 
           <div className="flex flex-col gap-4">

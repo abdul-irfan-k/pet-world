@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -36,14 +35,6 @@ const SignUpForm = () => {
         duration: 3000,
       });
       router.push('/sign-in');
-    },
-    //eslint-disable-next-line
-    onError: (error: AxiosError<any>) => {
-      const message = error.response?.data?.message || 'An error occurred';
-      toast.error(message, {
-        description: 'Please try again later.',
-        duration: 3000,
-      });
     },
   });
 
