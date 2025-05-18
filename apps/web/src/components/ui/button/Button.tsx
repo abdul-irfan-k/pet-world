@@ -17,7 +17,7 @@ const buttonVariants = cva(
         destructive:
           'bg-error-600 text-white hover:bg-error-700 focus:bg-error-600 disabled:bg-error-200 disabled:text-white',
         outline:
-          'bg-background text-gray-700 border border-gray-300 border-[1px] hover:bg-accent hover:text-accent-foreground disabled:border-gray-200 disabled:text-gray-300',
+          'bg-background text-gray-700 border border-gray-300 border hover:bg-accent hover:text-accent-foreground disabled:border-gray-200 disabled:text-gray-300',
         secondary:
           'bg-brand-50 text-brand-700 border border-brand-50 border-[1px] hover:bg-brand-100 hover:border-brand-100 focus:bg-brand-50 disabled:bg-brand-25 disabled:text-brand-300 disabled:border-brand-25',
         ghost: 'hover:bg-brand-50 hover:text-brand-700',
@@ -37,6 +37,9 @@ const buttonVariants = cva(
         true: 'w-full',
         false: '',
       },
+      rounded: {
+        true: 'rounded-full',
+      },
     },
     defaultVariants: {
       variant: 'primary',
@@ -50,6 +53,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   isLoading?: boolean;
+  rounded?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -62,6 +66,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       asChild = false,
       children,
       isLoading = false,
+      rounded = false,
       ...props
     },
     ref,
@@ -69,7 +74,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, fullWidth, className }))}
+        className={cn(
+          buttonVariants({ variant, size, fullWidth, rounded, className }),
+        )}
         ref={ref}
         {...props}
       >
