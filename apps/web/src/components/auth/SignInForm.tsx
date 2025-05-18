@@ -1,11 +1,12 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { EmailField, PasswordField } from '@/components/ui/form/inputs';
@@ -18,7 +19,6 @@ const SignInForm = () => {
   const searchParams = useSearchParams();
 
   const { login } = useAuthStore();
-  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
@@ -28,21 +28,32 @@ const SignInForm = () => {
     resolver: zodResolver(signInSchema),
   });
 
-  const signInMutation = useSignInMutation({
+  const { isPending, mutate, error } = useSignInMutation({
     onSuccess: response => {
       const { data } = response;
+
       login(data.user);
+      toast.success('Sign in successful', {
+        description: 'Welcome back to our platform!',
+        duration: 3000,
+      });
+
       const callbackUrl = searchParams.get('callbackUrl') || '/';
       router.push(callbackUrl);
     },
     onError: error => {
-      console.error('Sign in error', error);
-      setServerError(error.message);
+      const message = error?.response?.data?.message || 'An error occurred';
+      toast.error(message, {
+        description: 'Please try again later.',
+        duration: 3000,
+      });
     },
   });
+
   const onSubmit = (data: SignInInput) => {
-    signInMutation.mutate(data);
+    mutate(data);
   };
+
   return (
     <div className="flex flex-col items-center px-8">
       <div className="flex w-[360px] flex-col items-center gap-8">
@@ -67,19 +78,22 @@ const SignInForm = () => {
               {...register('password')}
               error={errors.password?.message}
             />
-            {serverError && (
+            {error?.response && (
               <span className="text-sm font-normal leading-tight text-red-500">
-                {serverError}
+                {error.response?.data.message || 'An error occurred'}
               </span>
             )}
-            <div className="flex flex-col gap-1.5"></div>
           </div>
 
           <div className="flex flex-col gap-4">
-            <Button size={'lg'} onClick={handleSubmit(onSubmit)}>
+            <Button
+              size={'lg'}
+              onClick={handleSubmit(onSubmit)}
+              isLoading={isPending}
+            >
               Sign in{' '}
             </Button>
-            <div className="flex items-center justify-center rounded-lg bg-white px-[18px] py-2.5 outline outline-1 outline-offset-[-1px] outline-[#d5d6da]">
+            <div className="flex items-center justify-center rounded-lg bg-white px-[18px] py-2.5 outline-1 outline-offset-[-1px] outline-[#d5d6da]">
               <span className="text-base font-semibold leading-normal text-[#414651]">
                 Sign in with Google
               </span>

@@ -1,4 +1,9 @@
-import { MutationOptions, useMutation, useQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+} from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 
 import { apiClient } from '../api-client';
 
@@ -14,13 +19,18 @@ interface AuthResponse {
   status: string;
 }
 
-const signIn = async (credentials: SignInInput) => {
+const signIn = async (credentials: SignInInput): Promise<AuthResponse> => {
   const { data } = await apiClient.post('/auth/signin', credentials);
   return data;
 };
 
-export const useSignInMutation = (option: MutationOptions<AuthResponse>) => {
-  return useMutation({ mutationFn: signIn, ...option });
+export const useSignInMutation = (
+  option?: UseMutationOptions<AuthResponse, AxiosError, SignInInput>,
+) => {
+  return useMutation<AuthResponse, AxiosError, SignInInput>({
+    mutationFn: signIn,
+    ...option,
+  });
 };
 
 const signup = async (credentials: SignUpInput) => {
@@ -50,5 +60,6 @@ export const useCurrentUserQuery = () => {
   return useQuery({
     queryFn: fetchCurrentUser,
     queryKey: ['currentUser'],
+    retry: 2,
   });
 };

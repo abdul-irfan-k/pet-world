@@ -16,7 +16,6 @@ export function middleware(request: NextRequest) {
     '/help',
   ]);
   const isPublicPath = publicPaths.has(request.nextUrl.pathname);
-
   if (isPublicPath) return NextResponse.next();
 
   if (!token) {

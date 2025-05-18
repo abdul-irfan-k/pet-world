@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import type { Metadata } from 'next';
 
 import '../styles/globals.css';
+import { Toaster } from '@/components/ui/sonner';
 import { AppProviders } from '@/providers';
 
 const inter = Inter({
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
+        <Toaster duration={2000} />
         <AppProviders>{children}</AppProviders>
       </body>
     </html>
