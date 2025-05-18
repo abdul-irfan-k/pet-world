@@ -7,12 +7,15 @@ import { X, Plus, Upload } from 'lucide-react';
 
 import { Button } from '../ui/button';
 import { Label, TextField } from '../ui/form/inputs';
+import { ImagePreviewModal } from '../ui/image-preview-modal';
 import { Textarea } from '../ui/textarea';
 
 const AddPetForm = () => {
   const [selectedSpecies, setSelectedSpecies] = useState('Dog');
   const [selectedGender, setSelectedGender] = useState('Male');
-  const [imageFiles, setImageFiles] = useState([]);
+  const [imagePreviewModalSrc, setImagePreviewModalSrc] = useState<
+    string | null
+  >(null);
 
   const placeholderImages = [
     '/pets/dog-1.jpeg',
@@ -20,6 +23,10 @@ const AddPetForm = () => {
     '/pets/dog-3.jpeg',
     '/pets/dog-4.jpeg',
   ];
+
+  const onImagePreviewModalClose = () => {
+    setImagePreviewModalSrc(null);
+  };
   return (
     <div className="flex-1 overflow-auto p-6">
       <div className="mb-6 flex items-center justify-between">
@@ -44,7 +51,7 @@ const AddPetForm = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <div className="space-y-6 md:col-span-2">
             <div className="rounded-lg bg-white p-6 shadow-sm">
@@ -178,6 +185,7 @@ const AddPetForm = () => {
                   <div
                     key={index}
                     className="group relative h-20 w-20 rounded-md border border-gray-200"
+                    onClick={() => setImagePreviewModalSrc(img)}
                   >
                     <Image
                       src={img}
@@ -218,6 +226,15 @@ const AddPetForm = () => {
           </div>
         </div>
       </div>
+
+      {imagePreviewModalSrc && (
+        <ImagePreviewModal
+          src={imagePreviewModalSrc}
+          alt="Image Preview"
+          open={!!imagePreviewModalSrc}
+          onClose={onImagePreviewModalClose}
+        />
+      )}
     </div>
   );
 };
