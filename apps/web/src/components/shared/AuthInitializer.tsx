@@ -1,8 +1,6 @@
 'use client';
 import { useEffect } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { useCurrentUserQuery } from '@/lib/api/authApi';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -12,7 +10,7 @@ const AuthInitializer = () => {
 
   useEffect(() => {
     if (result) {
-      setUser(result.data);
+      setUser(result.data.user);
     }
   }, [result, error]);
 

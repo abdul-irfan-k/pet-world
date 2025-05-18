@@ -91,7 +91,7 @@ const SignInForm = () => {
               onClick={handleSubmit(onSubmit)}
               isLoading={isPending}
             >
-              Sign in{' '}
+              Sign in
             </Button>
             <div className="flex items-center justify-center rounded-lg bg-white px-[18px] py-2.5 outline-1 outline-offset-[-1px] outline-[#d5d6da]">
               <span className="text-base font-semibold leading-normal text-[#414651]">

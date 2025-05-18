@@ -11,13 +11,19 @@ import type { SignInInput, SignUpInput } from '../schemas';
 
 import { User } from '@/types/User';
 
-interface AuthResponse {
-  data: {
-    user: User;
-  };
+type ApiResponse<T> = {
+  data: T;
   message: string;
   status: string;
-}
+};
+
+type AuthResponse = ApiResponse<{ user: User }>;
+
+type AuthMutationOptions<TVariables> = UseMutationOptions<
+  ApiResponse<{ user: User }>,
+  AxiosError,
+  TVariables
+>;
 
 const signIn = async (credentials: SignInInput): Promise<AuthResponse> => {
   const { data } = await apiClient.post('/auth/signin', credentials);
@@ -25,7 +31,7 @@ const signIn = async (credentials: SignInInput): Promise<AuthResponse> => {
 };
 
 export const useSignInMutation = (
-  option?: UseMutationOptions<AuthResponse, AxiosError, SignInInput>,
+  option?: AuthMutationOptions<SignInInput>,
 ) => {
   return useMutation<AuthResponse, AxiosError, SignInInput>({
     mutationFn: signIn,
@@ -33,13 +39,18 @@ export const useSignInMutation = (
   });
 };
 
-const signup = async (credentials: SignUpInput) => {
+const signup = async (credentials: SignUpInput): Promise<AuthResponse> => {
   const { data } = await apiClient.post('/auth/signup', credentials);
   return data;
 };
 
-export const useSignUpMutation = () => {
-  return useMutation({ mutationFn: signup });
+export const useSignUpMutation = (
+  option?: AuthMutationOptions<SignUpInput>,
+) => {
+  return useMutation<AuthResponse, AxiosError, SignUpInput>({
+    mutationFn: signup,
+    ...option,
+  });
 };
 
 const logout = async () => {
@@ -47,17 +58,17 @@ const logout = async () => {
   return data;
 };
 
-export const useLogoutMutation = () => {
-  return useMutation({ mutationFn: logout });
+export const useLogoutMutation = (option?: AuthMutationOptions<{}>) => {
+  return useMutation({ mutationFn: logout, ...option });
 };
 
-const fetchCurrentUser = async () => {
+const fetchCurrentUser = async (): Promise<AuthResponse> => {
   const { data } = await apiClient.get('/auth/me');
-  return { data };
+  return data;
 };
 
 export const useCurrentUserQuery = () => {
-  return useQuery({
+  return useQuery<AuthResponse>({
     queryFn: fetchCurrentUser,
     queryKey: ['currentUser'],
     retry: 2,
