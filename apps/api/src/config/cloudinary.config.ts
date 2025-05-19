@@ -16,4 +16,10 @@ cloudinary.config({
   secure: true,
 });
 
-export { cloudinary };
+const CLOUDINARY_UPLOAD_PRESETS = {
+  USER_PROFILE: 'user_profile_preset',
+  PET_IMAGES: 'pet_images_preset',
+  PET_VIDEOS: 'pet_videos_preset',
+};
+
+export { cloudinary, CLOUDINARY_UPLOAD_PRESETS };

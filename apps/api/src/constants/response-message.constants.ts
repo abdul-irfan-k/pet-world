@@ -21,6 +21,8 @@ export enum ResponseMessages {
   USER_REGISTERED = 'User registered successfully.',
   ACCESS_DENIED = 'Access denied.',
   EMAIL_SEND_FAILED = 'Failed to send email.',
+  UPLOAD_FAILED = 'Failed to upload file.',
+  DELETE_FAILED = 'Failed to delete file.',
   EMAIL_ALREADY_EXISTS = 'Email is already registered.',
   USER_NOT_FOUND = 'User not found.',
   PET_NOT_FOUND = 'Pet not found.',
