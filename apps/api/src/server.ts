@@ -7,7 +7,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 import { logger, PORT, CORS_ORIGIN } from './config';
-import { AuthRoutes, PetRoutes } from './routes';
+import { AuthRoutes, PetRoutes, UploadRoutes } from './routes';
 
 import { globalErrorHandler } from '@/middleware';
 
@@ -41,6 +41,7 @@ export class ExpressServer {
   private configureRoutes(): void {
     this.app.use('/api/v1/auth/', new AuthRoutes().getRoutes());
     this.app.use('/api/v1/pets/', new PetRoutes().getRoutes());
+    this.app.use('/api/v1/upload/', new UploadRoutes().getRoutes());
   }
 
   private configureErrorHandlers(): void {

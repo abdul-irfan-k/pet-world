@@ -11,7 +11,6 @@ import {
 import { cloudinary, CLOUDINARY_UPLOAD_PRESETS } from '@/config';
 import { HttpStatusCode, ResponseMessages } from '@/constants';
 import { HttpError } from '@/utils';
-
 export class UploadService implements IUploadService {
   public async uploadFile({
     file,
@@ -89,7 +88,7 @@ export class UploadService implements IUploadService {
   }
 
   private getUploadPreset(folder: string): string {
-    if (folder.includes('user')) {
+    if (folder.includes('profile_images')) {
       return CLOUDINARY_UPLOAD_PRESETS.USER_PROFILE;
     } else if (folder.includes('pet') && folder.includes('videos')) {
       return CLOUDINARY_UPLOAD_PRESETS.PET_VIDEOS;
