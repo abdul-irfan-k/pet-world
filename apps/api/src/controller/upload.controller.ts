@@ -52,17 +52,17 @@ export class UploadController implements IUploadController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const file = req.file;
+      const files = req.files;
 
-      if (!file) {
+      if (!files) {
         throw new HttpError({
           statusCode: HttpStatusCode.BAD_REQUEST,
           message: ResponseMessages.FILE_NOT_PROVIDED,
         });
       }
 
-      const result = await this._uploadService.uploadFile({
-        file,
+      const result = await this._uploadService.uploadMultipleFiles({
+        files: files as Express.Multer.File[],
         resourceType: 'image',
         folder: 'pet_images',
         tags: ['pet'],
