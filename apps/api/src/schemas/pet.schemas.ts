@@ -15,6 +15,8 @@ export const createPetSchema: z.ZodType<ICreatePetDTO> = z.object({
   age: z.number().int().positive('Age must be a positive integer'),
   profile: z.record(z.unknown()),
   gender: z.string().trim().min(1, 'Gender is required'),
+  images: z.array(z.string()).optional(),
+  videos: z.array(z.string()).optional(),
 });
 
 export const updatePetSchema: z.ZodType<Omit<IUpdatePetDTO, 'id'>> = z.object({
