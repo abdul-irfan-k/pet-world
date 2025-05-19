@@ -2,31 +2,72 @@
 import React, { useState } from 'react';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
-import { X, Plus, Upload } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Upload, X, Plus } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
-import { Button } from '../ui/button';
-import { Label, TextField } from '../ui/form/inputs';
-import { ImagePreviewModal } from '../ui/image-preview-modal';
-import { Textarea } from '../ui/textarea';
+import { UploadMediaSection } from './add-pet-form/UploadMediaSection';
+
+import { Button } from '@/components/ui/button';
+import { TextField } from '@/components/ui/form/inputs';
+import { Label } from '@/components/ui/form/inputs';
+import { Textarea } from '@/components/ui/textarea';
+import { useCreatePetMutation } from '@/lib/api/petsApi';
+import { addPetSchema, IAddPetInput } from '@/lib/schemas/petSchema';
 
 const AddPetForm = () => {
-  const [selectedSpecies, setSelectedSpecies] = useState('Dog');
-  const [selectedGender, setSelectedGender] = useState('Male');
-  const [imagePreviewModalSrc, setImagePreviewModalSrc] = useState<
-    string | null
-  >(null);
+  const router = useRouter();
+  const [selectedGender, setSelectedGender] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+    reset,
+  } = useForm<IAddPetInput>({
+    resolver: zodResolver(addPetSchema),
+    defaultValues: {
+      name: '',
+      species: '',
+      breed: '',
+      age: undefined,
+      profile: {},
+    },
+  });
+
+  const { mutate: createPet, isPending: isCreatingPet } = useCreatePetMutation({
+    onSuccess: response => {
+      toast.success(response.message || 'Pet added successfully!', {
+        description: `Name: ${response.data.pet.name}, Species: ${response.data.pet.species}`,
+      });
+      reset();
+    },
+    onError: error => {
+      toast.error(
+        //eslint-disable-next-line
+        //@ts-ignore
+        error.response?.data?.message || 'Failed to add pet. Please try again.',
+      );
+    },
+  });
+
+  const watchedSpecies = watch('species');
+
+  const onSubmit = (data: IAddPetInput) => {
+    createPet(data);
+  };
 
   const placeholderImages = [
-    '/pets/dog-1.jpeg',
-    '/pets/dog-2.jpeg',
-    '/pets/dog-3.jpeg',
-    '/pets/dog-4.jpeg',
+    '/pets/dog-1.jpg',
+    '/pets/cat-1.jpg',
+    '/pets/dog-2.jpg',
   ];
 
-  const onImagePreviewModalClose = () => {
-    setImagePreviewModalSrc(null);
-  };
   return (
     <div className="flex-1 overflow-auto p-6">
       <div className="mb-6 flex items-center justify-between">
@@ -44,6 +85,8 @@ const AddPetForm = () => {
             variant="black"
             rounded
             className="bg-green-500 hover:bg-green-600"
+            onClick={handleSubmit(onSubmit)}
+            isLoading={isCreatingPet}
           >
             <span className="mr-2">✓</span>
             Add Pet
@@ -59,9 +102,11 @@ const AddPetForm = () => {
 
               <div className="mb-4">
                 <TextField
-                  label="Pet Name"
+                  label="Pet Name*"
                   placeholder="e.g., Buddy"
                   className="w-full"
+                  {...register('name')}
+                  error={errors.name?.message}
                 />
               </div>
 
@@ -75,31 +120,46 @@ const AddPetForm = () => {
 
               <div className="mb-4">
                 <Label className="mb-1 block text-sm font-medium text-gray-700">
-                  Species
+                  Species*
                 </Label>
                 <div className="mb-2 text-sm text-gray-500">Select Species</div>
                 <div className="flex space-x-3">
-                  {['Dog 🐶', 'Cat 🐱', 'Rabbit 🐰'].map(species => (
-                    <button
-                      key={species}
-                      className={`flex items-center justify-center rounded-md px-6 py-3 ${
-                        selectedSpecies === species.split(' ')[0]
-                          ? 'border-2 border-green-500 bg-green-100'
-                          : 'border border-gray-200 bg-gray-50'
-                      }`}
-                      onClick={() => setSelectedSpecies(species.split(' ')[0])}
-                    >
-                      <span className="text-sm">{species}</span>
-                    </button>
-                  ))}
+                  {['Dog 🐶', 'Cat 🐱', 'Rabbit 🐰'].map(speciesItem => {
+                    const speciesValue = speciesItem.split(' ')[0];
+                    return (
+                      <button
+                        key={speciesValue}
+                        type="button"
+                        className={`flex items-center justify-center rounded-md px-6 py-3 ${
+                          watchedSpecies === speciesValue
+                            ? 'border-2 border-green-500 bg-green-100'
+                            : 'border border-gray-200 bg-gray-50'
+                        }`}
+                        onClick={() => {
+                          setValue('species', speciesValue, {
+                            shouldValidate: true,
+                          });
+                        }}
+                      >
+                        <span className="text-sm">{speciesItem}</span>
+                      </button>
+                    );
+                  })}
                 </div>
+                {errors.species && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {errors.species.message}
+                  </p>
+                )}
               </div>
 
               <div className="mb-4">
                 <TextField
-                  label="Breed"
+                  label="Breed*"
                   placeholder="e.g., Golden Retriever"
                   className="w-full"
+                  {...register('breed')}
+                  error={errors.breed?.message}
                 />
               </div>
 
@@ -127,10 +187,12 @@ const AddPetForm = () => {
 
               <div className="mb-4">
                 <TextField
-                  label="Age (years)"
+                  label="Age (years)*"
                   type="number"
                   placeholder="e.g., 2"
                   className="w-full"
+                  {...register('age', { valueAsNumber: true })}
+                  error={errors.age?.message}
                 />
               </div>
 
@@ -159,82 +221,10 @@ const AddPetForm = () => {
           </div>
 
           <div className="space-y-6 md:col-span-1">
-            <div className="rounded-lg bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-lg font-medium">Upload Media</h2>
-
-              <div className="mb-6">
-                <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6">
-                  <Upload className="mb-2 h-8 w-8 text-gray-400" />
-                  <p className="mb-1 text-sm text-gray-600">
-                    Drag & drop pet images
-                  </p>
-                  <p className="mb-3 text-xs text-gray-500">or</p>
-                  <Button
-                    size={'lg'}
-                    variant="outline"
-                    className="rounded-md px-4 py-2 text-sm"
-                  >
-                    Browse Files
-                  </Button>
-                  <p className="mt-3 text-xs text-gray-500">Max 8 images</p>
-                </div>
-              </div>
-
-              <div className="mb-4 grid grid-cols-3 gap-2">
-                {placeholderImages.map((img, index) => (
-                  <div
-                    key={index}
-                    className="group relative h-20 w-20 rounded-md border border-gray-200"
-                    onClick={() => setImagePreviewModalSrc(img)}
-                  >
-                    <Image
-                      src={img}
-                      alt={`Preview ${index}`}
-                      className="h-20 w-full object-cover"
-                      fill
-                    />
-                    <button className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-0.5 opacity-0 group-hover:opacity-100">
-                      <X className="h-3 w-3 text-white" />
-                    </button>
-                  </div>
-                ))}
-                <div className="flex h-20 items-center justify-center rounded-md border border-dashed border-gray-300">
-                  <Plus className="h-5 w-5 text-gray-400" />
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <label className="mb-3 block text-sm font-medium text-gray-700">
-                  Upload Videos (optional)
-                </label>
-                <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6">
-                  <Upload className="mb-2 h-8 w-8 text-gray-400" />
-                  <p className="mb-1 text-sm text-gray-600">
-                    Drag & drop pet videos
-                  </p>
-                  <p className="mb-3 text-xs text-gray-500">or</p>
-                  <Button
-                    size={'lg'}
-                    variant="outline"
-                    className="rounded-md px-4 py-2 text-sm"
-                  >
-                    Browse Files
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <UploadMediaSection placeholderImages={placeholderImages} />
           </div>
         </div>
       </div>
-
-      {imagePreviewModalSrc && (
-        <ImagePreviewModal
-          src={imagePreviewModalSrc}
-          alt="Image Preview"
-          open={!!imagePreviewModalSrc}
-          onClose={onImagePreviewModalClose}
-        />
-      )}
     </div>
   );
 };
