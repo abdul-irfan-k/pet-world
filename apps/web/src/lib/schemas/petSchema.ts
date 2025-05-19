@@ -6,6 +6,9 @@ export const addPetSchema = z.object({
   breed: z.string().trim().min(1, 'Breed cannot be empty'),
   age: z.number().int().positive('Age must be a positive integer'),
   profile: z.record(z.unknown()),
+  images: z.array(z.string()).optional(),
+  videos: z.array(z.string()).optional(),
+  gender: z.string().optional(),
 });
 export type IAddPetInput = z.infer<typeof addPetSchema>;
 

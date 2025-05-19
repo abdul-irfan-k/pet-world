@@ -21,6 +21,11 @@ import { addPetSchema, IAddPetInput } from '@/lib/schemas/petSchema';
 const AddPetForm = () => {
   const router = useRouter();
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
+  const [media, setMedia] = useState<{ images: string[]; videos: string[] }>({
+    images: [],
+    videos: [],
+  });
+  const [isMediaUploading, setIsMediaUploading] = useState(false);
 
   const {
     register,
@@ -59,7 +64,16 @@ const AddPetForm = () => {
   const watchedSpecies = watch('species');
 
   const onSubmit = (data: IAddPetInput) => {
-    createPet(data);
+    if (isMediaUploading) {
+      toast.warning('Please wait until image and video is fully uploaded.');
+      return;
+    }
+    createPet({
+      ...data,
+      images: media.images,
+      videos: media.videos,
+      gender: selectedGender ?? 'Unknown',
+    });
   };
 
   const placeholderImages = [
@@ -221,7 +235,11 @@ const AddPetForm = () => {
           </div>
 
           <div className="space-y-6 md:col-span-1">
-            <UploadMediaSection placeholderImages={placeholderImages} />
+            <UploadMediaSection
+              placeholderImages={placeholderImages}
+              setIsMediaUploading={setIsMediaUploading}
+              setMedia={setMedia}
+            />
           </div>
         </div>
       </div>

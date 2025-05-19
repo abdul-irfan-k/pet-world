@@ -3,24 +3,62 @@ import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 
 import { Upload, X, Plus } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { ImagePreviewModal } from '@/components/ui/image-preview-modal';
+import { Spinner } from '@/components/ui/spinnner';
+import { useUploadPetImagesMutation } from '@/lib/api/uploadApi';
 
 interface UploadMediaSectionProps {
   placeholderImages: string[];
+  setIsMediaUploading: React.Dispatch<React.SetStateAction<boolean>>;
+  setMedia: React.Dispatch<
+    React.SetStateAction<{
+      images: string[];
+      videos: string[];
+    }>
+  >;
 }
 
 const UploadMediaSection: React.FC<UploadMediaSectionProps> = ({
-  placeholderImages,
+  setIsMediaUploading,
+  setMedia,
 }) => {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
 
-  const [imagePreviewSrc, setImagePreviewSrc] = useState<string | null>(null);
+  const [imageModalPreview, setImageModalPreviwe] = useState<string | null>(
+    null,
+  );
+  const [imagePreviewSrc, setImagePreviewSrc] = useState<Array<string> | null>(
+    null,
+  );
+  const [uploadedImages, setUploadedImages] = useState<Array<string>>([]);
+
+  const { isPending, mutate: uploadPetImageMutate } =
+    useUploadPetImagesMutation({
+      onSuccess: (response: any) => {
+        const newUrls = response?.data?.map((img: any) => img.secure_url);
+        if (newUrls?.length) {
+          setUploadedImages(prev => [...prev, ...newUrls]);
+          setMedia(prev => ({
+            ...prev,
+            images: newUrls,
+          }));
+          setIsMediaUploading(false);
+          setImagePreviewSrc(null);
+        }
+      },
+      onError: (error: any) => {
+        setIsMediaUploading(false);
+        console.error('Image upload error:', error);
+        toast.error('image upload failed. Please try again.');
+      },
+    });
 
   const handleImageClick = (src: string) => {
-    setImagePreviewSrc(src);
+    setImageModalPreviwe(src);
   };
 
   const handleImageInputClick = () => {
@@ -32,9 +70,21 @@ const UploadMediaSection: React.FC<UploadMediaSectionProps> = ({
   };
 
   const onImagePreviewModalClose = () => {
-    setImagePreviewSrc(null);
+    setImageModalPreviwe(null);
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files as FileList;
+    if (!files) return;
+
+    const previews = Array.from(files).map(file => URL.createObjectURL(file));
+    setImagePreviewSrc(previews);
+    //eslint-disable-next-line
+    //@ts-ignore
+    uploadPetImageMutate(files);
+
+    setIsMediaUploading(true);
+  };
   return (
     <div className="space-y-6 md:col-span-1">
       <div className="rounded-lg bg-white p-6 shadow-sm">
@@ -51,8 +101,9 @@ const UploadMediaSection: React.FC<UploadMediaSectionProps> = ({
               size={'lg'}
               variant="outline"
               className="rounded-md px-4 py-2 text-sm"
+              disabled={isPending}
             >
-              Browse Files
+              {isPending ? 'Uploading...' : 'Browse Files'}
             </Button>
             <p className="mt-3 text-xs text-gray-500">Max 8 images</p>
             <input
@@ -61,32 +112,61 @@ const UploadMediaSection: React.FC<UploadMediaSectionProps> = ({
               multiple
               hidden
               ref={imageInputRef}
+              onChange={handleImageUpload}
             />
           </div>
         </div>
         <div className="mb-4 grid grid-cols-3 gap-2">
-          {placeholderImages.map((img, index) => (
-            <div
-              key={index}
-              className="group relative h-20 w-20 overflow-hidden rounded-md border border-gray-200"
-              onClick={() => handleImageClick(img)}
-            >
-              <Image
-                src={img}
-                alt={`Preview ${index}`}
-                className="h-20 w-full object-cover"
-                fill
-              />
-              <button
-                className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-0.5 opacity-0 group-hover:opacity-100"
-                onClick={e => {
-                  e.stopPropagation();
-                }}
+          {uploadedImages.length > 0 &&
+            uploadedImages.map((img, index) => (
+              <div
+                key={index}
+                className="group relative h-20 w-20 overflow-hidden rounded-md border border-gray-200"
+                onClick={() => handleImageClick(img)}
               >
-                <X className="h-3 w-3 text-white" />
-              </button>
-            </div>
-          ))}
+                <Image
+                  src={img}
+                  alt={`Preview ${index}`}
+                  className="h-20 w-full object-cover"
+                  fill
+                />
+                <button
+                  className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-0.5 opacity-0 group-hover:opacity-100"
+                  onClick={e => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <X className="h-3 w-3 text-white" />
+                </button>
+              </div>
+            ))}
+          {imagePreviewSrc &&
+            imagePreviewSrc.map((img, index) => (
+              <div
+                key={index}
+                className="group relative h-20 w-20 overflow-hidden rounded-md border border-gray-200"
+                onClick={() => handleImageClick(img)}
+              >
+                <Image
+                  src={img}
+                  alt={`Preview ${index}`}
+                  className="h-20 w-full object-cover"
+                  fill
+                />
+                <button
+                  className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-0.5 opacity-0 group-hover:opacity-100"
+                  onClick={e => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <X className="h-3 w-3 text-white" />
+                </button>
+
+                <div className="absolute left-[50%] top-[50%] block translate-x-[-50%] translate-y-[-50%]">
+                  <Spinner className="h-8 w-8" />
+                </div>
+              </div>
+            ))}
           <div
             className="flex h-20 cursor-pointer items-center justify-center rounded-md border border-dashed border-gray-300"
             onClick={handleImageInputClick}
@@ -122,11 +202,11 @@ const UploadMediaSection: React.FC<UploadMediaSectionProps> = ({
           </div>
         </div>
       </div>
-      {imagePreviewSrc && (
+      {imageModalPreview && (
         <ImagePreviewModal
-          src={imagePreviewSrc}
+          src={imageModalPreview}
           alt="Image Preview"
-          open={!!imagePreviewSrc}
+          open={!!imageModalPreview}
           onClose={onImagePreviewModalClose}
         />
       )}
