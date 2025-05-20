@@ -7,7 +7,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 import { logger, PORT, CORS_ORIGIN } from './config';
-import { AuthRoutes, PetRoutes, UploadRoutes } from './routes';
+import { AuthRoutes, PetCareRoutes, PetRoutes, UploadRoutes } from './routes';
 import { FavoriteRoutes } from './routes/favorites.routes';
 
 import { globalErrorHandler } from '@/middleware';
@@ -44,6 +44,7 @@ export class ExpressServer {
     this.app.use('/api/v1/pets/', new PetRoutes().getRoutes());
     this.app.use('/api/v1/favorites/', new FavoriteRoutes().getRoutes());
     this.app.use('/api/v1/upload/', new UploadRoutes().getRoutes());
+    this.app.use('/api/v1/pet‑care/', new PetCareRoutes().getRoutes());
   }
 
   private configureErrorHandlers(): void {

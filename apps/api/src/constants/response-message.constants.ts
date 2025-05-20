@@ -38,4 +38,7 @@ export enum ResponseMessages {
   PET_NOT_IN_FAVORITES = 'Pet is not in favorites.',
   FAVORITE_PET_SUCCESS = 'Pet added to favorites successfully.',
   UNFAVORITE_PET_SUCCESS = 'Pet removed from favorites successfully.',
+  PET_CARE_REQUEST_NOT_FOUND = 'Pet care request not found.',
+  UNAUTHORIZED_PET_CARE_REQUEST_UPDATE = 'Unauthorized to update this pet care request.',
+  UNAUTHORIZED_PET_CARE_REQUEST_DELETION = 'Unauthorized to delete this pet care request.',
 }

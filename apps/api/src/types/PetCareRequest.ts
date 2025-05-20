@@ -1,4 +1,4 @@
-export type PetCareRequest = {
+export interface PetCareRequest {
   id: string;
   ownerId: string;
   petId: string;
@@ -6,10 +6,9 @@ export type PetCareRequest = {
   title: string;
   amount: string;
   description: string;
-  status: string;
   startDate: Date;
   endDate: Date;
   questions?: Record<string, unknown> | null;
   createdAt: Date;
   updatedAt: Date;
-};
+}
