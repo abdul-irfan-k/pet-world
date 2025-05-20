@@ -260,4 +260,50 @@ export class PetCareService implements IPetCareService {
     });
     return { petCareProposals: petCareProposals as PetCareProposal[] };
   }
+
+  public async approvePetCareProposal(
+    data: IGetPetCareProposalByIdDTO,
+  ): Promise<{ petCareProposal: PetCareProposal }> {
+    const { id, userId } = data;
+
+    const existingProposal = await prisma.petCareProposal.findUnique({
+      where: { id },
+      include: { petCareRequest: true },
+    });
+
+    if (!existingProposal) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.PET_CARE_PROPOSAL_NOT_FOUND,
+      });
+    }
+
+    if (existingProposal.petCareRequest.ownerId !== userId) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.FORBIDDEN,
+        message: ResponseMessages.UNAUTHORIZED_PROPOSAL_APPROVAL,
+      });
+    }
+
+    const approvedProposal = await prisma.petCareProposal.update({
+      where: { id },
+      data: { status: 'approved' },
+    });
+
+    await prisma.petCareRequest.update({
+      where: { id: existingProposal.petCareRequestId },
+      data: { status: 'closed' },
+    });
+
+    await prisma.petCareProposal.updateMany({
+      where: {
+        petCareRequestId: existingProposal.petCareRequestId,
+        id: { not: id }, // Exclude the approved proposal
+        status: 'pending',
+      },
+      data: { status: 'rejected' },
+    });
+
+    return { petCareProposal: approvedProposal as PetCareProposal };
+  }
 }

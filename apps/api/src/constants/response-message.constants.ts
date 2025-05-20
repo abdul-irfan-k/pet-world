@@ -46,4 +46,5 @@ export enum ResponseMessages {
   UNAUTHORIZED_PET_CARE_PROPOSAL_DELETION = 'Unauthorized to delete this pet care proposal.',
   CANNOT_DELETE_PROCESSED_PROPOSAL = 'Cannot delete a proposal that has already been processed.',
   ADOPTER_CANNOT_CHANGE_STATUS = 'Adopter cannot change status of an already processed proposal.',
+  UNAUTHORIZED_PROPOSAL_APPROVAL = 'Only the pet care request owner can approve a proposal.',
 }

@@ -98,4 +98,7 @@ export interface IPetCareService {
   listPetCareProposalsByAdopterId(
     data: IListPetCareProposalsByAdopterIdDTO,
   ): Promise<{ petCareProposals: PetCareProposal[] }>;
+  approvePetCareProposal(
+    data: IGetPetCareProposalByIdDTO, // Assuming same DTO as getPetCareProposalById for now
+  ): Promise<{ petCareProposal: any }>;
 }

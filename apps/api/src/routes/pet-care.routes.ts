@@ -80,6 +80,14 @@ export class PetCareRoutes {
       ),
     );
 
+    router.put(
+      '/proposals/:proposalId/approve',
+      authMiddleware,
+      this._petCareController.approvePetCareProposal.bind(
+        this._petCareController,
+      ),
+    );
+
     router.delete(
       '/proposals/:proposalId',
       authMiddleware,
