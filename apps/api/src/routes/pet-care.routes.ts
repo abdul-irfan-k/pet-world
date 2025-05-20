@@ -49,6 +49,45 @@ export class PetCareRoutes {
       ),
     );
 
+    router.post(
+      '/proposals/',
+      authMiddleware,
+      this._petCareController.createPetCareProposal.bind(
+        this._petCareController,
+      ),
+    );
+
+    router.get(
+      '/proposals/',
+      authMiddleware,
+      this._petCareController.listPetCareProposalsByAdopterId.bind(
+        this._petCareController,
+      ),
+    );
+
+    router.get(
+      '/proposals/:proposalId',
+      this._petCareController.getPetCareProposalById.bind(
+        this._petCareController,
+      ),
+    );
+
+    router.put(
+      '/proposals/:proposalId',
+      authMiddleware,
+      this._petCareController.updatePetCareProposal.bind(
+        this._petCareController,
+      ),
+    );
+
+    router.delete(
+      '/proposals/:proposalId',
+      authMiddleware,
+      this._petCareController.deletePetCareProposal.bind(
+        this._petCareController,
+      ),
+    );
+
     return router;
   }
 }

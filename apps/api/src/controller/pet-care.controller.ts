@@ -112,4 +112,107 @@ export class PetCareController implements IPetCareController {
       next(error);
     }
   }
+
+  public async createPetCareProposal(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const result = await this._petCareService.createPetCareProposal({
+        ...req.body,
+        ownerId: req.user!.id,
+      });
+      res.status(HttpStatusCode.CREATED).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.CREATED,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async getPetCareProposalById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { proposalId } = req.params;
+      const result = await this._petCareService.getPetCareProposalById({
+        id: proposalId,
+        userId: req.user!.id,
+      });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async updatePetCareProposal(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { proposalId } = req.params;
+      const result = await this._petCareService.updatePetCareProposal({
+        id: proposalId,
+        userId: req.user!.id,
+        ...req.body,
+      });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.UPDATED,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async deletePetCareProposal(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { proposalId } = req.params;
+      await this._petCareService.deletePetCareProposal({
+        id: proposalId,
+        userId: req.user!.id,
+      });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        message: ResponseMessages.DELETED,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async listPetCareProposalsByAdopterId(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const adopterId = req.user!.id;
+      const result = await this._petCareService.listPetCareProposalsByAdopterId(
+        { adopterId },
+      );
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

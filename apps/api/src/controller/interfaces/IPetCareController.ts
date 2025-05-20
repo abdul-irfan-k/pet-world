@@ -26,4 +26,29 @@ export interface IPetCareController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  createPetCareProposal(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
+  getPetCareProposalById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
+  updatePetCareProposal(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
+  deletePetCareProposal(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
+  listPetCareProposalsByAdopterId(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

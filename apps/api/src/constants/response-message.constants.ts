@@ -41,4 +41,9 @@ export enum ResponseMessages {
   PET_CARE_REQUEST_NOT_FOUND = 'Pet care request not found.',
   UNAUTHORIZED_PET_CARE_REQUEST_UPDATE = 'Unauthorized to update this pet care request.',
   UNAUTHORIZED_PET_CARE_REQUEST_DELETION = 'Unauthorized to delete this pet care request.',
+  PET_CARE_PROPOSAL_NOT_FOUND = 'Pet care proposal not found.',
+  UNAUTHORIZED_PET_CARE_PROPOSAL_UPDATE = 'Unauthorized to update this pet care proposal.',
+  UNAUTHORIZED_PET_CARE_PROPOSAL_DELETION = 'Unauthorized to delete this pet care proposal.',
+  CANNOT_DELETE_PROCESSED_PROPOSAL = 'Cannot delete a proposal that has already been processed.',
+  ADOPTER_CANNOT_CHANGE_STATUS = 'Adopter cannot change status of an already processed proposal.',
 }
