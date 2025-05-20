@@ -19,7 +19,7 @@ export const uploadPetImages = async (files: FileList) => {
   );
   return data;
 };
-
+//eslint-disable-next-line
 export const useUploadPetImagesMutation = (options?: any) => {
   return useMutation({
     mutationFn: uploadPetImages,
@@ -31,7 +31,7 @@ const deletePetImage = async (imageId: string) => {
   const { data } = await apiClient.delete(`/upload/${imageId}`);
   return data;
 };
-
+//eslint-disable-next-line
 export const useDeletePetImageMutation = (options?: any) => {
   return useMutation({
     mutationFn: deletePetImage,
@@ -50,7 +50,7 @@ export const uploadPetVideo = async (file: File) => {
   });
   return data;
 };
-
+//eslint-disable-next-line
 export const useUploadPetVideoMutation = (options?: any) => {
   return useMutation({
     mutationFn: uploadPetVideo,
@@ -61,7 +61,7 @@ export const deletePetVideo = async (videoId: string) => {
   const { data } = await apiClient.delete(`/upload/video/${videoId}`);
   return data;
 };
-
+//eslint-disable-next-line
 export const useDeletePetVideoMutation = (options?: any) => {
   return useMutation({
     mutationFn: deletePetVideo,

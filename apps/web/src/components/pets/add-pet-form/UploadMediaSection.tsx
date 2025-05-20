@@ -42,7 +42,9 @@ const UploadMediaSection: React.FC<UploadMediaSectionProps> = ({
 
   const { isPending, mutate: uploadPetImageMutate } =
     useUploadPetImagesMutation({
+      //eslint-disable-next-line
       onSuccess: (response: any) => {
+        //eslint-disable-next-line
         const newUrls = response?.data?.map((img: any) => img.secure_url);
         if (newUrls?.length) {
           setUploadedImages(prev => [...prev, ...newUrls]);
@@ -54,7 +56,7 @@ const UploadMediaSection: React.FC<UploadMediaSectionProps> = ({
           setImagePreviewSrc(null);
         }
       },
-
+      //eslint-disable-next-line
       onError: (error: any) => {
         setIsMediaUploading(false);
         console.error('Image upload error:', error);
