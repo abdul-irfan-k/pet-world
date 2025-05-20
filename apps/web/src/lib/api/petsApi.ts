@@ -75,6 +75,21 @@ export const useGetMyPetsQuery = (
   });
 };
 
+const getAllPets = async (): Promise<PetsResponse> => {
+  const { data } = await apiClient.get('/pets');
+  return data;
+};
+
+export const useGetAllPetsQuery = (
+  options?: UseQueryOptions<PetsResponse, AxiosError, PetsResponse>,
+) => {
+  return useQuery<PetsResponse, AxiosError, PetsResponse>({
+    queryKey: ['pets'],
+    queryFn: getAllPets,
+    ...options,
+  });
+};
+
 const getPetById = async (id: string): Promise<PetResponse> => {
   const { data } = await apiClient.get(`/pets/${id}`);
   return data;

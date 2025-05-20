@@ -14,7 +14,8 @@ const PetResultGrid: FC<PetResultGridProps> = ({ pets }) => {
       {pets.map(pet => {
         //eslint-disable-next-line
         // @ts-ignore
-        const imageUrl = pet.images ?? pet.images[0];
+        const imageUrl =
+          typeof pet.images === 'string' ? pet.images : pet.images?.[0];
         //eslint-disable-next-line
         // @ts-ignore
         return <PetCard key={pet.id} image={imageUrl} {...pet} />;

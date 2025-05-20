@@ -6,10 +6,10 @@ type PetCardProps = {
   id: string;
   name: string;
   breed: string;
-  age: string;
+  age: number;
   gender: string;
-  location: string;
-  fee: number;
+  location?: string;
+  fee?: number;
   image: string;
   tag?: string; // e.g. "Bestseller", "Just In"
 };
@@ -20,8 +20,8 @@ const PetCard = ({
   breed,
   age,
   gender,
-  location,
-  fee,
+  location = 'Bangalore',
+  fee = 50,
   image,
   tag,
 }: PetCardProps) => {
