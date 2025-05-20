@@ -95,7 +95,10 @@ export class PetController implements IPetController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const result = await this._petService.listPets(req.query);
+      const result = await this._petService.listPets({
+        ...req.query,
+        userId: req.user?.id,
+      });
       res.status(HttpStatusCode.OK).json({
         status: 'success',
         data: result,

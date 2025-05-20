@@ -86,25 +86,39 @@ export class PetService implements IPetService {
     });
   }
 
-  public async listPets(query?: IGetPetsQueryDTO): Promise<{ pets: Pet[] }> {
+  public async listPets(data?: IGetPetsQueryDTO): Promise<{ pets: Pet[] }> {
     const whereClause: Prisma.PetWhereInput = {};
 
-    if (query?.species) {
-      whereClause.species = query.species;
+    if (data?.species) {
+      whereClause.species = data.species;
     }
-    if (query?.breed) {
-      whereClause.breed = query.breed;
+    if (data?.breed) {
+      whereClause.breed = data.breed;
     }
-    if (query?.ageRange) {
+    if (data?.ageRange) {
       whereClause.age = {
-        gte: query.ageRange[0],
-        lte: query.ageRange[1],
+        gte: data.ageRange[0],
+        lte: data.ageRange[1],
       };
     }
 
-    const pets = await prisma.pet.findMany({
+    let pets = await prisma.pet.findMany({
       where: whereClause,
     });
+
+    if (data?.userId) {
+      const favoritePets = await this.getFavoritePetsByUserId({
+        userId: data.userId,
+      });
+      const favoritedPetIds = new Set(favoritePets.pets.map(pet => pet.id));
+      pets = pets.map(pet => ({
+        ...pet,
+        isFavorited: favoritedPetIds.has(pet.id),
+      }));
+
+      return { pets: pets as Pet[] };
+    }
+
     return { pets: pets as Pet[] };
   }
 

@@ -14,6 +14,7 @@ export type IGetPetsQueryDTO = Partial<{
   species: string;
   breed: string;
   ageRange: [number, number];
+  userId: string;
 }>;
 
 export type IAddPetToFavoritesDTO = Pick<FavoritePet, 'petId' | 'userId'>;
