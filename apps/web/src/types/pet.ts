@@ -1,10 +1,20 @@
+export enum PetType {
+  DOG = 'dog',
+  CAT = 'cat',
+  RABBIT = 'rabbit',
+}
 export type Pet = {
-  id: string; // Add id here
+  id: string;
   name: string;
+  petBiometricId?: string | null;
+  species: string;
+  images: string[];
+  videos: string[];
+  age: number;
   breed: string;
-  age: string;
   gender: string;
-  location: string;
-  fee: number;
-  image: string;
+  profile?: Record<string, unknown> | null;
+  ownerId: string;
+  createdAt: Date;
+  updatedAt: Date;
 };

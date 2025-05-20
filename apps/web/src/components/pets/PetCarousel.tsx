@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pet } from '@/types/pet';
+
 import {
   Carousel,
   CarouselContent,
@@ -7,7 +7,10 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from '../ui/carousel';
+
 import { PetCard } from './PetCard';
+
+import { Pet } from '@/types/pet';
 
 interface PetCarouselProps {
   pets: Pet[];
@@ -22,7 +25,7 @@ const PetCarousel: React.FC<PetCarouselProps> = ({ pets }) => {
             key={pet.id}
             className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
           >
-            <PetCard {...pet} />
+            <PetCard {...pet} image={pet.images[0]} fee={150} />
           </CarouselItem>
         ))}
       </CarouselContent>

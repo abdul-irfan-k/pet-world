@@ -22,4 +22,5 @@ export interface IPetService {
   getPetById(data: IGetPetByIdDTO): Promise<{ pet: Pet | null }>;
   deletePet(data: IDeletePetDTO): Promise<void>;
   listPets(query?: IGetPetsQueryDTO): Promise<{ pets: Pet[] }>;
+  getMyPets(ownerId: string): Promise<{ pets: Pet[] }>;
 }

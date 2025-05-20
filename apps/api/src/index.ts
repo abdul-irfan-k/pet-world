@@ -1,8 +1,15 @@
+import * as fs from 'fs';
+import * as path from 'path';
+
 import { logger } from './config';
 import { ExpressServer } from './server';
 
 async function bootstrap() {
   try {
+    const tempDir = path.join(process.cwd(), 'uploads/temp');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
     new ExpressServer().start();
   } catch (error) {
     logger.error('Failed to start the application:', error);

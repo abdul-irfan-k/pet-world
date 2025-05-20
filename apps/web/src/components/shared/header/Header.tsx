@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { Search, ShoppingBag, User2 } from 'lucide-react';
 
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 
 import { useAuthStore } from '@/stores/authStore';
 

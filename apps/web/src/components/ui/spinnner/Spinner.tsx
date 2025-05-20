@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-const Spinner = () => {
+import { cn } from '@/lib/utils';
+
+interface SpinnerProps extends React.SVGProps<SVGSVGElement> {
+  className?: string;
+}
+const Spinner: FC<SpinnerProps> = ({ className }) => {
   return (
     <svg
       aria-hidden="true"
       role="status"
-      className="inline h-4 w-4 animate-spin text-white"
+      className={cn('inline h-4 w-4 animate-spin text-white', className)}
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

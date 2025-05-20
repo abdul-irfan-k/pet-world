@@ -1,18 +1,30 @@
+'use client';
+
 import { PetCard } from '@/components/pets';
 import { Footer, Header } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { Video } from '@/components/ui/video';
+import { useGetAllPetsQuery } from '@/lib/api/petsApi';
 import { dogs } from '@/lib/data/dummyDogs';
 
 export default function Home() {
+  const { data: petsData, isLoading } = useGetAllPetsQuery();
+
+  const pets = petsData?.data.pets;
+
   return (
     <div>
       <Header />
 
       <div className="grid grid-cols-1 gap-6 p-4 py-16 sm:grid-cols-2 lg:grid-cols-4">
-        {dogs.map(dog => (
-          <PetCard key={dog.id} {...dog} />
-        ))}
+        {isLoading &&
+          dogs.map(dog => (
+            <PetCard key={dog.id} image={dog.images[0]} {...dog} />
+          ))}
+        {!isLoading &&
+          pets?.map(pet => (
+            <PetCard key={pet.id} image={pet.images[0]} {...pet} />
+          ))}
       </div>
 
       <div className="container mx-auto py-16">

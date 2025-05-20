@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { TokenExpiredError } from 'jsonwebtoken';
 
 import { logger } from '@/config';
 import { HttpStatusCode } from '@/constants';
@@ -40,6 +41,15 @@ export const authMiddleware = async (
 
     next();
   } catch (error) {
+    if (error instanceof TokenExpiredError) {
+      logger.warn('Token has expired:', error.expiredAt);
+      return next(
+        new HttpError({
+          message: 'Access token has expired. Please log in again.',
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+        }),
+      );
+    }
     logger.error('Auth middleware error:', error);
     next(error);
   }

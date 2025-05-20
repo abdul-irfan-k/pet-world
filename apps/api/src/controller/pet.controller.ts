@@ -25,7 +25,7 @@ export class PetController implements IPetController {
       res.status(HttpStatusCode.CREATED).json({
         status: 'success',
         data: result,
-        message: ResponseMessages.CREATED, // Using generic CREATED message
+        message: ResponseMessages.CREATED,
       });
     } catch (error) {
       next(error);
@@ -47,7 +47,7 @@ export class PetController implements IPetController {
       res.status(HttpStatusCode.OK).json({
         status: 'success',
         data: result,
-        message: ResponseMessages.UPDATED, // Using generic UPDATED message
+        message: ResponseMessages.UPDATED,
       });
     } catch (error) {
       next(error);
@@ -65,7 +65,7 @@ export class PetController implements IPetController {
       res.status(HttpStatusCode.OK).json({
         status: 'success',
         data: result,
-        message: ResponseMessages.SUCCESS, // Using generic SUCCESS message for fetched
+        message: ResponseMessages.SUCCESS,
       });
     } catch (error) {
       next(error);
@@ -82,7 +82,7 @@ export class PetController implements IPetController {
       await this._petService.deletePet({ id, ownerId: req.user!.id });
       res.status(HttpStatusCode.OK).json({
         status: 'success',
-        message: ResponseMessages.DELETED, // Using generic DELETED message
+        message: ResponseMessages.DELETED,
       });
     } catch (error) {
       next(error);
@@ -99,7 +99,24 @@ export class PetController implements IPetController {
       res.status(HttpStatusCode.OK).json({
         status: 'success',
         data: result,
-        message: ResponseMessages.SUCCESS, // Using generic SUCCESS message for fetched list
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async getMyPets(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const result = await this._petService.getMyPets(req.user!.id);
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
       });
     } catch (error) {
       next(error);
