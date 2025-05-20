@@ -19,6 +19,7 @@ type ApiResponse<T> = {
 };
 
 type PetResponse = ApiResponse<{ pet: Pet }>;
+type PetsResponse = ApiResponse<{ pets: Pet[] }>;
 
 type PetMutationOptions<TVariables> = UseMutationOptions<
   PetResponse,
@@ -57,6 +58,21 @@ export const useUpdatePetMutation = (
       ...options,
     },
   );
+};
+
+const getMyPets = async (): Promise<PetsResponse> => {
+  const { data } = await apiClient.get('/pets/my-pets');
+  return data;
+};
+
+export const useGetMyPetsQuery = (
+  options?: UseQueryOptions<PetsResponse, AxiosError, PetsResponse>,
+) => {
+  return useQuery<PetsResponse, AxiosError, PetsResponse>({
+    queryKey: ['myPets'],
+    queryFn: getMyPets,
+    ...options,
+  });
 };
 
 const getPetById = async (id: string): Promise<PetResponse> => {

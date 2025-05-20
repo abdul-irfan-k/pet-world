@@ -22,11 +22,11 @@ const PetOwnerSidebar = () => {
         <div>
           <p className="mb-2 text-xs font-medium text-gray-500">Main Menu</p>
           <Link
-            href="#"
+            href="/pets/my-pets"
             className="flex items-center rounded-md px-3 py-2 text-gray-700 hover:bg-gray-100"
           >
             <LayoutDashboard className="mr-3 h-5 w-5" />
-            <span className="text-sm">Overview</span>
+            <span className="text-sm">My Pets</span>
           </Link>
           <Link
             href="#"

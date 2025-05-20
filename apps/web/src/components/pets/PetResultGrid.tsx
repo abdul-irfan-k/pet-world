@@ -1,6 +1,8 @@
-import { Pet } from '@/types/pet';
 import React, { FC } from 'react';
+
 import { PetCard } from './PetCard';
+
+import { Pet } from '@/types/pet';
 
 interface PetResultGridProps {
   pets: Pet[];
@@ -8,9 +10,14 @@ interface PetResultGridProps {
 
 const PetResultGrid: FC<PetResultGridProps> = ({ pets }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {pets.map(pet => {
-        return <PetCard key={pet.id} {...pet} />;
+        //eslint-disable-next-line
+        // @ts-ignore
+        const imageUrl = pet.images ?? pet.images[0];
+        //eslint-disable-next-line
+        // @ts-ignore
+        return <PetCard key={pet.id} image={imageUrl} {...pet} />;
       })}
     </div>
   );
