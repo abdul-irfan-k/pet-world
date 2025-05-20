@@ -1,14 +1,11 @@
 'use client';
+import { useParams } from 'next/navigation';
+
 import { UpdatePetForm } from '@/components/pets';
 
-interface EditPetPageProps {
-  params: {
-    petId: string;
-  };
-}
-
-export default function EditPetPage({ params }: EditPetPageProps) {
-  const { petId } = params;
+export default function EditPetPage() {
+  const params = useParams();
+  const petId = params.petId as string;
 
   return (
     <div className="w-full">

@@ -54,6 +54,7 @@ const UploadMediaSection: React.FC<UploadMediaSectionProps> = ({
           setImagePreviewSrc(null);
         }
       },
+
       onError: (error: any) => {
         setIsMediaUploading(false);
         console.error('Image upload error:', error);

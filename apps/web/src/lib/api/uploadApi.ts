@@ -31,6 +31,7 @@ const deletePetImage = async (imageId: string) => {
   const { data } = await apiClient.delete(`/upload/${imageId}`);
   return data;
 };
+
 export const useDeletePetImageMutation = (options?: any) => {
   return useMutation({
     mutationFn: deletePetImage,
@@ -49,6 +50,7 @@ export const uploadPetVideo = async (file: File) => {
   });
   return data;
 };
+
 export const useUploadPetVideoMutation = (options?: any) => {
   return useMutation({
     mutationFn: uploadPetVideo,
@@ -59,6 +61,7 @@ export const deletePetVideo = async (videoId: string) => {
   const { data } = await apiClient.delete(`/upload/video/${videoId}`);
   return data;
 };
+
 export const useDeletePetVideoMutation = (options?: any) => {
   return useMutation({
     mutationFn: deletePetVideo,

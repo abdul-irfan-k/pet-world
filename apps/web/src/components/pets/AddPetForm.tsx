@@ -49,6 +49,7 @@ const AddPetForm = () => {
         description: `Name: ${response.data.pet.name}, Species: ${response.data.pet.species}`,
       });
       reset();
+      router.push('/pets/my-pets');
     },
     onError: error => {
       toast.error(

@@ -9,7 +9,6 @@ import { PlusCircle } from 'lucide-react';
 import { PetResultGrid } from '@/components/pets';
 import { Button } from '@/components/ui/button';
 import { useGetMyPetsQuery } from '@/lib/api/petsApi';
-import { Pet } from '@/types/pet';
 
 export default function MyPetsPage() {
   const { data: petsResponse, isLoading, error } = useGetMyPetsQuery();
@@ -44,7 +43,7 @@ export default function MyPetsPage() {
         <PetResultGrid pets={pets} />
       ) : (
         <div className="text-center text-gray-500">
-          <p className="mb-4 text-lg">You haven't added any pets yet.</p>
+          <p className="mb-4 text-lg">{"You haven't added any pets yet."}</p>
           <Link href="/pets/add">
             <Button variant="outline" size="lg">
               Add Your First Pet

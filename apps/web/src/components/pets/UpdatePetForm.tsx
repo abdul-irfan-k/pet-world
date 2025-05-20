@@ -38,7 +38,6 @@ const UpdatePetForm: React.FC<UpdatePetFormProps> = ({ petId }) => {
     formState: { errors },
     setValue,
     watch,
-    reset,
   } = useForm<IAddPetInput>({
     resolver: zodResolver(addPetSchema),
     defaultValues: {
@@ -77,7 +76,7 @@ const UpdatePetForm: React.FC<UpdatePetFormProps> = ({ petId }) => {
       toast.success(response.message || 'Pet updated successfully!', {
         description: `Name: ${response.data.pet.name}, Species: ${response.data.pet.species}`,
       });
-      router.push(`/pets/${petId}`); // Redirect to pet details page
+      router.push('/pets/my-pets');
     },
     onError: error => {
       toast.error(
