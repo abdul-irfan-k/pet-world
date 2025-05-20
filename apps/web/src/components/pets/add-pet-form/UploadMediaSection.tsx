@@ -11,7 +11,6 @@ import { Spinner } from '@/components/ui/spinnner';
 import { useUploadPetImagesMutation } from '@/lib/api/uploadApi';
 
 interface UploadMediaSectionProps {
-  placeholderImages: string[];
   setIsMediaUploading: React.Dispatch<React.SetStateAction<boolean>>;
   setMedia: React.Dispatch<
     React.SetStateAction<{
@@ -19,11 +18,16 @@ interface UploadMediaSectionProps {
       videos: string[];
     }>
   >;
+  existingMedia?: {
+    images: string[];
+    videos: string[];
+  };
 }
 
 const UploadMediaSection: React.FC<UploadMediaSectionProps> = ({
   setIsMediaUploading,
   setMedia,
+  existingMedia,
 }) => {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -117,6 +121,30 @@ const UploadMediaSection: React.FC<UploadMediaSectionProps> = ({
           </div>
         </div>
         <div className="mb-4 grid grid-cols-3 gap-2">
+          {existingMedia &&
+            existingMedia.images.length > 0 &&
+            existingMedia.images.map((img, index) => (
+              <div
+                key={index}
+                className="group relative h-20 w-20 overflow-hidden rounded-md border border-gray-200"
+                onClick={() => handleImageClick(img)}
+              >
+                <Image
+                  src={img}
+                  alt={`Preview ${index}`}
+                  className="h-20 w-full object-cover"
+                  fill
+                />
+                <button
+                  className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-0.5 opacity-0 group-hover:opacity-100"
+                  onClick={e => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <X className="h-3 w-3 text-white" />
+                </button>
+              </div>
+            ))}
           {uploadedImages.length > 0 &&
             uploadedImages.map((img, index) => (
               <div

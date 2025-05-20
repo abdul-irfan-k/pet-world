@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -13,10 +13,14 @@ import { Button } from '@/components/ui/button';
 import { TextField } from '@/components/ui/form/inputs';
 import { Label } from '@/components/ui/form/inputs';
 import { Textarea } from '@/components/ui/textarea';
-import { useCreatePetMutation } from '@/lib/api/petsApi';
+import { useUpdatePetMutation, useGetPetByIdQuery } from '@/lib/api/petsApi';
 import { addPetSchema, IAddPetInput } from '@/lib/schemas/petSchema';
 
-const AddPetForm = () => {
+interface UpdatePetFormProps {
+  petId: string;
+}
+
+const UpdatePetForm: React.FC<UpdatePetFormProps> = ({ petId }) => {
   const router = useRouter();
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [media, setMedia] = useState<{ images: string[]; videos: string[] }>({
@@ -24,6 +28,9 @@ const AddPetForm = () => {
     videos: [],
   });
   const [isMediaUploading, setIsMediaUploading] = useState(false);
+
+  // Fetch the pet data
+  const { data: petData, isLoading: isPetLoading } = useGetPetByIdQuery(petId);
 
   const {
     register,
@@ -43,18 +50,41 @@ const AddPetForm = () => {
     },
   });
 
-  const { mutate: createPet, isPending: isCreatingPet } = useCreatePetMutation({
+  // Update form values when pet data is loaded
+  useEffect(() => {
+    if (petData?.data.pet) {
+      const pet = petData.data.pet;
+      setValue('name', pet.name);
+      setValue('species', pet.species);
+      setValue('breed', pet.breed);
+      setValue('age', pet.age);
+
+      // Set gender
+      setSelectedGender(pet.gender || 'Unknown');
+
+      // Set media
+      if (pet.images || pet.videos) {
+        setMedia({
+          images: pet.images || [],
+          videos: pet.videos || [],
+        });
+      }
+    }
+  }, [petData, setValue]);
+
+  const { mutate: updatePet, isPending: isUpdatingPet } = useUpdatePetMutation({
     onSuccess: response => {
-      toast.success(response.message || 'Pet added successfully!', {
+      toast.success(response.message || 'Pet updated successfully!', {
         description: `Name: ${response.data.pet.name}, Species: ${response.data.pet.species}`,
       });
-      reset();
+      router.push(`/pets/${petId}`); // Redirect to pet details page
     },
     onError: error => {
       toast.error(
         //eslint-disable-next-line
         //@ts-ignore
-        error.response?.data?.message || 'Failed to add pet. Please try again.',
+        error.response?.data?.message ||
+          'Failed to update pet. Please try again.',
       );
     },
   });
@@ -66,7 +96,8 @@ const AddPetForm = () => {
       toast.warning('Please wait until image and video is fully uploaded.');
       return;
     }
-    createPet({
+    updatePet({
+      id: petId,
       ...data,
       images: media.images,
       videos: media.videos,
@@ -74,28 +105,41 @@ const AddPetForm = () => {
     });
   };
 
+  if (isPetLoading) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        Loading pet details...
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 overflow-auto p-6">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center">
           <span className="mr-2 text-lg">🐾</span>
-          <h1 className="text-xl font-medium">Add New Pet</h1>
+          <h1 className="text-xl font-medium">Update Pet</h1>
         </div>
         <div className="flex items-center space-x-4">
-          <Button size={'lg'} variant="outline" rounded>
-            <span className="mr-2 text-gray-700">📄</span>
-            Save Draft
+          <Button
+            size={'lg'}
+            variant="outline"
+            rounded
+            onClick={() => router.push(`/pets/${petId}`)}
+          >
+            <span className="mr-2 text-gray-700">❌</span>
+            Cancel
           </Button>
           <Button
             size={'lg'}
             variant="black"
             rounded
-            className="bg-green-500 hover:bg-green-600"
+            className="bg-blue-500 hover:bg-blue-600"
             onClick={handleSubmit(onSubmit)}
-            isLoading={isCreatingPet}
+            isLoading={isUpdatingPet}
           >
             <span className="mr-2">✓</span>
-            Add Pet
+            Update Pet
           </Button>
         </div>
       </div>
@@ -121,6 +165,7 @@ const AddPetForm = () => {
                   label="Pet Biometric ID (Optional)"
                   placeholder="e.g., PETID-39421"
                   className="w-full"
+                  // defaultValue={petData?.data?.pet?.biometricId || ''}
                 />
               </div>
 
@@ -178,6 +223,7 @@ const AddPetForm = () => {
                   {['Male', 'Female', 'Unknown'].map(gender => (
                     <button
                       key={gender}
+                      type="button"
                       className={`flex items-center justify-center rounded-md px-6 py-3 ${
                         selectedGender === gender
                           ? 'border-2 border-green-500 bg-green-100'
@@ -210,6 +256,8 @@ const AddPetForm = () => {
                   placeholder="Buddy is a well-trained golden retriever, friendly with children and other pets. Needs a new home as I'll be relocating abroad."
                   rows={4}
                   className="w-full rounded-md border border-gray-200 bg-gray-50 p-3"
+                  // defaultValue={petData?.data?.pet?.description || ''}
+                  // {...register('description')}
                 />
               </div>
 
@@ -221,6 +269,8 @@ const AddPetForm = () => {
                   placeholder="e.g., Mangalore, Karnataka"
                   className="w-full"
                   type="text"
+                  // defaultValue={petData?.data?.pet?.location || ''}
+                  // {...register('location')}
                 />
               </div>
             </div>
@@ -230,6 +280,7 @@ const AddPetForm = () => {
             <UploadMediaSection
               setIsMediaUploading={setIsMediaUploading}
               setMedia={setMedia}
+              existingMedia={media}
             />
           </div>
         </div>
@@ -238,4 +289,4 @@ const AddPetForm = () => {
   );
 };
 
-export { AddPetForm };
+export { UpdatePetForm };

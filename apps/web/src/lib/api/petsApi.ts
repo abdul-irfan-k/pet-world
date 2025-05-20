@@ -66,9 +66,9 @@ const getPetById = async (id: string): Promise<PetResponse> => {
 
 export const useGetPetByIdQuery = (
   id: string,
-  options?: UseQueryOptions<PetResponse, AxiosError>,
+  options?: UseQueryOptions<PetResponse, AxiosError, PetResponse>,
 ) => {
-  return useQuery<PetResponse, AxiosError>({
+  return useQuery<PetResponse, AxiosError, PetResponse>({
     queryKey: ['pet', id],
     queryFn: () => getPetById(id),
     enabled: !!id,
