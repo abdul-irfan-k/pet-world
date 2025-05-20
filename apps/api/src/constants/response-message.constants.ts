@@ -34,4 +34,8 @@ export enum ResponseMessages {
   PASSWORD_INCORRECT = 'Incorrect password.',
   UNAUTHORIZED_PET_DELETION = 'Unauthorized to delete this pet.',
   UNAUTHORIZED_PET_UPDATE = 'Unauthorized to update this pet.',
+  PET_ALREADY_FAVORITED = 'Pet is already in favorites.',
+  PET_NOT_IN_FAVORITES = 'Pet is not in favorites.',
+  FAVORITE_PET_SUCCESS = 'Pet added to favorites successfully.',
+  UNFAVORITE_PET_SUCCESS = 'Pet removed from favorites successfully.',
 }

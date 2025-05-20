@@ -1,4 +1,4 @@
-import { Pet } from '@/types/Pet';
+import { Pet, FavoritePet } from '@/types/Pet';
 
 export type ICreatePetDTO = Omit<Pet, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -16,6 +16,14 @@ export type IGetPetsQueryDTO = Partial<{
   ageRange: [number, number];
 }>;
 
+export type IAddPetToFavoritesDTO = Pick<FavoritePet, 'petId' | 'userId'>;
+
+export type IRemovePetFromFavoritesDTO = Pick<FavoritePet, 'petId' | 'userId'>;
+
+export type IGetFavoritePetsByUserIdDTO = Pick<FavoritePet, 'userId'>;
+
+export type IIsPetFavoritedByUserDTO = Pick<FavoritePet, 'userId' | 'petId'>;
+
 export interface IPetService {
   createPet(data: ICreatePetDTO): Promise<{ pet: Pet }>;
   updatePet(data: IUpdatePetDTO): Promise<{ pet: Pet }>;
@@ -23,4 +31,12 @@ export interface IPetService {
   deletePet(data: IDeletePetDTO): Promise<void>;
   listPets(query?: IGetPetsQueryDTO): Promise<{ pets: Pet[] }>;
   getMyPets(ownerId: string): Promise<{ pets: Pet[] }>;
+  addPetToFavorites(data: IAddPetToFavoritesDTO): Promise<{ pet: FavoritePet }>;
+  removePetFromFavorites(data: IRemovePetFromFavoritesDTO): Promise<void>;
+  getFavoritePetsByUserId(
+    data: IGetFavoritePetsByUserIdDTO,
+  ): Promise<{ pets: Pet[] }>;
+  isPetFavoritedByUser(
+    data: IIsPetFavoritedByUserDTO,
+  ): Promise<{ isFavorited: { status: boolean } }>;
 }

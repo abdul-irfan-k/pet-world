@@ -3,6 +3,7 @@ export enum PetType {
   CAT = 'cat',
   RABBIT = 'rabbit',
 }
+
 export type Pet = {
   id: string;
   name: string;
@@ -52,4 +53,11 @@ export type PetAdoption = {
   isAlreadyAdopted: boolean;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type FavoritePet = {
+  id: string;
+  userId: string;
+  petId: string;
+  createdAt: Date;
 };

@@ -32,6 +32,7 @@ model User {
   campaigns           Pet_Campaigns[]
   petAdoptionRequests Pet_Adoption_Request[]
   otp                 Otp[]
+  FavoritePet         FavoritePet[]
 }
 
 model Pet {
@@ -52,6 +53,19 @@ model Pet {
   owner            User                   @relation(fields: [ownerId], references: [id])
   adoptionRequests Pet_Adoption_Request[]
   adoptions        Pet_Adoption[]
+  FavoritePet      FavoritePet[]
+}
+
+model FavoritePet {
+  id        String   @id @default(cuid())
+  userId    String
+  petId     String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  pet  Pet  @relation(fields: [petId], references: [id])
+
+  @@unique([userId, petId])
 }
 
 model Location {

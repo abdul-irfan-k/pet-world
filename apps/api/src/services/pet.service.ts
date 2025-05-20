@@ -5,13 +5,17 @@ import {
   IGetPetsQueryDTO,
   IPetService,
   IUpdatePetDTO,
+  IAddPetToFavoritesDTO,
+  IRemovePetFromFavoritesDTO,
+  IGetFavoritePetsByUserIdDTO,
+  IIsPetFavoritedByUserDTO,
 } from './interfaces/IPetService';
 
 import type { Prisma } from '../../generated/prisma';
 
 import { prisma } from '@/config';
 import { HttpStatusCode, ResponseMessages } from '@/constants';
-import { Pet } from '@/types/Pet';
+import { Pet, FavoritePet } from '@/types/Pet';
 import { HttpError } from '@/utils';
 
 export class PetService implements IPetService {
@@ -109,5 +113,91 @@ export class PetService implements IPetService {
       where: { ownerId },
     });
     return { pets: pets as Pet[] };
+  }
+
+  public async addPetToFavorites(
+    data: IAddPetToFavoritesDTO,
+  ): Promise<{ pet: FavoritePet }> {
+    const { userId, petId } = data;
+    const existingFavorite = await prisma.favoritePet.findUnique({
+      where: {
+        userId_petId: {
+          userId,
+          petId,
+        },
+      },
+    });
+
+    if (existingFavorite) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.CONFLICT,
+        message: ResponseMessages.PET_ALREADY_FAVORITED,
+      });
+    }
+
+    const favoritePet = await prisma.favoritePet.create({
+      data: {
+        userId,
+        petId,
+      },
+    });
+    return { pet: favoritePet as FavoritePet };
+  }
+
+  public async removePetFromFavorites(
+    data: IRemovePetFromFavoritesDTO,
+  ): Promise<void> {
+    const { userId, petId } = data;
+    const existingFavorite = await prisma.favoritePet.findUnique({
+      where: {
+        userId_petId: {
+          userId,
+          petId,
+        },
+      },
+    });
+
+    if (!existingFavorite) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.PET_NOT_IN_FAVORITES,
+      });
+    }
+
+    await prisma.favoritePet.delete({
+      where: {
+        userId_petId: {
+          userId,
+          petId,
+        },
+      },
+    });
+  }
+
+  public async getFavoritePetsByUserId(
+    data: IGetFavoritePetsByUserIdDTO,
+  ): Promise<{ pets: Pet[] }> {
+    const { userId } = data;
+    const favoritePets = await prisma.favoritePet.findMany({
+      where: { userId },
+      include: { pet: true },
+    });
+    const pets = favoritePets.map(fav => fav.pet);
+    return { pets: pets as Pet[] };
+  }
+
+  public async isPetFavoritedByUser(
+    data: IIsPetFavoritedByUserDTO,
+  ): Promise<{ isFavorited: { status: boolean } }> {
+    const { userId, petId } = data;
+    const favoritePet = await prisma.favoritePet.findUnique({
+      where: {
+        userId_petId: {
+          userId,
+          petId,
+        },
+      },
+    });
+    return { isFavorited: { status: !!favoritePet } };
   }
 }
