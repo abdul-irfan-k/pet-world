@@ -6,4 +6,5 @@ export interface IPetController {
   getPetById(req: Request, res: Response, next: NextFunction): Promise<void>;
   deletePet(req: Request, res: Response, next: NextFunction): Promise<void>;
   listPets(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getMyPets(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

@@ -103,4 +103,11 @@ export class PetService implements IPetService {
     });
     return { pets: pets as Pet[] };
   }
+
+  public async getMyPets(ownerId: string): Promise<{ pets: Pet[] }> {
+    const pets = await prisma.pet.findMany({
+      where: { ownerId },
+    });
+    return { pets: pets as Pet[] };
+  }
 }
