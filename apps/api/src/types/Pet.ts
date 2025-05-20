@@ -1,3 +1,8 @@
+import { PetCareProposal } from 'generated/prisma';
+
+import { PetCare } from './PetCare';
+import { User } from './User';
+
 export enum PetType {
   DOG = 'dog',
   CAT = 'cat',
@@ -20,6 +25,13 @@ export type Pet = {
   updatedAt: Date;
 };
 
+export type FavoritePet = {
+  id: string;
+  userId: string;
+  petId: string;
+  createdAt: Date;
+};
+
 export type PetAdopter = {
   id: string;
   userId: string;
@@ -30,34 +42,7 @@ export type PetAdopter = {
   overview?: Record<string, unknown> | null;
   createdAt: Date;
   updatedAt: Date;
-};
-
-export type PetAdoptionRequest = {
-  id: string;
-  userId: string;
-  petId: string;
-  locationId: string;
-  status: string;
-  imageUrls: string[];
-  videoUrls: string[];
-  address?: Record<string, unknown> | null;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type PetAdoption = {
-  id: string;
-  petId: string;
-  adopterId: string;
-  adoptionDate?: Date | null;
-  isAlreadyAdopted: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type FavoritePet = {
-  id: string;
-  userId: string;
-  petId: string;
-  createdAt: Date;
+  user: User;
+  proposals: PetCareProposal[];
+  petCare: PetCare[];
 };
