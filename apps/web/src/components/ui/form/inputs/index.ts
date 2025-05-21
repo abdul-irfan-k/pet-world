@@ -5,3 +5,4 @@ export { EmailInput } from './EmailInput';
 export { Label } from './Label';
 export { PasswordField } from './PasswordField';
 export { PasswordInput } from './PasswordInput';
+export { TextAreaField } from './TextAreaField';
