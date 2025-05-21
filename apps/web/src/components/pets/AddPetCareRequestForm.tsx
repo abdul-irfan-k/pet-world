@@ -21,7 +21,9 @@ import { Pet } from '@/types/pet';
 
 const AddPetCareRequestForm = () => {
   const router = useRouter();
+  //eslint-disable-next-line
   const [selectedPet, setSelectedPet] = useState<null | Pet>(null);
+  //eslint-disable-next-line
   const [selectedLocation, setSelectedLocation] = useState<null | {
     id: string;
     name: string;
@@ -56,7 +58,7 @@ const AddPetCareRequestForm = () => {
         reset();
         router.push('/pet-care/my-requests');
       },
-      onError: error => {
+      onError: () => {
         toast.error('Failed to create pet care request. Please try again.');
       },
     });
@@ -365,7 +367,7 @@ const AddPetCareRequestForm = () => {
                 <li className="flex items-start">
                   <span className="mr-2">✅</span>
                   <span>
-                    Be clear about your pet's needs and care requirements
+                    {"Be clear about your pet's needs and care requirements"}
                   </span>
                 </li>
                 <li className="flex items-start">
