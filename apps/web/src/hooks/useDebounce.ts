@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 
 type Timer = ReturnType<typeof setTimeout>;
 
+//eslint-disable-next-line
 type SomeFunction = (...args: any[]) => void;
 
 export function useDebounce<Func extends SomeFunction>(
@@ -19,6 +20,7 @@ export function useDebounce<Func extends SomeFunction>(
     };
   }, []);
 
+  //eslint-disable-next-line
   const debouncedFunction = ((...args) => {
     const newTimer = setTimeout(() => {
       func(...args);

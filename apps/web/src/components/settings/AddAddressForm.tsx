@@ -67,6 +67,7 @@ const AddAddressForm: FC<AddAddressFormProps> = ({ onClose }) => {
       ? City.getCitiesOfState(selectedCountry, selectedState)
       : [];
 
+  //eslint-disable-next-line
   const onSubmit = (data: any) => {
     console.log({
       ...data,
