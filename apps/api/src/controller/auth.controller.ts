@@ -2,6 +2,7 @@ import type { IAuthController } from './interfaces/IAuthController';
 import type { IAuthService } from '@/services/interfaces/IAuthService';
 import type { Request, Response, NextFunction } from 'express';
 
+import { NODE_ENV } from '@/config';
 import { HttpStatusCode, ResponseMessages } from '@/constants';
 import { AuthService } from '@/services';
 import { HttpError } from '@/utils';
@@ -51,15 +52,16 @@ export class AuthController implements IAuthController {
 
       const result = await this._authService.signin({ email, password });
 
+      const isProduction = NODE_ENV === 'production';
       res.cookie('accessToken', result.accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: isProduction,
         sameSite: 'strict',
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: isProduction,
         sameSite: 'strict',
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });

@@ -6,7 +6,7 @@ import express, { Application } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import { logger, PORT, CORS_ORIGIN } from './config';
+import { logger, PORT, CORS_ORIGINS } from './config';
 import { AuthRoutes, PetCareRoutes, PetRoutes, UploadRoutes } from './routes';
 import { FavoriteRoutes } from './routes/favorites.routes';
 
@@ -26,9 +26,10 @@ export class ExpressServer {
   }
 
   private configureMiddlewares(): void {
+    const allowedOrigins = CORS_ORIGINS.split(',').map(origin => origin.trim());
     this.app.use(
       cors({
-        origin: CORS_ORIGIN,
+        origin: allowedOrigins,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         credentials: true,
       }),
