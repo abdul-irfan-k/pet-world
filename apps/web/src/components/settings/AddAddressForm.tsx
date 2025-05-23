@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useMemo } from 'react';
 
 import {
   Country,
@@ -10,7 +10,7 @@ import {
   ICountry,
 } from 'country-state-city';
 import { X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 import { Button, ButtonIcon } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
@@ -26,19 +26,11 @@ import {
   SelectValue,
 } from '../ui/select';
 
-const STATES = ['Karnataka', 'Maharashtra', 'Tamil Nadu'];
-const COUNTRIES = ['India', 'USA', 'UK'];
-
 interface AddAddressFormProps {
   onClose: () => void;
 }
 
 const AddAddressForm: FC<AddAddressFormProps> = ({ onClose }) => {
-  const [states, setStates] = useState<IState[]>([]);
-  const [cities, setCities] = useState<ICity[]>([]);
-  const [selectedCountryValue, setSelectedCountryValue] = useState('IN');
-  const [selectedStateValue, setSelectedStateValue] = useState('');
-  const [selectedCityValue, setSelectedCityValue] = useState('');
   const [isDefaultAddress, setIsDefaultAddress] = useState(false);
 
   const {
@@ -46,6 +38,8 @@ const AddAddressForm: FC<AddAddressFormProps> = ({ onClose }) => {
     handleSubmit,
     setValue,
     formState: { errors },
+    control,
+    watch,
   } = useForm({
     defaultValues: {
       name: '',
@@ -60,48 +54,22 @@ const AddAddressForm: FC<AddAddressFormProps> = ({ onClose }) => {
     },
   });
 
-  useEffect(() => {
-    if (selectedCountryValue) {
-      const result = State.getStatesOfCountry(selectedCountryValue);
-      setStates(result);
-      setSelectedStateValue('');
-      setSelectedCityValue('');
-      setValue('country', selectedCountryValue);
-      setValue('state', '');
-      setValue('city', '');
-    } else {
-      setStates([]);
-      setSelectedStateValue('');
-      setSelectedCityValue('');
-      setValue('country', '');
-      setValue('state', '');
-      setValue('city', '');
-    }
-  }, [selectedCountryValue, setValue]);
+  const countries = useMemo(() => Country.getAllCountries(), []);
+  const selectedCountry = watch('country');
+  const selectedState = watch('state');
 
-  useEffect(() => {
-    if (selectedCountryValue && selectedStateValue) {
-      const result = City.getCitiesOfState(
-        selectedCountryValue,
-        selectedStateValue,
-      );
-      setCities(result);
-      setSelectedCityValue('');
-      setValue('state', selectedStateValue);
-      setValue('city', '');
-    } else {
-      setCities([]);
-      setSelectedCityValue('');
-      setValue('city', '');
-    }
-  }, [selectedCountryValue, selectedStateValue, setValue]);
+  const states = useMemo(() => {
+    return selectedCountry ? State.getStatesOfCountry(selectedCountry) : [];
+  }, [selectedCountry]);
+
+  const cities: ICity[] =
+    selectedCountry && selectedState
+      ? City.getCitiesOfState(selectedCountry, selectedState)
+      : [];
 
   const onSubmit = (data: any) => {
     console.log({
       ...data,
-      country: selectedCountryValue,
-      state: selectedStateValue,
-      city: selectedCityValue,
       isDefault: isDefaultAddress,
     });
     onClose();
@@ -162,28 +130,40 @@ const AddAddressForm: FC<AddAddressFormProps> = ({ onClose }) => {
 
             <div className="w-full">
               <Label htmlFor="country">Country*</Label>
-              <Select
-                onValueChange={value => {
-                  setSelectedCountryValue(value);
-                  setValue('country', value);
-                }}
-                defaultValue={selectedCountryValue}
-                value={selectedCountryValue}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Country*" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Country</SelectLabel>
-                    {Country.getAllCountries().map((country: ICountry) => (
-                      <SelectItem key={country.isoCode} value={country.isoCode}>
-                        {country.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+
+              <Controller
+                name="country"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    defaultValue={selectedCountry}
+                    value={field.value}
+                    onValueChange={value => {
+                      field.onChange(value);
+                      setValue('state', '');
+                      setValue('city', '');
+                    }}
+                    name="country"
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Country*" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[400px]">
+                      <SelectGroup>
+                        <SelectLabel>Country</SelectLabel>
+                        {countries.map((country: ICountry) => (
+                          <SelectItem
+                            key={country.isoCode}
+                            value={country.isoCode}
+                          >
+                            {country.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               {errors.country && (
                 <p className="mt-1 text-xs text-red-500">
                   {errors.country.message}
@@ -192,28 +172,34 @@ const AddAddressForm: FC<AddAddressFormProps> = ({ onClose }) => {
             </div>
             <div className="w-full">
               <Label htmlFor="state">State*</Label>
-              <Select
-                onValueChange={value => {
-                  setSelectedStateValue(value);
-                  setValue('state', value);
-                }}
-                value={selectedStateValue}
-                disabled={!selectedCountryValue || states.length === 0}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="State*" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>State</SelectLabel>
-                    {states.map((state: IState) => (
-                      <SelectItem key={state.isoCode} value={state.isoCode}>
-                        {state.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <Controller
+                name="state"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={value => {
+                      field.onChange(value);
+                      setValue('city', '');
+                    }}
+                    disabled={!selectedCountry || states.length === 0}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="State*" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[400px]">
+                      <SelectGroup>
+                        <SelectLabel>State</SelectLabel>
+                        {states.map((state: IState) => (
+                          <SelectItem key={state.isoCode} value={state.isoCode}>
+                            {state.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               {errors.state && (
                 <p className="mt-1 text-xs text-red-500">
                   {errors.state.message}
@@ -222,28 +208,31 @@ const AddAddressForm: FC<AddAddressFormProps> = ({ onClose }) => {
             </div>
             <div className="w-full">
               <Label htmlFor="city">City*</Label>
-              <Select
-                onValueChange={value => {
-                  setSelectedCityValue(value);
-                  setValue('city', value);
-                }}
-                value={selectedCityValue}
-                disabled={!selectedStateValue || cities.length === 0}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="City*" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>City</SelectLabel>
-                    {cities.map((city: ICity) => (
-                      <SelectItem key={city.name} value={city.name}>
-                        {city.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <Controller
+                name="city"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    disabled={!selectedState || cities.length === 0}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="City*" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[400px]">
+                      <SelectGroup>
+                        <SelectLabel>City</SelectLabel>
+                        {cities.map((city: ICity) => (
+                          <SelectItem key={city.name} value={city.name}>
+                            {city.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               {errors.city && (
                 <p className="mt-1 text-xs text-red-500">
                   {errors.city.message}
