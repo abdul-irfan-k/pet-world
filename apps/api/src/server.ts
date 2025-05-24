@@ -27,9 +27,12 @@ export class ExpressServer {
 
   private configureMiddlewares(): void {
     const allowedOrigins = CORS_ORIGINS.split(',').map(origin => origin.trim());
+    const vercelPreviewRegex =
+      /^https:\/\/[a-zA-Z0-9-]+\.vercel\.app(?:\/.*)?$/;
+
     this.app.use(
       cors({
-        origin: allowedOrigins,
+        origin: [...allowedOrigins, vercelPreviewRegex],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         credentials: true,
       }),
