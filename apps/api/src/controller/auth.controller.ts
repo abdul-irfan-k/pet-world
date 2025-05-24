@@ -58,12 +58,14 @@ export class AuthController implements IAuthController {
         secure: isProduction,
         sameSite: isProduction ? 'none' : 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000,
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
         secure: isProduction,
         sameSite: isProduction ? 'none' : 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       res.status(HttpStatusCode.OK).json({
