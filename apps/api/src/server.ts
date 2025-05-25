@@ -55,7 +55,7 @@ export class ExpressServer {
     this.app.use('/api/v1/favorites/', new FavoriteRoutes().getRoutes());
     this.app.use('/api/v1/upload/', new UploadRoutes().getRoutes());
     this.app.use('/api/v1/pet‑care/', new PetCareRoutes().getRoutes());
-    this.app.use('/api/v1/user/', new UserRoutes().getRoutes());
+    this.app.use('/api/v1/users/', new UserRoutes().getRoutes());
   }
 
   private configureErrorHandlers(): void {
