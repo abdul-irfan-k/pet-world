@@ -7,8 +7,8 @@ export type Location = {
   state: string;
   city: string;
   postcode: string;
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
   isDefault: boolean;
   createdAt: Date;
   updatedAt: Date;

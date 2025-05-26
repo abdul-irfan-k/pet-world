@@ -8,8 +8,8 @@ export const addAddressSchema = z.object({
   state: z.string().trim().min(1, 'State cannot be empty'),
   city: z.string().trim().min(1, 'City cannot be empty'),
   postcode: z.string().trim().min(1, 'Postcode cannot be empty'),
-  latitude: z.string(),
-  longitude: z.string(),
+  latitude: z.number({ invalid_type_error: 'Latitude must be a number' }),
+  longitude: z.number({ invalid_type_error: 'Longitude must be a number' }),
   isDefault: z.boolean().optional().default(false),
 });
 export type IAddAddressInput = z.infer<typeof addAddressSchema>;
@@ -22,8 +22,8 @@ export const updateAddressSchema = z.object({
   state: z.string().trim().min(1, 'State cannot be empty').optional(),
   city: z.string().trim().min(1, 'City cannot be empty').optional(),
   postcode: z.string().trim().min(1, 'Postcode cannot be empty').optional(),
-  latitude: z.string().optional(),
-  longitude: z.string().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
   isDefault: z.boolean().optional(),
 });
 

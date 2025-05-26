@@ -1,6 +1,7 @@
 'use client';
 import React, { FC, useState, useMemo } from 'react';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import {
   Country,
@@ -32,6 +33,7 @@ import {
   SelectValue,
 } from '../ui/select';
 
+import { IAddAddressInput, addAddressSchema } from '@/lib/schemas';
 import { Location } from '@/types/Location';
 
 interface AddressFormProps {
@@ -58,7 +60,7 @@ const AddressForm: FC<AddressFormProps> = ({
     formState: { errors },
     control,
     watch,
-  } = useForm<Location>({
+  } = useForm({
     defaultValues: {
       name: initialData?.name || '',
       street: initialData?.street || '',
@@ -68,9 +70,12 @@ const AddressForm: FC<AddressFormProps> = ({
       city: initialData?.city || '',
       postcode: initialData?.postcode || '',
       isDefault: initialData?.isDefault || false,
-      latitude: initialData?.latitude || '',
-      longitude: initialData?.longitude || '',
+      latitude: initialData?.latitude ?? 0,
+      longitude: initialData?.longitude ?? 0,
     },
+    //eslint-disable-next-line
+    //@ts-ignore
+    resolver: zodResolver(addAddressSchema),
   });
 
   const createMutation = useCreateAddressMutation({
@@ -119,22 +124,20 @@ const AddressForm: FC<AddressFormProps> = ({
       : [];
   }, [selectedCountry, selectedState]);
 
-  const handleFormSubmit = (data: Location) => {
-    const formData: Location = {
+  const handleFormSubmit = (data: IAddAddressInput) => {
+    const submissionData = {
       ...data,
       isDefault: isDefaultAddress,
-      latitude: watch('latitude'),
-      longitude: watch('longitude'),
     };
 
-    if (mode === 'create') createMutation.mutate(formData);
-    else if (initialData?.id && mode === 'edit')
+    if (mode === 'create') {
+      createMutation.mutate(submissionData);
+    } else if (initialData?.id && mode === 'edit') {
       updateMutation.mutate({
-        ...formData,
+        ...submissionData,
         id: initialData.id,
-        latitude: watch('latitude'),
-        longitude: watch('longitude'),
       });
+    }
   };
 
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
@@ -297,8 +300,18 @@ const AddressForm: FC<AddressFormProps> = ({
                       const selectedCity = cities.find(
                         city => city.name === value,
                       );
-                      setValue('longitude', selectedCity?.longitude || '');
-                      setValue('latitude', selectedCity?.latitude || '');
+                      setValue(
+                        'longitude',
+                        //eslint-disable-next-line
+                        //@ts-ignore
+                        parseFloat(selectedCity?.longitude || 0),
+                      );
+                      setValue(
+                        'latitude',
+                        //eslint-disable-next-line
+                        //@ts-ignore
+                        parseFloat(selectedCity?.latitude || 0),
+                      );
                     }}
                     disabled={
                       !selectedState || cities.length === 0 || isSubmitting
