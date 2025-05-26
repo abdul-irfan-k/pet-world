@@ -2,6 +2,7 @@ import type { IAuthController } from './interfaces/IAuthController';
 import type { IAuthService } from '@/services/interfaces/IAuthService';
 import type { Request, Response, NextFunction } from 'express';
 
+import { NODE_ENV } from '@/config';
 import { HttpStatusCode, ResponseMessages } from '@/constants';
 import { AuthService } from '@/services';
 import { HttpError } from '@/utils';
@@ -51,17 +52,20 @@ export class AuthController implements IAuthController {
 
       const result = await this._authService.signin({ email, password });
 
+      const isProduction = NODE_ENV === 'production';
       res.cookie('accessToken', result.accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000,
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       res.status(HttpStatusCode.OK).json({
@@ -95,10 +99,27 @@ export class AuthController implements IAuthController {
 
       const result = await this._authService.refreshToken({ refreshToken });
 
+      const isProduction = NODE_ENV === 'production';
+      res.cookie('accessToken', result.accessToken, {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
+      res.cookie('refreshToken', result.refreshToken, {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
+
       res.status(HttpStatusCode.OK).json({
         status: 'success',
         data: {
           accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
         },
         message: ResponseMessages.SUCCESS,
       });

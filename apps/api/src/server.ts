@@ -6,8 +6,15 @@ import express, { Application } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import { logger, PORT, CORS_ORIGIN } from './config';
-import { AuthRoutes, PetRoutes, UploadRoutes } from './routes';
+import { logger, PORT, CORS_ORIGINS } from './config';
+import {
+  AuthRoutes,
+  PetCareRoutes,
+  PetRoutes,
+  UploadRoutes,
+  UserRoutes,
+} from './routes';
+import { FavoriteRoutes } from './routes/favorites.routes';
 
 import { globalErrorHandler } from '@/middleware';
 
@@ -25,9 +32,13 @@ export class ExpressServer {
   }
 
   private configureMiddlewares(): void {
+    const allowedOrigins = CORS_ORIGINS.split(',').map(origin => origin.trim());
+    const vercelPreviewRegex =
+      /^https:\/\/[a-zA-Z0-9-]+\.vercel\.app(?:\/.*)?$/;
+
     this.app.use(
       cors({
-        origin: CORS_ORIGIN,
+        origin: [...allowedOrigins, vercelPreviewRegex],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         credentials: true,
       }),
@@ -41,7 +52,10 @@ export class ExpressServer {
   private configureRoutes(): void {
     this.app.use('/api/v1/auth/', new AuthRoutes().getRoutes());
     this.app.use('/api/v1/pets/', new PetRoutes().getRoutes());
+    this.app.use('/api/v1/favorites/', new FavoriteRoutes().getRoutes());
     this.app.use('/api/v1/upload/', new UploadRoutes().getRoutes());
+    this.app.use('/api/v1/pet‑care/', new PetCareRoutes().getRoutes());
+    this.app.use('/api/v1/users/', new UserRoutes().getRoutes());
   }
 
   private configureErrorHandlers(): void {

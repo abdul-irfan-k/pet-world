@@ -1,7 +1,7 @@
 export enum PaymentStatus {
-  pending = 'pending',
-  completed = 'completed',
-  rejected = 'rejected',
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+  REJECTED = 'rejected',
 }
 
 export type PetCampaigns = {

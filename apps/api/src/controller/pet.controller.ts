@@ -95,7 +95,10 @@ export class PetController implements IPetController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const result = await this._petService.listPets(req.query);
+      const result = await this._petService.listPets({
+        ...req.query,
+        userId: req.user?.id,
+      });
       res.status(HttpStatusCode.OK).json({
         status: 'success',
         data: result,
@@ -113,6 +116,86 @@ export class PetController implements IPetController {
   ): Promise<void> {
     try {
       const result = await this._petService.getMyPets(req.user!.id);
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async addPetToFavorites(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { petId } = req.body;
+      const userId = req.user!.id;
+      const result = await this._petService.addPetToFavorites({
+        userId,
+        petId,
+      });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.FAVORITE_PET_SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async removePetFromFavorites(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { petId } = req.params;
+      const userId = req.user!.id;
+      await this._petService.removePetFromFavorites({ userId, petId });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        message: ResponseMessages.UNFAVORITE_PET_SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async getFavoritePetsByUserId(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const userId = req.user!.id;
+      const result = await this._petService.getFavoritePetsByUserId({ userId });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async isPetFavoritedByUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { petId } = req.params;
+      const userId = req.user!.id;
+      const result = await this._petService.isPetFavoritedByUser({
+        userId,
+        petId,
+      });
       res.status(HttpStatusCode.OK).json({
         status: 'success',
         data: result,

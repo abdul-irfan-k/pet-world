@@ -5,16 +5,7 @@ const AUTH_COOKIE_NAME = 'accessToken';
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get(AUTH_COOKIE_NAME);
-  const publicPaths = new Set([
-    '/',
-    '/home',
-    '/sign-in',
-    '/sign-up',
-    '/explore',
-    '/stories',
-    '/about-us',
-    '/help',
-  ]);
+  const publicPaths = new Set(['/', '/sign-in', '/sign-up']);
   const isPublicPath = publicPaths.has(request.nextUrl.pathname);
   if (isPublicPath) return NextResponse.next();
 
@@ -33,16 +24,12 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/',
-    '/home',
     '/sign-in',
     '/sign-up',
-    '/explore',
-    '/stories',
-    '/add-pet',
     '/my-pets',
-    '/about-us',
-    '/help',
     '/email-verification/:path*',
     '/settings/:path*',
+    '/pets/add',
+    '/pets/:petId/edit',
   ],
 };

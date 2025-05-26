@@ -1,2 +1,2 @@
 export { SettingsSidebar } from './SettingsSidebar';
-export { AddAddressForm } from './AddAddressForm';
+export { AddressForm } from './AddressForm';

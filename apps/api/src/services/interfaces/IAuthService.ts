@@ -16,7 +16,7 @@ export interface ISignInDTO {
 export interface ISignInResponseDTO {
   accessToken: string;
   refreshToken: string;
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'isVerified' | 'isDisabled'>;
 }
 
 export interface IRefreshTokenDTO {
@@ -44,7 +44,7 @@ export interface IVerifyForgotPasswordResponseDTO {
 }
 
 export interface ISignUpResponseDTO {
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'isVerified' | 'isDisabled'>;
 }
 
 export interface ILogoutDTO {
@@ -56,7 +56,7 @@ export interface IGetUserDetailsDTO {
 }
 
 export interface IGetUserDetailsResponseDTO {
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'isVerified' | 'isDisabled'>;
 }
 
 export interface IAuthService {

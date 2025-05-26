@@ -32,7 +32,7 @@ export class AuthRoutes {
     );
     router.post(
       '/refresh-token',
-      schemaValidator(refreshTokenSchema),
+      // schemaValidator(refreshTokenSchema),
       this._authController.refreshToken.bind(this._authController),
     );
     router.post(

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -18,6 +18,7 @@ const queryClient = new QueryClient({
           });
         }
       },
+
       //eslint-disable-next-line
       onError(error: any, _variables, context: any) {
         if (context.meta.notify) {
@@ -38,7 +39,9 @@ const AppProviders = ({
 }>) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthInitializer />
+      <Suspense>
+        <AuthInitializer />
+      </Suspense>
 
       {children}
     </QueryClientProvider>

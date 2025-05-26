@@ -45,7 +45,7 @@ export const authMiddleware = async (
       logger.warn('Token has expired:', error.expiredAt);
       return next(
         new HttpError({
-          message: 'Access token has expired. Please log in again.',
+          message: 'ACCESS_TOKEN_EXPIRED',
           statusCode: HttpStatusCode.UNAUTHORIZED,
         }),
       );

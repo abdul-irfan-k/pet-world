@@ -15,7 +15,7 @@ const WishlistGrid: React.FC<WishlistGridProps> = ({ pets }) => {
       {pets.map(pet => (
         //eslint-disable-next-line
         //@ts-ignore
-        <PetCard key={pet.id} {...pet} />
+        <PetCard key={pet.id} {...pet} image={pet.images[0]} />
       ))}
     </div>
   );

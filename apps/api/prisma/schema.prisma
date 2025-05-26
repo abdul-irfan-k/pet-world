@@ -24,14 +24,15 @@ model User {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
-  pets                Pet[]
-  locations           Location[]
-  petAdopter          Pet_Adopter?
-  sentPayments        Payment[]              @relation("SentPayments")
-  receivedPayments    Payment[]              @relation("ReceivedPayments")
-  campaigns           Pet_Campaigns[]
-  petAdoptionRequests Pet_Adoption_Request[]
-  otp                 Otp[]
+  pets             Pet[]
+  locations        Location[]
+  petAdopter       Pet_Adopter?
+  sentPayments     Payment[]        @relation("SentPayments")
+  receivedPayments Payment[]        @relation("ReceivedPayments")
+  campaigns        Pet_Campaigns[]
+  petCareRequest   PetCareRequest[]
+  otp              Otp[]
+  FavoritePet      FavoritePet[]
 }
 
 model Pet {
@@ -49,23 +50,42 @@ model Pet {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now())
 
-  owner            User                   @relation(fields: [ownerId], references: [id])
-  adoptionRequests Pet_Adoption_Request[]
-  adoptions        Pet_Adoption[]
+  owner            User             @relation(fields: [ownerId], references: [id])
+  adoptionRequests PetCareRequest[]
+  petCare          PetCare[]
+  FavoritePet      FavoritePet[]
+}
+
+model FavoritePet {
+  id        String   @id @default(cuid())
+  userId    String
+  petId     String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  pet  Pet  @relation(fields: [petId], references: [id])
+
+  @@unique([userId, petId])
 }
 
 model Location {
   id        String   @id @default(cuid())
+  name      String
+  street    String
+  apt       String?
   country   String
+  state     String
   city      String
+  postcode  String
   latitude  Float
   longitude Float
+  isDefault Boolean  @default(false)
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  user             User                   @relation(fields: [userId], references: [id])
-  adoptionRequests Pet_Adoption_Request[]
+  user           User             @relation(fields: [userId], references: [id])
+  petCareRequest PetCareRequest[]
 }
 
 model Pet_Adopter {
@@ -79,39 +99,9 @@ model Pet_Adopter {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @default(now())
 
-  user      User           @relation(fields: [userId], references: [id])
-  adoptions Pet_Adoption[]
-}
-
-model Pet_Adoption_Request {
-  id         String   @id @default(cuid())
-  userId     String
-  petId      String
-  locationId String
-  status     String   @default("pending")
-  imageUrls  String[]
-  videoUrls  String[]
-  address    Json?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
-
-  user     User     @relation(fields: [userId], references: [id])
-  pet      Pet      @relation(fields: [petId], references: [id])
-  location Location @relation(fields: [locationId], references: [id])
-}
-
-model Pet_Adoption {
-  id               String    @id @default(cuid())
-  petId            String    @unique
-  adopterId        String
-  adoptionDate     DateTime?
-  isAlreadyAdopted Boolean   @default(false)
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @default(now())
-
-  pet     Pet         @relation(fields: [petId], references: [id])
-  adopter Pet_Adopter @relation(fields: [adopterId], references: [id])
-  payment Payment?
+  user      User              @relation(fields: [userId], references: [id])
+  proposals PetCareProposal[]
+  petCare   PetCare[] // Added relation
 }
 
 model Pet_Campaigns {
@@ -162,9 +152,9 @@ model Payment {
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @default(now())
 
-  user     User          @relation("SentPayments", fields: [userId], references: [id])
-  receiver User          @relation("ReceivedPayments", fields: [receiverId], references: [id])
-  adoption Pet_Adoption? @relation(fields: [adoptionId], references: [id])
+  user     User     @relation("SentPayments", fields: [userId], references: [id])
+  receiver User     @relation("ReceivedPayments", fields: [receiverId], references: [id])
+  petCare  PetCare? @relation(fields: [adoptionId], references: [id])
 }
 
 enum OtpAction {
@@ -184,4 +174,59 @@ model Otp {
   updatedAt DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id])
+}
+
+model PetCare {
+  id               String        @id @default(cuid())
+  petId            String
+  adopterId        String
+  petCareRequestId String
+  startedAt        DateTime
+  endedAt          DateTime
+  isCompleted      Boolean       @default(false)
+  paymentStatus    PaymentStatus @default(pending)
+  review           String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @default(now())
+
+  pet            Pet            @relation(fields: [petId], references: [id])
+  adopter        Pet_Adopter    @relation(fields: [adopterId], references: [id])
+  petCareRequest PetCareRequest @relation(fields: [petCareRequestId], references: [id])
+  Payment        Payment?
+}
+
+model PetCareRequest {
+  id          String   @id @default(cuid())
+  ownerId     String
+  petId       String
+  locationId  String
+  title       String
+  amount      String
+  description String
+  status      String   @default("pending")
+  startDate   DateTime
+  endDate     DateTime
+  questions   Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  user      User              @relation(fields: [ownerId], references: [id])
+  pet       Pet               @relation(fields: [petId], references: [id])
+  location  Location          @relation(fields: [locationId], references: [id])
+  proposals PetCareProposal[]
+  petCare   PetCare[] // Added relation
+}
+
+model PetCareProposal {
+  id               String   @id @default(cuid())
+  petCareRequestId String
+  adopterId        String
+  message          String
+  proposedFee      Float
+  status           String   @default("pending")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now())
+
+  petCareRequest PetCareRequest @relation(fields: [petCareRequestId], references: [id])
+  adopter        Pet_Adopter    @relation(fields: [adopterId], references: [id])
 }

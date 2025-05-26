@@ -1,3 +1,5 @@
+import { TokenExpiredError } from 'jsonwebtoken';
+
 import type {
   IAuthService,
   ISignInDTO,
@@ -26,6 +28,7 @@ import {
   generateOTP,
   getPasswordChangeTemplate,
   sendEmail,
+  verifyRefreshToken,
 } from '@/utils';
 
 export class AuthService implements IAuthService {
@@ -116,22 +119,50 @@ export class AuthService implements IAuthService {
   public async refreshToken(
     args: IRefreshTokenDTO,
   ): Promise<IRefreshTokenResponseDTO> {
-    //eslint-disable-next-line
-    //@ts-ignore
-    const { refreshToken, email, id } = args;
-    const newAccessToken = generateAccessToken({
-      email,
-      id,
-    });
-    const newRefreshToken = generateRefreshToken({
-      email,
-      id,
-    });
+    try {
+      //eslint-disable-next-line
+      //@ts-ignore
+      const { refreshToken } = args;
 
-    return {
-      accessToken: newAccessToken,
-      refreshToken: newRefreshToken,
-    };
+      const payload = await verifyRefreshToken(refreshToken);
+      if (!payload) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: 'INVALID_REFRESH_TOKEN',
+        });
+      }
+
+      const { email, id } = payload;
+      const newAccessToken = generateAccessToken({
+        email,
+        id,
+      });
+      const newRefreshToken = generateRefreshToken({
+        email,
+        id,
+      });
+
+      return {
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      };
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: 'REFRESH_TOKEN_EXPIRED',
+        });
+      }
+
+      if (error instanceof HttpError) {
+        throw error;
+      }
+
+      throw new HttpError({
+        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        message: ResponseMessages.INTERNAL_SERVER_ERROR,
+      });
+    }
   }
 
   public async forgotPassword(args: IForgotPasswordDTO): Promise<void> {

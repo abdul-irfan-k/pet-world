@@ -120,3 +120,73 @@ export const useDeletePetMutation = (
     ...options,
   });
 };
+
+const addPetToFavorites = async (petId: string): Promise<ApiResponse<null>> => {
+  const { data } = await apiClient.post('/favorites', { petId });
+  return data;
+};
+
+export const useAddPetToFavoritesMutation = (
+  options?: UseMutationOptions<ApiResponse<null>, AxiosError, string>,
+) => {
+  return useMutation<ApiResponse<null>, AxiosError, string>({
+    mutationFn: addPetToFavorites,
+    ...options,
+  });
+};
+
+const removePetFromFavorites = async (
+  petId: string,
+): Promise<ApiResponse<null>> => {
+  const { data } = await apiClient.delete(`/favorites/${petId}`);
+  return data;
+};
+
+export const useRemovePetFromFavoritesMutation = (
+  options?: UseMutationOptions<ApiResponse<null>, AxiosError, string>,
+) => {
+  return useMutation<ApiResponse<null>, AxiosError, string>({
+    mutationFn: removePetFromFavorites,
+    ...options,
+  });
+};
+
+const getFavoritePetsByUserId = async (): Promise<PetsResponse> => {
+  const { data } = await apiClient.get('/favorites');
+  return data;
+};
+
+export const useGetFavoritePetsQuery = (
+  options?: UseQueryOptions<PetsResponse, AxiosError, PetsResponse>,
+) => {
+  return useQuery<PetsResponse, AxiosError, PetsResponse>({
+    queryKey: ['favoritePets'],
+    queryFn: getFavoritePetsByUserId,
+    ...options,
+  });
+};
+
+type IsPetFavoritedResponse = ApiResponse<{ isFavorited: { status: boolean } }>;
+
+const isPetFavoritedByUser = async (
+  petId: string,
+): Promise<IsPetFavoritedResponse> => {
+  const { data } = await apiClient.get(`/favorites/${petId}/status`);
+  return data;
+};
+
+export const useIsPetFavoritedByUserQuery = (
+  petId: string,
+  options?: UseQueryOptions<
+    IsPetFavoritedResponse,
+    AxiosError,
+    IsPetFavoritedResponse
+  >,
+) => {
+  return useQuery<IsPetFavoritedResponse, AxiosError, IsPetFavoritedResponse>({
+    queryKey: ['isPetFavorited', petId],
+    queryFn: () => isPetFavoritedByUser(petId),
+    enabled: !!petId,
+    ...options,
+  });
+};
