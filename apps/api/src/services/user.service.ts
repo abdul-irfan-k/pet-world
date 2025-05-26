@@ -14,8 +14,20 @@ export class UserService implements IUserService {
   public async addAddress(
     data: ICreateAddressDTO,
   ): Promise<{ location: Location }> {
+    const { userId, ...addressData } = data;
+
+    if (addressData.isDefault) {
+      await prisma.location.updateMany({
+        where: { userId, isDefault: true },
+        data: { isDefault: false },
+      });
+    }
+
     const location = await prisma.location.create({
-      data,
+      data: {
+        ...addressData,
+        userId,
+      },
     });
     return { location };
   }
@@ -26,6 +38,9 @@ export class UserService implements IUserService {
     const { userId } = data;
     const locations = await prisma.location.findMany({
       where: { userId },
+      orderBy: {
+        isDefault: 'desc',
+      },
     });
     return { locations };
   }
@@ -50,6 +65,13 @@ export class UserService implements IUserService {
 
     if (!existingLocation) {
       return { location: null };
+    }
+
+    if (updateData.isDefault === true) {
+      await prisma.location.updateMany({
+        where: { userId, isDefault: true, NOT: { id: addressId } }, // Exclude the current address
+        data: { isDefault: false },
+      });
     }
 
     const updatedLocation = await prisma.location.update({

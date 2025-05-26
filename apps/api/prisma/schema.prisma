@@ -70,10 +70,16 @@ model FavoritePet {
 
 model Location {
   id        String   @id @default(cuid())
+  name      String
+  street    String
+  apt       String?
   country   String
+  state     String
   city      String
+  postcode  String
   latitude  Float
   longitude Float
+  isDefault Boolean  @default(false)
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
