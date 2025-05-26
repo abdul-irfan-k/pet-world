@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -9,7 +9,6 @@ import { AuthInitializer } from '@/components/shared';
 const queryClient = new QueryClient({
   defaultOptions: {
     mutations: {
-      //eslint-disable-next-line
       onSuccess(data: any, _variables, context: any) {
         if (context.meta.notify) {
           toast.success(data.message, {
@@ -18,7 +17,7 @@ const queryClient = new QueryClient({
           });
         }
       },
-      //eslint-disable-next-line
+
       onError(error: any, _variables, context: any) {
         if (context.meta.notify) {
           toast.error(error.response?.data?.message || 'An error occurred', {
@@ -38,7 +37,9 @@ const AppProviders = ({
 }>) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthInitializer />
+      <Suspense>
+        <AuthInitializer />
+      </Suspense>
 
       {children}
     </QueryClientProvider>
