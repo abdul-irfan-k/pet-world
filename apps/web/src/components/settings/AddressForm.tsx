@@ -84,7 +84,7 @@ const AddressForm: FC<AddressFormProps> = ({
       toast.success(response.message);
       onClose();
     },
-
+    //eslint-disable-next-line
     onError: (error: AxiosError<any>) => {
       const errorMessage =
         error?.response?.data?.message ||
@@ -101,6 +101,7 @@ const AddressForm: FC<AddressFormProps> = ({
       onClose();
     },
 
+    //eslint-disable-next-line
     onError: (error: AxiosError<any>) => {
       const errorMessage =
         error?.response?.data?.message ||

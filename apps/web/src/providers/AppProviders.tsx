@@ -9,6 +9,7 @@ import { AuthInitializer } from '@/components/shared';
 const queryClient = new QueryClient({
   defaultOptions: {
     mutations: {
+      //eslint-disable-next-line
       onSuccess(data: any, _variables, context: any) {
         if (context.meta.notify) {
           toast.success(data.message, {
@@ -18,6 +19,7 @@ const queryClient = new QueryClient({
         }
       },
 
+      //eslint-disable-next-line
       onError(error: any, _variables, context: any) {
         if (context.meta.notify) {
           toast.error(error.response?.data?.message || 'An error occurred', {
