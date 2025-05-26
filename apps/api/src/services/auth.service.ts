@@ -122,15 +122,17 @@ export class AuthService implements IAuthService {
     try {
       //eslint-disable-next-line
       //@ts-ignore
-      const { refreshToken, email, id } = args;
+      const { refreshToken } = args;
 
-      const isValidToken = await verifyRefreshToken(refreshToken);
-      if (!isValidToken) {
+      const payload = await verifyRefreshToken(refreshToken);
+      if (!payload) {
         throw new HttpError({
           statusCode: HttpStatusCode.UNAUTHORIZED,
           message: 'INVALID_REFRESH_TOKEN',
         });
       }
+
+      const { email, id } = payload;
       const newAccessToken = generateAccessToken({
         email,
         id,
