@@ -9,23 +9,33 @@ export const apiClient = axios.create({
 apiClient.interceptors.response.use(
   response => response,
   async error => {
+    console.log('error response', error);
+    const originalRequest = error.config;
+
     if (
-      error.response.statusCode === 401 &&
-      error.response.data.message === 'ACCESS_TOKEN_EXPIRED'
+      originalRequest &&
+      error.response &&
+      error.response.data &&
+      error.response.data.code === 401 &&
+      error.response.data.message === 'ACCESS_TOKEN_EXPIRED' &&
+      !originalRequest._retry
     ) {
+      originalRequest._retry = true;
+
       try {
-        const originalRequest = error.config;
         await axios.post(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh-token`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}auth/refresh-token`,
           {},
           {
             withCredentials: true,
           },
         );
         return apiClient(originalRequest);
-      } catch (error) {
-        return Promise.reject(error);
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
       }
     }
+
+    return Promise.reject(error);
   },
 );
