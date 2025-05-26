@@ -68,6 +68,8 @@ const AddressForm: FC<AddressFormProps> = ({
       city: initialData?.city || '',
       postcode: initialData?.postcode || '',
       isDefault: initialData?.isDefault || false,
+      latitude: initialData?.latitude || '',
+      longitude: initialData?.longitude || '',
     },
   });
 
@@ -119,6 +121,8 @@ const AddressForm: FC<AddressFormProps> = ({
     const formData: Location = {
       ...data,
       isDefault: isDefaultAddress,
+      latitude: watch('latitude'),
+      longitude: watch('longitude'),
     };
 
     if (mode === 'create') createMutation.mutate(formData);
@@ -126,6 +130,8 @@ const AddressForm: FC<AddressFormProps> = ({
       updateMutation.mutate({
         ...formData,
         id: initialData.id,
+        latitude: watch('latitude'),
+        longitude: watch('longitude'),
       });
   };
 
@@ -284,7 +290,14 @@ const AddressForm: FC<AddressFormProps> = ({
                 render={({ field }) => (
                   <Select
                     value={field.value}
-                    onValueChange={field.onChange}
+                    onValueChange={value => {
+                      field.onChange(value);
+                      const selectedCity = cities.find(
+                        city => city.name === value,
+                      );
+                      setValue('longitude', selectedCity?.longitude || '');
+                      setValue('latitude', selectedCity?.latitude || '');
+                    }}
                     disabled={
                       !selectedState || cities.length === 0 || isSubmitting
                     }
