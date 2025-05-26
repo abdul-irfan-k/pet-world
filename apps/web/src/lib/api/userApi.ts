@@ -17,8 +17,8 @@ type ApiResponse<T> = {
   status: string;
 };
 
-type AddressResponse = ApiResponse<{ address: Location }>;
-type AddressesResponse = ApiResponse<{ addresses: Location[] }>;
+type AddressResponse = ApiResponse<{ location: Location }>;
+type AddressesResponse = ApiResponse<{ locations: Location[] }>;
 
 type AddressMutationOptions<TData, TVariables> = UseMutationOptions<
   TData,
