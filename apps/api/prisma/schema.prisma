@@ -230,3 +230,12 @@ model PetCareProposal {
   petCareRequest PetCareRequest @relation(fields: [petCareRequestId], references: [id])
   adopter        Pet_Adopter    @relation(fields: [adopterId], references: [id])
 }
+
+model Admin {
+  id       String @id @default(cuid())
+  email    String @unique
+  password String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
