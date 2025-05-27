@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const AUTH_COOKIE_NAME = 'accessToken';
+// const AUTH_COOKIE_NAME = 'accessToken';
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get(AUTH_COOKIE_NAME);
+  const token = request.cookies.get('accessToken');
+
+  console.log('Middleware accessToken:', token?.value);
+
   const publicPaths = new Set(['/', '/sign-in', '/sign-up']);
   const isPublicPath = publicPaths.has(request.nextUrl.pathname);
   if (isPublicPath) return NextResponse.next();

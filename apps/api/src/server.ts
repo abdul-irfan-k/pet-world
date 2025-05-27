@@ -8,6 +8,7 @@ import morgan from 'morgan';
 
 import { logger, PORT, CORS_ORIGINS } from './config';
 import {
+  AdminRoutes,
   AuthRoutes,
   PetCareRoutes,
   PetRoutes,
@@ -56,6 +57,9 @@ export class ExpressServer {
     this.app.use('/api/v1/upload/', new UploadRoutes().getRoutes());
     this.app.use('/api/v1/pet‑care/', new PetCareRoutes().getRoutes());
     this.app.use('/api/v1/users/', new UserRoutes().getRoutes());
+
+    // Admin Routes
+    this.app.use('/api/v1/admin/', new AdminRoutes().getRoutes());
   }
 
   private configureErrorHandlers(): void {

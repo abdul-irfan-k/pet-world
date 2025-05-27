@@ -38,6 +38,11 @@ const SignInForm = () => {
         duration: 3000,
       });
 
+      //eslint-disable-next-line
+      //@ts-ignore
+      const token = data.accessToken;
+      document.cookie = `accessToken=${token}; path=/; Secure; SameSite=None`;
+
       const callbackUrl = searchParams.get('callbackUrl') || '/';
       router.push(callbackUrl);
     },

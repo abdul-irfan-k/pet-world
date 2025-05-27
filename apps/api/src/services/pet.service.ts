@@ -65,7 +65,9 @@ export class PetService implements IPetService {
   }
 
   public async deletePet(data: IDeletePetDTO): Promise<void> {
-    const existingPet = await prisma.pet.findUnique({ where: { id: data.id } });
+    const existingPet = await prisma.pet.findUnique({
+      where: { id: data.id, isDeleted: false },
+    });
 
     if (!existingPet) {
       throw new HttpError({
@@ -81,13 +83,14 @@ export class PetService implements IPetService {
       });
     }
 
-    await prisma.pet.delete({
+    await prisma.pet.update({
       where: { id: data.id },
+      data: { isDeleted: true },
     });
   }
 
   public async listPets(data?: IGetPetsQueryDTO): Promise<{ pets: Pet[] }> {
-    const whereClause: Prisma.PetWhereInput = {};
+    const whereClause: Prisma.PetWhereInput = { isDeleted: false };
 
     if (data?.species) {
       whereClause.species = data.species;
@@ -124,7 +127,7 @@ export class PetService implements IPetService {
 
   public async getMyPets(ownerId: string): Promise<{ pets: Pet[] }> {
     const pets = await prisma.pet.findMany({
-      where: { ownerId },
+      where: { ownerId, isDeleted: false },
     });
     return { pets: pets as Pet[] };
   }
@@ -139,6 +142,7 @@ export class PetService implements IPetService {
           userId,
           petId,
         },
+        isDeleted: false,
       },
     });
 
@@ -168,6 +172,7 @@ export class PetService implements IPetService {
           userId,
           petId,
         },
+        isDeleted: false,
       },
     });
 
@@ -178,13 +183,14 @@ export class PetService implements IPetService {
       });
     }
 
-    await prisma.favoritePet.delete({
+    await prisma.favoritePet.update({
       where: {
         userId_petId: {
           userId,
           petId,
         },
       },
+      data: { isDeleted: true },
     });
   }
 
@@ -193,11 +199,11 @@ export class PetService implements IPetService {
   ): Promise<{ pets: Pet[] }> {
     const { userId } = data;
     const favoritePets = await prisma.favoritePet.findMany({
-      where: { userId },
+      where: { userId, isDeleted: false },
       include: { pet: true },
     });
-    const pets = favoritePets.map(fav => fav.pet);
-    return { pets: pets as Pet[] };
+    const pets = favoritePets.map(fav => fav.pet) as Pet[];
+    return { pets };
   }
 
   public async isPetFavoritedByUser(
@@ -210,6 +216,7 @@ export class PetService implements IPetService {
           userId,
           petId,
         },
+        isDeleted: false,
       },
     });
     return { isFavorited: { status: !!favoritePet } };

@@ -3,3 +3,4 @@ export { Footer } from './Footer';
 export { Header } from './header/Header';
 export { PetOwnerHeader } from './header/PetOwnerHeader';
 export { PetOwnerSidebar } from './sidebar/PetOwnerSidebar';
+export { AdminDashboardSidebar } from './sidebar/AdminDashboardSidebar';

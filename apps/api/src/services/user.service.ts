@@ -37,7 +37,7 @@ export class UserService implements IUserService {
   ): Promise<{ locations: Location[] }> {
     const { userId } = data;
     const locations = await prisma.location.findMany({
-      where: { userId },
+      where: { userId, isDeleted: false },
       orderBy: {
         isDefault: 'desc',
       },
@@ -50,7 +50,7 @@ export class UserService implements IUserService {
   ): Promise<{ location: Location | null }> {
     const { userId, id: addressId } = data;
     const location = await prisma.location.findUnique({
-      where: { id: addressId, userId },
+      where: { id: addressId, userId, isDeleted: false },
     });
     return { location };
   }
@@ -69,7 +69,7 @@ export class UserService implements IUserService {
 
     if (updateData.isDefault === true) {
       await prisma.location.updateMany({
-        where: { userId, isDefault: true, NOT: { id: addressId } }, // Exclude the current address
+        where: { userId, isDefault: true, NOT: { id: addressId } },
         data: { isDefault: false },
       });
     }
@@ -86,15 +86,16 @@ export class UserService implements IUserService {
   ): Promise<{ location: Location | null }> {
     const { userId, id: addressId } = data;
     const existingLocation = await prisma.location.findUnique({
-      where: { id: addressId, userId },
+      where: { id: addressId, userId, isDeleted: false },
     });
 
     if (!existingLocation) {
       return { location: null };
     }
 
-    const deletedLocation = await prisma.location.delete({
+    const deletedLocation = await prisma.location.update({
       where: { id: addressId },
+      data: { isDeleted: true },
     });
     return { location: deletedLocation };
   }

@@ -20,7 +20,7 @@ const envSchema = z.object({
   GMAIL_APP_PASSWORD: z.string().min(1),
 });
 
-const env = envSchema.parse(process.env);
+export const env = envSchema.parse(process.env);
 
 export const {
   NODE_ENV,
