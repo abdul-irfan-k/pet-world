@@ -14,7 +14,7 @@ export class PetCareRoutes {
     const router = Router();
 
     router.post(
-      '/requests/',
+      '/requests',
       authMiddleware,
       this._petCareController.createPetCareRequest.bind(
         this._petCareController,
@@ -22,7 +22,7 @@ export class PetCareRoutes {
     );
 
     router.get(
-      '/requests/',
+      '/requests',
       this._petCareController.listPetCareRequests.bind(this._petCareController),
     );
 
@@ -50,7 +50,7 @@ export class PetCareRoutes {
     );
 
     router.post(
-      '/proposals/',
+      '/proposals',
       authMiddleware,
       this._petCareController.createPetCareProposal.bind(
         this._petCareController,
@@ -58,7 +58,7 @@ export class PetCareRoutes {
     );
 
     router.get(
-      '/proposals/',
+      '/proposals',
       authMiddleware,
       this._petCareController.listPetCareProposalsByAdopterId.bind(
         this._petCareController,
