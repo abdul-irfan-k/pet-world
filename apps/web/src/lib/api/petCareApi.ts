@@ -22,7 +22,7 @@ type PetCareMutations<TVariables> = UseMutationOptions<
 const createPetCareRequest = async (
   petData: object,
 ): Promise<PetCareResponse> => {
-  const { data } = await apiClient.post('/pet‑care/requests', petData);
+  const { data } = await apiClient.post('pet-care/requests', petData);
   return data;
 };
 

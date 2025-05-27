@@ -47,7 +47,7 @@ const AddPetCareRequestForm = () => {
       title: '',
       amount: 5000,
       description: '',
-      questions: [],
+      questions: {},
     },
   });
 
@@ -87,6 +87,8 @@ const AddPetCareRequestForm = () => {
       endDate: dateRange.to,
     });
   };
+
+  console.log('errors', errors);
 
   return (
     <div className="flex-1 overflow-auto p-6">
@@ -164,8 +166,9 @@ const AddPetCareRequestForm = () => {
                 <TextField
                   label="Budget Amount*"
                   placeholder="e.g., $50 per day"
+                  type="number"
                   className="w-full"
-                  {...register('amount')}
+                  {...register('amount', { valueAsNumber: true })}
                   error={errors.amount?.message}
                 />
               </div>
@@ -203,7 +206,7 @@ const AddPetCareRequestForm = () => {
                     //eslint-disable-next-line
                     //@ts-ignore
                     questions[0] = e.target.value;
-                    setValue('questions', questions);
+                    // setValue('questions', questions);
                   }}
                 />
               </div>
@@ -323,19 +326,6 @@ const AddPetCareRequestForm = () => {
                   <span className="text-sm text-gray-500">Amount</span>
                   <span className="font-medium">{watch('amount') || '-'}</span>
                 </div>
-              </div>
-
-              <div className="mt-6">
-                <Button
-                  size={'lg'}
-                  variant="black"
-                  rounded
-                  className="w-full bg-green-500 hover:bg-green-600"
-                  onClick={handleSubmit(onSubmit)}
-                  isLoading={isCreatingPetCareRequest}
-                >
-                  Create Request
-                </Button>
               </div>
             </div>
 
