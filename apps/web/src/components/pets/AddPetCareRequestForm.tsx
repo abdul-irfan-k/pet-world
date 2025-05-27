@@ -8,6 +8,9 @@ import { Calendar } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { LocationSelector } from './pet-care-request/LocationSelector';
+import { PetSelector } from './pet-care-request/PetSelector';
+
 import { Button } from '@/components/ui/button';
 import { DatePickerWithRange } from '@/components/ui/date-picker';
 import { TextAreaField, TextField } from '@/components/ui/form/inputs';
@@ -17,18 +20,15 @@ import {
   addPetCareRequestSchema,
   IAddPetCareRequestInput,
 } from '@/lib/schemas/petCareSchema';
+import { Location } from '@/types/Location';
 import { Pet } from '@/types/pet';
 
 const AddPetCareRequestForm = () => {
   const router = useRouter();
-  //eslint-disable-next-line
   const [selectedPet, setSelectedPet] = useState<null | Pet>(null);
-  //eslint-disable-next-line
-  const [selectedLocation, setSelectedLocation] = useState<null | {
-    id: string;
-    name: string;
-    address: string;
-  }>(null);
+  const [selectedLocation, setSelectedLocation] = useState<null | Location>(
+    null,
+  );
   const [dateRange, setDateRange] = useState({
     from: new Date(),
     to: new Date(new Date().setDate(new Date().getDate() + 7)), // Default 1 week
@@ -53,8 +53,8 @@ const AddPetCareRequestForm = () => {
 
   const { mutate: createPetCareRequest, isPending: isCreatingPetCareRequest } =
     useCreatePetCareRequestMutation({
-      onSuccess: response => {
-        toast.success(response.message);
+      onSuccess: _response => {
+        toast.success('Pet care request created successfully!');
         reset();
         router.push('/pet-care/my-requests');
       },
@@ -134,30 +134,14 @@ const AddPetCareRequestForm = () => {
                 <Label className="mb-1 block text-sm font-medium text-gray-700">
                   Select Pet*
                 </Label>
-                <div className="mb-2 text-sm text-gray-500">
-                  Choose which pet needs care
-                </div>
-                {/* <PetSelector onPetSelected={setSelectedPet} /> */}
-                {!selectedPet && (
-                  <p className="mt-1 text-xs text-red-500">
-                    Please select a pet
-                  </p>
-                )}
+                <PetSelector onPetSelected={setSelectedPet} />
               </div>
 
               <div className="mb-4">
                 <Label className="mb-1 block text-sm font-medium text-gray-700">
                   Location*
                 </Label>
-                <div className="mb-2 text-sm text-gray-500">
-                  Where will the pet care take place?
-                </div>
-                {/* <LocationSelector onLocationSelected={setSelectedLocation} /> */}
-                {!selectedLocation && (
-                  <p className="mt-1 text-xs text-red-500">
-                    Please select a location
-                  </p>
-                )}
+                <LocationSelector onLocationSelected={setSelectedLocation} />
               </div>
 
               <div className="mb-4">
@@ -289,11 +273,7 @@ const AddPetCareRequestForm = () => {
                       ? `${dateRange.from.toLocaleDateString()} - ${dateRange.to.toLocaleDateString()}`
                       : 'Select dates'}
                   </p>
-                  <p className="mt-1">
-                    {/* {dateRange.from && dateRange.to
-                      ? `${Math.ceil((dateRange.to - dateRange.from) / (1000 * 60 * 60 * 24))} days`
-                      : ''} */}
-                  </p>
+                  <p className="mt-1"></p>
                 </div>
               </div>
 
@@ -323,7 +303,7 @@ const AddPetCareRequestForm = () => {
                   <div className="rounded-lg bg-gray-50 p-3">
                     <p className="text-sm">{selectedLocation.name}</p>
                     <p className="text-xs text-gray-500">
-                      {selectedLocation.address}
+                      {selectedLocation.street}
                     </p>
                   </div>
                 ) : (
