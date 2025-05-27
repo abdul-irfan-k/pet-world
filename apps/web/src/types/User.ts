@@ -7,6 +7,7 @@ export interface User {
   address?: Record<string, unknown> | null;
   gender?: string | null;
   password: string;
+  profileImage?: string; // Added profileImage
   createdAt: Date;
   updatedAt: Date;
 }

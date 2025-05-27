@@ -1,9 +1,8 @@
+'use client';
 import React from 'react';
 
 import {
   ChevronDown,
-  Edit,
-  Trash2,
   Search,
   Plus,
   Upload,
@@ -15,6 +14,8 @@ import {
   ChevronsRight,
 } from 'lucide-react';
 
+import { columns } from '@/components/admin/pets/PetColumn';
+import PetTable from '@/components/admin/pets/PetTable';
 import { Button } from '@/components/ui/button';
 import { Pet } from '@/types/pet';
 
@@ -137,102 +138,7 @@ const AdminPetsManagementPage = () => {
       </div>
 
       <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                className="w-12 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                <input
-                  type="checkbox"
-                  className="text-brand-600 focus:ring-brand-500 h-4 w-4 rounded border-gray-300"
-                />
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                Name
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                Species
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                Breed
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                Age
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                Gender
-              </th>
-
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {pets.map(pet => (
-              <tr key={pet.id}>
-                <td className="whitespace-nowrap px-6 py-4">
-                  <input
-                    type="checkbox"
-                    className="text-brand-600 focus:ring-brand-500 h-4 w-4 rounded border-gray-300"
-                  />
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
-                  {pet.name}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                  {pet.species}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                  {pet.breed}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                  {pet.age}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                  {pet.gender}
-                </td>
-
-                <td className="space-x-2 whitespace-nowrap px-6 py-4 text-sm font-medium">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-brand-600 hover:text-brand-700"
-                  >
-                    <Edit className="mr-1 h-4 w-4" /> Edit
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    <Trash2 className="mr-1 h-4 w-4" /> Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <PetTable columns={columns} data={pets} />
       </div>
 
       <div className="mt-6 flex items-center justify-between">
@@ -251,7 +157,7 @@ const AdminPetsManagementPage = () => {
             variant="ghost"
             size="icon"
             className="text-gray-500 hover:bg-gray-100 disabled:opacity-50"
-            disabled={pets.length <= 10} // Example disabled logic
+            disabled={pets.length <= 10}
           >
             <ChevronsLeft className="h-4 w-4" />
           </Button>
@@ -259,15 +165,13 @@ const AdminPetsManagementPage = () => {
             variant="ghost"
             size="icon"
             className="text-gray-500 hover:bg-gray-100 disabled:opacity-50"
-            disabled={pets.length <= 10} // Example disabled logic
+            disabled={pets.length <= 10}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          {/* Pagination numbers can be dynamically generated based on total pets and rows per page */}
           <Button variant="secondary" size="sm" className="px-3 py-1.5 text-sm">
             1
           </Button>
-          {/* Add more page numbers if needed */}
           <Button
             variant="ghost"
             size="icon"
