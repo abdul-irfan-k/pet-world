@@ -14,11 +14,7 @@ import type {
   IVerifyAdopterDocumentsResponse,
 } from './interfaces/IAdminService';
 
-import {
-  Prisma,
-  type Pet_Adopter,
-  type PrismaClient,
-} from '@/../generated/prisma';
+import { Prisma } from '@/../generated/prisma';
 import { prisma, env } from '@/config';
 import { HttpStatusCode, ResponseMessages } from '@/constants';
 import { PetAdopter } from '@/types/User';
@@ -47,10 +43,10 @@ export class AdminService implements IAdminService {
 
     const token = jwt.sign(
       { id: admin.id, email: admin.email, role: 'admin' },
-      env.JWT_ACCESS_TOKEN_SECRET, // Try with only payload and secret
-      // {
-      //   expiresIn: env.JWT_ACCESS_TOKEN_EXPIRES_IN || '1d',
-      // }
+      env.JWT_ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: '1d',
+      },
     );
 
     const { password, ...adminWithoutPassword } = admin;

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { AdminController } from '@/controller';
-import { authMiddleware } from '@/middleware';
+import { adminAuthMiddleware } from '@/middleware';
 
 export class AdminRoutes {
   private readonly _adminController: AdminController;
@@ -20,43 +20,43 @@ export class AdminRoutes {
 
     router.post(
       '/logout',
-      authMiddleware,
+      adminAuthMiddleware,
       this._adminController.logout.bind(this._adminController),
     );
 
     router.get(
       '/me',
-      authMiddleware,
+      adminAuthMiddleware,
       this._adminController.getAdminProfile.bind(this._adminController),
     );
 
     router.get(
       '/users',
-      authMiddleware,
+      adminAuthMiddleware,
       this._adminController.getAllAdopters.bind(this._adminController),
     );
 
     router.get(
       '/users/:id',
-      authMiddleware,
+      adminAuthMiddleware,
       this._adminController.getAdopterById.bind(this._adminController),
     );
 
     router.patch(
       '/users/:id/verify',
-      authMiddleware,
+      adminAuthMiddleware,
       this._adminController.verifyAdopterDocuments.bind(this._adminController),
     );
 
     router.put(
       '/users/:id',
-      authMiddleware,
+      adminAuthMiddleware,
       this._adminController.updateAdopterDetails.bind(this._adminController),
     );
 
     router.delete(
       '/users/:id',
-      authMiddleware,
+      adminAuthMiddleware,
       this._adminController.deleteAdopter.bind(this._adminController),
     );
 

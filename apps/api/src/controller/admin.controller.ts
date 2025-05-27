@@ -2,6 +2,7 @@ import type { IAdminController } from './interfaces/IAdminController';
 import type { IAdminService } from '@/services/interfaces/IAdminService';
 import type { NextFunction, Request, Response } from 'express';
 
+import { NODE_ENV } from '@/config';
 import { HttpStatusCode, ResponseMessages } from '@/constants';
 import { AdminService } from '@/services/admin.service';
 
@@ -19,6 +20,16 @@ export class AdminController implements IAdminController {
   ): Promise<void> {
     try {
       const result = await this._adminService.login(req.body);
+
+      const isProduction = NODE_ENV === 'production';
+      res.cookie('adminAccessToken', result.token, {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      });
+
       res.status(HttpStatusCode.OK).json({
         status: 'success',
         data: result,
@@ -36,6 +47,7 @@ export class AdminController implements IAdminController {
   ): Promise<void> {
     try {
       await this._adminService.logout(req.user?.id);
+      res.cookie('adminAccessToken', '');
       res.status(HttpStatusCode.OK).json({
         status: 'success',
         message: ResponseMessages.LOGOUT_SUCCESS,
