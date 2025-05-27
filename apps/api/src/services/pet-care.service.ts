@@ -8,7 +8,7 @@ import {
   IGetPetCareProposalByIdDTO,
   IUpdatePetCareProposalDTO,
   IDeletePetCareProposalDTO,
-  IListPetCareProposalsByAdopterIdDTO, // Added this line
+  IListPetCareProposalsByAdopterIdDTO,
 } from './interfaces/IPetCareService';
 
 import type { IPetCareService } from './interfaces/IPetCareService';
@@ -72,7 +72,7 @@ export class PetCareService implements IPetCareService {
     data: IGetPetCareRequestByIdDTO,
   ): Promise<{ petCareRequest: PetCareRequest | null }> {
     const petCareRequest = await prisma.petCareRequest.findUnique({
-      where: { id: data.id },
+      where: { id: data.id, isDeleted: false },
     });
     return { petCareRequest: petCareRequest as PetCareRequest | null };
   }
@@ -98,13 +98,18 @@ export class PetCareService implements IPetCareService {
       });
     }
 
-    await prisma.petCareRequest.delete({ where: { id: data.id } });
+    await prisma.petCareRequest.update({
+      where: { id: data.id },
+      data: { isDeleted: true },
+    });
   }
 
   public async listPetCareRequests(
     query?: IListPetCareRequestsQueryDTO,
   ): Promise<{ petCareRequests: PetCareRequest[] }> {
-    const whereClause: Prisma.PetCareRequestWhereInput = {};
+    const whereClause: Prisma.PetCareRequestWhereInput = {
+      isDeleted: false,
+    };
 
     if (query?.status) {
       whereClause.status = query.status;
@@ -135,7 +140,7 @@ export class PetCareService implements IPetCareService {
     data: IGetPetCareProposalByIdDTO,
   ): Promise<{ petCareProposal: PetCareProposal | null }> {
     const proposal = await prisma.petCareProposal.findUnique({
-      where: { id: data.id },
+      where: { id: data.id, isDeleted: false },
       include: {
         petCareRequest: {
           include: {
@@ -168,9 +173,8 @@ export class PetCareService implements IPetCareService {
     data: IUpdatePetCareProposalDTO,
   ): Promise<{ petCareProposal: PetCareProposal }> {
     const { id, userId, ...updateData } = data;
-
     const existingProposal = await prisma.petCareProposal.findUnique({
-      where: { id },
+      where: { id, isDeleted: false },
       include: { petCareRequest: true },
     });
 
@@ -216,7 +220,6 @@ export class PetCareService implements IPetCareService {
     data: IDeletePetCareProposalDTO,
   ): Promise<void> {
     const { id, userId } = data;
-
     const existingProposal = await prisma.petCareProposal.findUnique({
       where: { id },
     });
@@ -242,18 +245,26 @@ export class PetCareService implements IPetCareService {
       });
     }
 
-    await prisma.petCareProposal.delete({ where: { id } });
+    await prisma.petCareProposal.update({
+      where: { id },
+      data: { isDeleted: true },
+    });
   }
 
   public async listPetCareProposalsByAdopterId(
     data: IListPetCareProposalsByAdopterIdDTO,
   ): Promise<{ petCareProposals: PetCareProposal[] }> {
+    const { adopterId } = data;
     const petCareProposals = await prisma.petCareProposal.findMany({
-      where: { adopterId: data.adopterId },
+      where: {
+        adopterId,
+        isDeleted: false,
+      },
       include: {
         petCareRequest: {
           include: {
             pet: true,
+            user: true,
           },
         },
       },
@@ -265,9 +276,8 @@ export class PetCareService implements IPetCareService {
     data: IGetPetCareProposalByIdDTO,
   ): Promise<{ petCareProposal: PetCareProposal }> {
     const { id, userId } = data;
-
     const existingProposal = await prisma.petCareProposal.findUnique({
-      where: { id },
+      where: { id, isDeleted: false },
       include: { petCareRequest: true },
     });
 

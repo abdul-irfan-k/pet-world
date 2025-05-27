@@ -77,6 +77,7 @@ export class AdminService implements IAdminService {
 
   public async getAllAdopters(): Promise<IGetAllAdoptersResponse> {
     const adopters = (await prisma.pet_Adopter.findMany({
+      where: { isDeleted: false },
       include: { user: true },
     })) as PetAdopter[];
     return { adopters };
@@ -196,17 +197,61 @@ export class AdminService implements IAdminService {
       });
     }
 
-    await prisma.pet_Adopter.delete({ where: { id: adopterId } });
+    await prisma.pet_Adopter.update({
+      where: { id: adopterId },
+      data: { isDeleted: true },
+    });
   }
 
   public async getAllPets(queryParams: any): Promise<any> {
-    const pets = await prisma.pet.findMany();
-    return { pets };
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = queryParams;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.PetWhereInput = {
+      isDeleted: false,
+    };
+
+    const pets = await prisma.pet.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: {
+        [sortBy]: sortOrder,
+      },
+      include: {
+        owner: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    const totalPets = await prisma.pet.count({ where });
+    return {
+      pets,
+      totalPages: Math.ceil(totalPets / limit),
+      currentPage: page,
+    };
   }
 
   public async getPetById(petId: string): Promise<any> {
     const pet = await prisma.pet.findUnique({
       where: { id: petId },
+      include: {
+        owner: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
     });
     if (!pet) {
       throw new HttpError({
@@ -227,7 +272,10 @@ export class AdminService implements IAdminService {
         message: 'Pet not found',
       });
     }
-    await prisma.pet.delete({ where: { id: petId } });
+    await prisma.pet.update({
+      where: { id: petId },
+      data: { isDeleted: true },
+    });
   }
 
   public async updatePetStatus(petId: string, statusData: any): Promise<any> {
@@ -248,13 +296,62 @@ export class AdminService implements IAdminService {
   }
 
   public async getAllAdoptionRequests(queryParams: any): Promise<any> {
-    const adoptionRequests = await prisma.petCareRequest.findMany();
-    return { adoptionRequests };
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+      status,
+    } = queryParams;
+    const skip = (page - 1) * limit;
+    const where: Prisma.PetCareRequestWhereInput = {
+      isDeleted: false,
+    };
+
+    if (status) {
+      where.status = status;
+    }
+
+    const adoptionRequests = await prisma.petCareRequest.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: {
+        [sortBy]: sortOrder,
+      },
+      include: {
+        pet: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    const totalRequests = await prisma.petCareRequest.count({ where });
+
+    return {
+      adoptionRequests,
+      totalPages: Math.ceil(totalRequests / limit),
+      currentPage: page,
+    };
   }
 
   public async getAdoptionRequestById(requestId: string): Promise<any> {
     const adoptionRequest = await prisma.petCareRequest.findUnique({
-      where: { id: requestId },
+      where: { id: requestId, isDeleted: false },
+      include: {
+        pet: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+        proposals: true,
+      },
     });
     if (!adoptionRequest) {
       throw new HttpError({
@@ -269,12 +366,17 @@ export class AdminService implements IAdminService {
     const existingRequest = await prisma.petCareRequest.findUnique({
       where: { id: requestId },
     });
+
     if (!existingRequest) {
       throw new HttpError({
         statusCode: HttpStatusCode.NOT_FOUND,
         message: 'Adoption request not found',
       });
     }
-    await prisma.petCareRequest.delete({ where: { id: requestId } });
+
+    await prisma.petCareRequest.update({
+      where: { id: requestId },
+      data: { isDeleted: true },
+    });
   }
 }

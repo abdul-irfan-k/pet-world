@@ -168,7 +168,9 @@ export class AuthService implements IAuthService {
   public async forgotPassword(args: IForgotPasswordDTO): Promise<void> {
     const { email } = args;
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({
+      where: { email, isDeleted: false },
+    });
 
     if (!user) {
       throw new HttpError({
@@ -197,7 +199,6 @@ export class AuthService implements IAuthService {
         action: OtpAction.RESET_PASSWORD,
       },
     });
-
     const emailHtml = getPasswordChangeTemplate(otp);
 
     try {
@@ -249,7 +250,10 @@ export class AuthService implements IAuthService {
       }
 
       if (new Date() > otpRecord.expiresAt) {
-        await prisma.otp.delete({ where: { id: otpRecord.id } });
+        await prisma.otp.update({
+          where: { id: otpRecord.id },
+          data: { isDeleted: true },
+        });
         throw new HttpError({
           statusCode: HttpStatusCode.BAD_REQUEST,
           message: ResponseMessages.OTP_EXPIRED,
@@ -263,11 +267,11 @@ export class AuthService implements IAuthService {
           where: { id: user.id },
           data: { password: hashedPassword },
         }),
-        prisma.otp.delete({
+        prisma.otp.update({
           where: { id: otpRecord.id },
+          data: { isDeleted: true },
         }),
       ]);
-      // Assuming ResponseMessages.SUCCESS is appropriate, or use/create a more specific one like PASSWORD_RESET_SUCCESSFUL
       return { success: true, message: ResponseMessages.SUCCESS };
     } catch (error) {
       logger.error(
@@ -294,7 +298,9 @@ export class AuthService implements IAuthService {
   ): Promise<IGetUserDetailsResponseDTO> {
     const { id } = args;
 
-    const user = await prisma.user.findUnique({ where: { id } });
+    const user = await prisma.user.findUnique({
+      where: { id, isDeleted: false },
+    });
 
     if (!user) {
       throw new HttpError({
