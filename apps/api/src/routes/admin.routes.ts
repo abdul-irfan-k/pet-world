@@ -60,6 +60,50 @@ export class AdminRoutes {
       this._adminController.deleteAdopter.bind(this._adminController),
     );
 
+    // Pet management routes
+    router.get(
+      '/pets',
+      adminAuthMiddleware,
+      this._adminController.getAllPets.bind(this._adminController),
+    );
+
+    router.get(
+      '/pets/:petId',
+      adminAuthMiddleware,
+      this._adminController.getPetById.bind(this._adminController),
+    );
+
+    router.delete(
+      '/pets/:petId',
+      adminAuthMiddleware,
+      this._adminController.deletePet.bind(this._adminController),
+    );
+
+    router.patch(
+      '/pets/:petId/status',
+      adminAuthMiddleware,
+      this._adminController.updatePetStatus.bind(this._adminController),
+    );
+
+    // Adoption request management routes
+    router.get(
+      '/adoptions',
+      adminAuthMiddleware,
+      this._adminController.getAllAdoptionRequests.bind(this._adminController),
+    );
+
+    router.get(
+      '/adoptions/:requestId',
+      adminAuthMiddleware,
+      this._adminController.getAdoptionRequestById.bind(this._adminController),
+    );
+
+    router.delete(
+      '/adoptions/:requestId',
+      adminAuthMiddleware,
+      this._adminController.deleteAdoptionRequest.bind(this._adminController),
+    );
+
     return router;
   }
 }

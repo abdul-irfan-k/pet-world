@@ -176,4 +176,128 @@ export class AdminController implements IAdminController {
       next(error);
     }
   }
+
+  // Pet management
+  public async getAllPets(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const result = await this._adminService.getAllPets(req.query);
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async getPetById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { petId } = req.params;
+      const result = await this._adminService.getPetById(petId);
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async deletePet(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { petId } = req.params;
+      await this._adminService.deletePet(petId);
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        message: 'Pet deleted successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async updatePetStatus(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { petId } = req.params;
+      const result = await this._adminService.updatePetStatus(petId, req.body);
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: 'Pet status updated successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Adoption request management
+  public async getAllAdoptionRequests(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const result = await this._adminService.getAllAdoptionRequests(req.query);
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async getAdoptionRequestById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { requestId } = req.params;
+      const result = await this._adminService.getAdoptionRequestById(requestId);
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async deleteAdoptionRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { requestId } = req.params;
+      await this._adminService.deleteAdoptionRequest(requestId);
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        message: 'Adoption request deleted successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

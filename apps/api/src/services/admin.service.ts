@@ -198,4 +198,83 @@ export class AdminService implements IAdminService {
 
     await prisma.pet_Adopter.delete({ where: { id: adopterId } });
   }
+
+  public async getAllPets(queryParams: any): Promise<any> {
+    const pets = await prisma.pet.findMany();
+    return { pets };
+  }
+
+  public async getPetById(petId: string): Promise<any> {
+    const pet = await prisma.pet.findUnique({
+      where: { id: petId },
+    });
+    if (!pet) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: 'Pet not found',
+      });
+    }
+    return { pet };
+  }
+
+  public async deletePet(petId: string): Promise<void> {
+    const existingPet = await prisma.pet.findUnique({
+      where: { id: petId },
+    });
+    if (!existingPet) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: 'Pet not found',
+      });
+    }
+    await prisma.pet.delete({ where: { id: petId } });
+  }
+
+  public async updatePetStatus(petId: string, statusData: any): Promise<any> {
+    const existingPet = await prisma.pet.findUnique({
+      where: { id: petId },
+    });
+    if (!existingPet) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: 'Pet not found',
+      });
+    }
+    const updatedPet = await prisma.pet.update({
+      where: { id: petId },
+      data: { ...statusData, updatedAt: new Date() },
+    });
+    return { pet: updatedPet };
+  }
+
+  public async getAllAdoptionRequests(queryParams: any): Promise<any> {
+    const adoptionRequests = await prisma.petCareRequest.findMany();
+    return { adoptionRequests };
+  }
+
+  public async getAdoptionRequestById(requestId: string): Promise<any> {
+    const adoptionRequest = await prisma.petCareRequest.findUnique({
+      where: { id: requestId },
+    });
+    if (!adoptionRequest) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: 'Adoption request not found',
+      });
+    }
+    return { adoptionRequest };
+  }
+
+  public async deleteAdoptionRequest(requestId: string): Promise<void> {
+    const existingRequest = await prisma.petCareRequest.findUnique({
+      where: { id: requestId },
+    });
+    if (!existingRequest) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: 'Adoption request not found',
+      });
+    }
+    await prisma.petCareRequest.delete({ where: { id: requestId } });
+  }
 }

@@ -53,4 +53,15 @@ export interface IAdminService {
     data: IUpdateAdopterDetailsDTO,
   ): Promise<IUpdateAdopterDetailsResponse>;
   deleteAdopter(data: IDeleteAdopterDTO): Promise<void>;
+
+  // Pet management
+  getAllPets(queryParams: any): Promise<any>; // Replace 'any' with specific DTO/Response types
+  getPetById(petId: string): Promise<any>; // Replace 'any' with specific DTO/Response types
+  deletePet(petId: string): Promise<void>;
+  updatePetStatus(petId: string, statusData: any): Promise<any>; // Replace 'any' with specific DTO/Response types
+
+  // Adoption request management
+  getAllAdoptionRequests(queryParams: any): Promise<any>; // Replace 'any' with specific DTO/Response types
+  getAdoptionRequestById(requestId: string): Promise<any>; // Replace 'any' with specific DTO/Response types
+  deleteAdoptionRequest(requestId: string): Promise<void>;
 }
