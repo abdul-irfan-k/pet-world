@@ -15,6 +15,7 @@ import { Button } from '../ui/button';
 import { PetPrimaryInfo } from './PetPrimaryInfo';
 
 interface PetDetailsContentProps {
+  //eslint-disable-next-line
   pet: any;
 }
 const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
@@ -119,7 +120,8 @@ const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
               </AccordionTrigger>
               <AccordionContent>
                 <div className="mt-2 grid grid-cols-1 gap-2 lg:grid-cols-2">
-                  {pet.ownerDescription?.map((desc: any, index: number) => (
+                  {//eslint-disable-next-line
+                  pet.ownerDescription?.map((desc: any, index: number) => (
                     <div key={index} className="flex items-center gap-2">
                       {desc.positive ? (
                         <Check
