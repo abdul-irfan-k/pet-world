@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useRouter, useParams } from 'next/navigation';
 
@@ -36,7 +36,7 @@ const AddPetCareProposalForm = () => {
 
   const { mutate: createPetCareProposal, isPending: isCreatingProposal } =
     useCreatePetCareProposalMutation({
-      onSuccess: _response => {
+      onSuccess: () => {
         toast.success('Pet care proposal submitted successfully!');
         reset();
         router.push(`/pet-care/requests/${petCareRequestId}`);

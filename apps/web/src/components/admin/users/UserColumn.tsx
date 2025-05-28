@@ -77,8 +77,7 @@ export const columns: ColumnDef<User>[] = [
   {
     id: 'actions',
     header: 'Actions',
-    cell: ({ row }) => {
-      const user = row.original;
+    cell: () => {
       return (
         <div className="flex items-center space-x-2">
           <Button

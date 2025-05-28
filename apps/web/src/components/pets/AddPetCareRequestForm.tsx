@@ -53,7 +53,7 @@ const AddPetCareRequestForm = () => {
 
   const { mutate: createPetCareRequest, isPending: isCreatingPetCareRequest } =
     useCreatePetCareRequestMutation({
-      onSuccess: _response => {
+      onSuccess: () => {
         toast.success('Pet care request created successfully!');
         reset();
         router.push('/pet-care/my-requests');

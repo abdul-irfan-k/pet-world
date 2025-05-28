@@ -59,7 +59,7 @@ export const columns: ColumnDef<Pet>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => {
+    cell: () => {
       return (
         <div className="flex items-center space-x-2">
           <Button
