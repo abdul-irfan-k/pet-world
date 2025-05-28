@@ -4,9 +4,6 @@ import React from 'react';
 
 import { useParams } from 'next/navigation';
 
-import { useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-
 import { Button } from '@/components/ui/button';
 import {
   useFetchProposalsForRequestQuery,
@@ -24,8 +21,10 @@ export default function PetCareRequestProposalsPage() {
     refetch: loadProposals,
   } = useFetchProposalsForRequestQuery(requestId, {});
 
+  //eslint-disable-next-line
   const handleProceed = async (proposalId: string) => {};
 
+  //eslint-disable-next-line
   const handleReject = async (proposalId: string) => {};
 
   if (!requestId) {
