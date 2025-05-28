@@ -122,7 +122,7 @@ export class PetCareController implements IPetCareController {
     try {
       const result = await this._petCareService.createPetCareProposal({
         ...req.body,
-        ownerId: req.user!.id,
+        adopterId: req.user!.id,
       });
       res.status(HttpStatusCode.CREATED).json({
         status: 'success',

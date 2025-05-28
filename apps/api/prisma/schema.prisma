@@ -27,13 +27,15 @@ model User {
 
   pets             Pet[]
   locations        Location[]
-  petAdopter       Pet_Adopter?
-  sentPayments     Payment[]        @relation("SentPayments")
-  receivedPayments Payment[]        @relation("ReceivedPayments")
+  // petAdopter       Pet_Adopter?
+  sentPayments     Payment[]         @relation("SentPayments")
+  receivedPayments Payment[]         @relation("ReceivedPayments")
   campaigns        Pet_Campaigns[]
   petCareRequest   PetCareRequest[]
   otp              Otp[]
   FavoritePet      FavoritePet[]
+  PetCare          PetCare[]
+  PetCareProposal  PetCareProposal[]
 }
 
 model Pet {
@@ -92,22 +94,22 @@ model Location {
   petCareRequest PetCareRequest[]
 }
 
-model Pet_Adopter {
-  id               String   @id @default(cuid())
-  userId           String   @unique
-  adharNumber      String?  @unique
-  documents        Json?
-  yearOfExperience Int?
-  certifications   String[]
-  overview         Json?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @default(now())
-  isDeleted        Boolean  @default(false)
+// model Pet_Adopter {
+//   id               String   @id @default(cuid())
+//   userId           String   @unique
+//   adharNumber      String?  @unique
+//   documents        Json?
+//   yearOfExperience Int?
+//   certifications   String[]
+//   overview         Json?
+//   createdAt        DateTime @default(now())
+//   updatedAt        DateTime @default(now())
+//   isDeleted        Boolean  @default(false)
 
-  user      User              @relation(fields: [userId], references: [id])
-  proposals PetCareProposal[]
-  petCare   PetCare[] // Added relation
-}
+//   user      User              @relation(fields: [userId], references: [id])
+//   proposals PetCareProposal[]
+//   petCare   PetCare[] // Added relation
+// }
 
 model Pet_Campaigns {
   id          String   @id @default(cuid())
@@ -200,7 +202,7 @@ model PetCare {
   isDeleted        Boolean       @default(false)
 
   pet            Pet            @relation(fields: [petId], references: [id])
-  adopter        Pet_Adopter    @relation(fields: [adopterId], references: [id])
+  adopter        User           @relation(fields: [adopterId], references: [id])
   petCareRequest PetCareRequest @relation(fields: [petCareRequestId], references: [id])
   Payment        Payment?
 }
@@ -240,7 +242,7 @@ model PetCareProposal {
   isDeleted        Boolean  @default(false)
 
   petCareRequest PetCareRequest @relation(fields: [petCareRequestId], references: [id])
-  adopter        Pet_Adopter    @relation(fields: [adopterId], references: [id])
+  adopter        User           @relation(fields: [adopterId], references: [id])
 }
 
 model Admin {
