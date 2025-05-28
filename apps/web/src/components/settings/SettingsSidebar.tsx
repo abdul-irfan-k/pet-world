@@ -1,4 +1,6 @@
+'use client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import {
   User,
@@ -8,7 +10,11 @@ import {
   Lock,
   Eye,
   Link2,
+  LogOut,
 } from 'lucide-react';
+
+import { Button } from '@/components/ui/button/Button';
+import { useLogoutMutation } from '@/lib/api/authApi';
 
 const settingsLinks = [
   { label: 'Account Details', icon: User, href: '/settings/account' },
@@ -25,6 +31,17 @@ const settingsLinks = [
 ];
 
 const SettingsSidebar = () => {
+  const router = useRouter();
+  const { mutate: logoutUser, isPending } = useLogoutMutation({
+    onSuccess: () => {
+      router.push('/');
+    },
+  });
+
+  const handleLogout = () => {
+    logoutUser(undefined);
+  };
+
   return (
     <div className="">
       <ul className="space-y-5">
@@ -39,6 +56,17 @@ const SettingsSidebar = () => {
             </Link>
           </li>
         ))}
+        <li>
+          <Button
+            onClick={handleLogout}
+            variant="ghost"
+            className="flex w-full items-center justify-start px-0 text-[16px] font-medium text-red-500"
+            isLoading={isPending}
+          >
+            <LogOut className="h-5 w-5" />
+            <span>Logout</span>
+          </Button>
+        </li>
       </ul>
     </div>
   );
