@@ -67,6 +67,11 @@ export type IListPetCareProposalsByAdopterIdDTO = {
   adopterId: string;
 };
 
+export type IListProposalsForPetCareRequestDTO = {
+  petCareRequestId: string;
+  userId: string; // To ensure the user is authorized to view proposals
+};
+
 export interface IPetCareService {
   createPetCareRequest(
     data: ICreatePetCareRequestDTO,
@@ -79,6 +84,9 @@ export interface IPetCareService {
   ): Promise<{ petCareRequest: PetCareRequest | null }>;
   deletePetCareRequest(data: IDeletePetCareRequestDTO): Promise<void>;
   listPetCareRequests(
+    query?: IListPetCareRequestsQueryDTO,
+  ): Promise<{ petCareRequests: PetCareRequest[] }>;
+  listMyPetCareRequests(
     query?: IListPetCareRequestsQueryDTO,
   ): Promise<{ petCareRequests: PetCareRequest[] }>;
 
@@ -95,6 +103,9 @@ export interface IPetCareService {
   deletePetCareProposal(data: IDeletePetCareProposalDTO): Promise<void>;
   listPetCareProposalsByAdopterId(
     data: IListPetCareProposalsByAdopterIdDTO,
+  ): Promise<{ petCareProposals: PetCareProposal[] }>;
+  listProposalsForPetCareRequest(
+    data: IListProposalsForPetCareRequestDTO,
   ): Promise<{ petCareProposals: PetCareProposal[] }>;
   approvePetCareProposal(
     data: IGetPetCareProposalByIdDTO, // Assuming same DTO as getPetCareProposalById for now

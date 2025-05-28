@@ -9,6 +9,7 @@ import {
   IUpdatePetCareProposalDTO,
   IDeletePetCareProposalDTO,
   IListPetCareProposalsByAdopterIdDTO,
+  IListProposalsForPetCareRequestDTO,
 } from './interfaces/IPetCareService';
 
 import type { IPetCareService } from './interfaces/IPetCareService';
@@ -113,6 +114,27 @@ export class PetCareService implements IPetCareService {
 
     if (query?.status) {
       whereClause.status = query.status;
+    }
+
+    const petCareRequests = await prisma.petCareRequest.findMany({
+      where: whereClause,
+    });
+    return { petCareRequests: petCareRequests as PetCareRequest[] };
+  }
+
+  public async listMyPetCareRequests(
+    query?: IListPetCareRequestsQueryDTO,
+  ): Promise<{ petCareRequests: PetCareRequest[] }> {
+    const whereClause: Prisma.PetCareRequestWhereInput = {
+      isDeleted: false,
+    };
+
+    if (query?.status) {
+      whereClause.status = query.status;
+    }
+
+    if (query?.userId) {
+      whereClause.ownerId = query.userId;
     }
 
     const petCareRequests = await prisma.petCareRequest.findMany({
@@ -267,6 +289,52 @@ export class PetCareService implements IPetCareService {
             user: true,
           },
         },
+      },
+    });
+    return { petCareProposals: petCareProposals as PetCareProposal[] };
+  }
+
+  public async listProposalsForPetCareRequest(
+    data: IListProposalsForPetCareRequestDTO,
+  ): Promise<{ petCareProposals: PetCareProposal[] }> {
+    const { petCareRequestId, userId } = data;
+
+    // First, verify that the user is the owner of the pet care request
+    const petCareRequest = await prisma.petCareRequest.findUnique({
+      where: { id: petCareRequestId },
+    });
+
+    if (!petCareRequest) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.PET_CARE_REQUEST_NOT_FOUND,
+      });
+    }
+
+    if (petCareRequest.ownerId !== userId) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.FORBIDDEN,
+        message: ResponseMessages.UNAUTHORIZED_PET_CARE_PROPOSAL_ACCESS,
+      });
+    }
+
+    const petCareProposals = await prisma.petCareProposal.findMany({
+      where: {
+        petCareRequestId,
+        isDeleted: false,
+      },
+      include: {
+        adopter: {
+          // Assuming you want to include adopter details
+          select: {
+            id: true,
+            name: true,
+            email: true, // Add other fields as necessary
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc', // Optional: order by creation date
       },
     });
     return { petCareProposals: petCareProposals as PetCareProposal[] };

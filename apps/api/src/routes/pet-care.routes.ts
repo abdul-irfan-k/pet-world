@@ -27,6 +27,14 @@ export class PetCareRoutes {
     );
 
     router.get(
+      '/my-requests',
+      authMiddleware,
+      this._petCareController.listMyPetCareRequests.bind(
+        this._petCareController,
+      ),
+    );
+
+    router.get(
       '/requests/:requestId',
       this._petCareController.getPetCareRequestById.bind(
         this._petCareController,
@@ -92,6 +100,14 @@ export class PetCareRoutes {
       '/proposals/:proposalId',
       authMiddleware,
       this._petCareController.deletePetCareProposal.bind(
+        this._petCareController,
+      ),
+    );
+
+    router.get(
+      '/requests/:requestId/proposals',
+      authMiddleware,
+      this._petCareController.listProposalsForPetCareRequest.bind(
         this._petCareController,
       ),
     );
