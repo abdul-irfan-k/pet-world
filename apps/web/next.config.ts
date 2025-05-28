@@ -24,11 +24,20 @@ const nextConfig: NextConfig = {
     });
     return config;
   },
-  turbo: {
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
+  experimental: {
+    turbo: {
+      rules: {
+        '**/*.svg': {
+          loaders: [
+            {
+              loader: '@svgr/webpack',
+              options: {
+                icon: true,
+              },
+            },
+          ],
+          as: '*.js',
+        },
       },
     },
   },

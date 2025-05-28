@@ -57,7 +57,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
           <Input
             ref={ref}
             className="w-full flex-1 border-none bg-transparent outline-none focus:ring-0"
-            type="text"
+            type={props.type ? props.type : 'text'}
             disabled={isDisabled}
             aria-invalid={hasError}
             {...props}

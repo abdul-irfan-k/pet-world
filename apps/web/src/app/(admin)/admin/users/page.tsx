@@ -2,19 +2,19 @@ import React from 'react';
 
 import {
   ChevronDown,
-  Edit,
-  Trash2,
-  Search,
-  Plus,
-  Upload,
-  Eye,
-  Settings2,
-  ChevronsLeft,
   ChevronLeft,
   ChevronRight,
+  ChevronsLeft,
   ChevronsRight,
+  Eye,
+  Plus,
+  Search,
+  Settings2,
+  Upload,
 } from 'lucide-react';
 
+import { columns } from '@/components/admin/users/UserColumn';
+import UsersTable from '@/components/admin/users/UserTable';
 import { Button } from '@/components/ui/button';
 
 const users = [
@@ -238,124 +238,12 @@ const AdminUserManagementPage = () => {
       </div>
 
       <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                className="w-12 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                <input
-                  type="checkbox"
-                  className="text-brand-600 focus:ring-brand-500 h-4 w-4 rounded border-gray-300"
-                />
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                Full name
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                Email
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                Role
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                Status
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                Joined date
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                2F Auth
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {users.map(user => (
-              <tr key={user.id}>
-                <td className="whitespace-nowrap px-6 py-4">
-                  <input
-                    type="checkbox"
-                    className="text-brand-600 focus:ring-brand-500 h-4 w-4 rounded border-gray-300"
-                  />
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
-                  {user.name}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                  {user.email}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                  {user.role}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      user.status === 'Active'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}
-                  >
-                    <span
-                      className={`mr-1.5 h-2 w-2 rounded-full ${
-                        user.status === 'Active'
-                          ? 'bg-green-500'
-                          : 'bg-gray-400'
-                      }`}
-                    ></span>
-                    {user.status}
-                  </span>
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                  {user.joinedDate}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-yellow-600">
-                  {user.twoFactorAuth}
-                </td>
-                <td className="space-x-2 whitespace-nowrap px-6 py-4 text-sm font-medium">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-brand-600 hover:text-brand-700"
-                  >
-                    <Edit className="mr-1 h-4 w-4" /> Edit
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    <Trash2 className="mr-1 h-4 w-4" /> Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <UsersTable
+          columns={columns}
+          //eslint-disable-next-line
+          //@ts-ignore
+          data={users}
+        />
       </div>
 
       <div className="mt-6 flex items-center justify-between">

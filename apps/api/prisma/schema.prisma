@@ -27,13 +27,16 @@ model User {
 
   pets             Pet[]
   locations        Location[]
-  petAdopter       Pet_Adopter?
-  sentPayments     Payment[]        @relation("SentPayments")
-  receivedPayments Payment[]        @relation("ReceivedPayments")
+  // petAdopter       Pet_Adopter?
+  sentPayments     Payment[]         @relation("SentPayments")
+  receivedPayments Payment[]         @relation("ReceivedPayments")
   campaigns        Pet_Campaigns[]
   petCareRequest   PetCareRequest[]
   otp              Otp[]
   FavoritePet      FavoritePet[]
+  PetCare          PetCare[]
+  PetCareProposal  PetCareProposal[]
+  Pet_Adopter      Pet_Adopter?
 }
 
 model Pet {
@@ -200,9 +203,11 @@ model PetCare {
   isDeleted        Boolean       @default(false)
 
   pet            Pet            @relation(fields: [petId], references: [id])
-  adopter        Pet_Adopter    @relation(fields: [adopterId], references: [id])
+  adopter        User           @relation(fields: [adopterId], references: [id])
   petCareRequest PetCareRequest @relation(fields: [petCareRequestId], references: [id])
   Payment        Payment?
+  Pet_Adopter    Pet_Adopter?   @relation(fields: [pet_AdopterId], references: [id])
+  pet_AdopterId  String?
 }
 
 model PetCareRequest {
@@ -240,7 +245,9 @@ model PetCareProposal {
   isDeleted        Boolean  @default(false)
 
   petCareRequest PetCareRequest @relation(fields: [petCareRequestId], references: [id])
-  adopter        Pet_Adopter    @relation(fields: [adopterId], references: [id])
+  adopter        User           @relation(fields: [adopterId], references: [id])
+  Pet_Adopter    Pet_Adopter?   @relation(fields: [pet_AdopterId], references: [id])
+  pet_AdopterId  String?
 }
 
 model Admin {

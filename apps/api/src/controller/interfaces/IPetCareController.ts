@@ -51,4 +51,9 @@ export interface IPetCareController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  listProposalsForPetCareRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void>;
 }

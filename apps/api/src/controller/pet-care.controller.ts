@@ -20,7 +20,8 @@ export class PetCareController implements IPetCareController {
     try {
       const result = await this._petCareService.createPetCareRequest({
         ...req.body,
-        userId: req.user!.id,
+        ownerId: req.user!.id,
+        amount: req.body.amount.toString(),
       });
       res.status(HttpStatusCode.CREATED).json({
         status: 'success',
@@ -113,6 +114,26 @@ export class PetCareController implements IPetCareController {
     }
   }
 
+  public async listMyPetCareRequests(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const result = await this._petCareService.listMyPetCareRequests({
+        userId: req.user!.id,
+        ...req.query,
+      });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   public async createPetCareProposal(
     req: Request,
     res: Response,
@@ -121,7 +142,7 @@ export class PetCareController implements IPetCareController {
     try {
       const result = await this._petCareService.createPetCareProposal({
         ...req.body,
-        ownerId: req.user!.id,
+        adopterId: req.user!.id,
       });
       res.status(HttpStatusCode.CREATED).json({
         status: 'success',
@@ -225,6 +246,27 @@ export class PetCareController implements IPetCareController {
       const { proposalId } = req.params;
       const result = await this._petCareService.approvePetCareProposal({
         id: proposalId,
+        userId: req.user!.id,
+      });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async listProposalsForPetCareRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { requestId } = req.params;
+      const result = await this._petCareService.listProposalsForPetCareRequest({
+        petCareRequestId: requestId,
         userId: req.user!.id,
       });
       res.status(HttpStatusCode.OK).json({
