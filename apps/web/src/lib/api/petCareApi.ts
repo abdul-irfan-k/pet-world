@@ -1,10 +1,22 @@
-import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
 import { apiClient } from '../api-client';
 import { IAddPetCareProposalInput } from '../schemas';
 
 import { PetCareRequest } from '@/types/PetCare';
+
+export interface Proposal {
+  id: string;
+  proposerName: string;
+  message: string;
+  status?: string;
+}
 
 type ApiResponse<T> = {
   data: T;
@@ -13,14 +25,52 @@ type ApiResponse<T> = {
 };
 
 type PetCareResponse = ApiResponse<{ petCareRequest: PetCareRequest }>;
-
-type PetCareProposalResponse = ApiResponse<{ proposal: unknown }>;
+type PetCareRequestResponse = ApiResponse<{ petCareRequest: PetCareRequest }>;
+type PetCareProposalResponse = ApiResponse<{ proposal: Proposal }>;
+type PetCareProposalsListResponse = ApiResponse<{
+  petCareProposals: Proposal[];
+}>;
+type MyPetCareRequestsResponse = ApiResponse<{
+  petCareRequests: PetCareRequest[];
+}>;
 
 type PetCareMutations<TData, TVariables> = UseMutationOptions<
   TData,
   AxiosError,
   TVariables
 >;
+
+const fetchPetCareRequestById = async (
+  requestId: string,
+): Promise<PetCareRequestResponse> => {
+  const { data } = await apiClient.get(`pet-care/requests/${requestId}`);
+  return data;
+};
+
+export const useFetchPetCareRequestByIdQuery = (
+  requestId: string,
+  options?: Omit<
+    UseQueryOptions<
+      PetCareRequestResponse,
+      AxiosError,
+      PetCareRequestResponse,
+      readonly [string, string]
+    >,
+    'queryKey' | 'queryFn'
+  >,
+) => {
+  return useQuery<
+    PetCareRequestResponse,
+    AxiosError,
+    PetCareRequestResponse,
+    readonly [string, string]
+  >({
+    queryKey: ['petCareRequest', requestId],
+    queryFn: () => fetchPetCareRequestById(requestId),
+    enabled: !!requestId,
+    ...options,
+  });
+};
 
 const createPetCareRequest = async (
   petData: object,
@@ -39,7 +89,7 @@ export const useCreatePetCareRequestMutation = (
 };
 
 const createPetCareProposal = async (
-  proposalData: object,
+  proposalData: IAddPetCareProposalInput,
 ): Promise<PetCareProposalResponse> => {
   const { data } = await apiClient.post('pet-care/proposals', proposalData);
   return data;
@@ -54,6 +104,68 @@ export const useCreatePetCareProposalMutation = (
     IAddPetCareProposalInput
   >({
     mutationFn: createPetCareProposal,
+    ...options,
+  });
+};
+
+const fetchProposalsForRequest = async (
+  requestId: string,
+): Promise<PetCareProposalsListResponse> => {
+  const { data } = await apiClient.get(
+    `pet-care/requests/${requestId}/proposals`,
+  );
+  return data;
+};
+
+export const useFetchProposalsForRequestQuery = (
+  requestId: string,
+  options?: Omit<
+    UseQueryOptions<
+      PetCareProposalsListResponse,
+      AxiosError,
+      PetCareProposalsListResponse,
+      readonly [string, string]
+    >,
+    'queryKey' | 'queryFn'
+  >,
+) => {
+  return useQuery<
+    PetCareProposalsListResponse,
+    AxiosError,
+    PetCareProposalsListResponse,
+    readonly [string, string]
+  >({
+    queryKey: ['proposalsForRequest', requestId],
+    queryFn: () => fetchProposalsForRequest(requestId),
+    enabled: !!requestId,
+    ...options,
+  });
+};
+
+const fetchMyPetCareRequests = async (): Promise<MyPetCareRequestsResponse> => {
+  const { data } = await apiClient.get('pet-care/my-requests');
+  return data;
+};
+
+export const useFetchMyPetCareRequestsQuery = (
+  options?: Omit<
+    UseQueryOptions<
+      MyPetCareRequestsResponse,
+      AxiosError,
+      MyPetCareRequestsResponse,
+      readonly [string]
+    >,
+    'queryKey' | 'queryFn'
+  >,
+) => {
+  return useQuery<
+    MyPetCareRequestsResponse,
+    AxiosError,
+    MyPetCareRequestsResponse,
+    readonly [string]
+  >({
+    queryKey: ['myPetCareRequests'],
+    queryFn: fetchMyPetCareRequests,
     ...options,
   });
 };

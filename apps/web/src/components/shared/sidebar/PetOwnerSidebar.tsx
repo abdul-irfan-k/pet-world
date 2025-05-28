@@ -39,7 +39,7 @@ const PetOwnerSidebar = () => {
             <span className="text-sm">My Pets</span>
           </Link>
           <Link
-            href="/pet-care/my-request"
+            href="/pet-care/my-requests"
             className={`flex items-center rounded-md px-3 py-2 ${
               pathname === '/pet-care/my-request'
                 ? 'bg-green-500 text-white'
