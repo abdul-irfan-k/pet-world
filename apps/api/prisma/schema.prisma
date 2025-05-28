@@ -36,6 +36,7 @@ model User {
   FavoritePet      FavoritePet[]
   PetCare          PetCare[]
   PetCareProposal  PetCareProposal[]
+  Pet_Adopter      Pet_Adopter?
 }
 
 model Pet {
@@ -94,22 +95,22 @@ model Location {
   petCareRequest PetCareRequest[]
 }
 
-// model Pet_Adopter {
-//   id               String   @id @default(cuid())
-//   userId           String   @unique
-//   adharNumber      String?  @unique
-//   documents        Json?
-//   yearOfExperience Int?
-//   certifications   String[]
-//   overview         Json?
-//   createdAt        DateTime @default(now())
-//   updatedAt        DateTime @default(now())
-//   isDeleted        Boolean  @default(false)
+model Pet_Adopter {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  adharNumber      String?  @unique
+  documents        Json?
+  yearOfExperience Int?
+  certifications   String[]
+  overview         Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now())
+  isDeleted        Boolean  @default(false)
 
-//   user      User              @relation(fields: [userId], references: [id])
-//   proposals PetCareProposal[]
-//   petCare   PetCare[] // Added relation
-// }
+  user      User              @relation(fields: [userId], references: [id])
+  proposals PetCareProposal[]
+  petCare   PetCare[] // Added relation
+}
 
 model Pet_Campaigns {
   id          String   @id @default(cuid())
@@ -205,6 +206,8 @@ model PetCare {
   adopter        User           @relation(fields: [adopterId], references: [id])
   petCareRequest PetCareRequest @relation(fields: [petCareRequestId], references: [id])
   Payment        Payment?
+  Pet_Adopter    Pet_Adopter?   @relation(fields: [pet_AdopterId], references: [id])
+  pet_AdopterId  String?
 }
 
 model PetCareRequest {
@@ -243,6 +246,8 @@ model PetCareProposal {
 
   petCareRequest PetCareRequest @relation(fields: [petCareRequestId], references: [id])
   adopter        User           @relation(fields: [adopterId], references: [id])
+  Pet_Adopter    Pet_Adopter?   @relation(fields: [pet_AdopterId], references: [id])
+  pet_AdopterId  String?
 }
 
 model Admin {
