@@ -11,3 +11,14 @@ export const addPetCareRequestSchema = z.object({
   questions: z.record(z.any()).optional(),
 });
 export type IAddPetCareRequestInput = z.infer<typeof addPetCareRequestSchema>;
+
+export const addPetCareProposalSchema = z.object({
+  petCareRequestId: z.string().min(1, 'Pet Care Request ID cannot be empty'),
+  message: z
+    .string()
+    .trim()
+    .min(10, 'Message is too short (minimum 10 characters)'),
+  proposedFee: z.number().positive('Proposed fee must be a positive number'),
+});
+
+export type IAddPetCareProposalInput = z.infer<typeof addPetCareProposalSchema>;
