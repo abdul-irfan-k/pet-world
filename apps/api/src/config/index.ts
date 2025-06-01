@@ -5,3 +5,4 @@ export * from './multer.config';
 export * from './nodemailer.config';
 export * from './prisma.config';
 export * from './redis.config';
+export * from './stripe.config';
