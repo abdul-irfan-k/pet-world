@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { TokenExpiredError } from 'jsonwebtoken';
 
 import type {
@@ -14,6 +15,7 @@ import type {
   ILogoutDTO,
   IGetUserDetailsDTO,
   IGetUserDetailsResponseDTO,
+  iSignInWithGoogleDTO,
 } from './interfaces/IAuthService';
 
 import { logger, prisma } from '@/config';
@@ -114,6 +116,89 @@ export class AuthService implements IAuthService {
         updatedAt: user.updatedAt,
       },
     };
+  }
+
+  public async signInWithGoogle(
+    args: iSignInWithGoogleDTO,
+  ): Promise<ISignInResponseDTO> {
+    try {
+      if (!args || !args.code) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: 'INVALID_GOOGLE_SIGNIN_REQUEST',
+        });
+      }
+      const { code } = args;
+
+      const tokenResponse = await axios.post(
+        'https://oauth2.googleapis.com/token',
+        null,
+        {
+          params: {
+            code: code,
+            client_id: process.env.GOOGLE_CLIENT_ID,
+            client_secret: process.env.GOOGLE_CLIENT_SECRET,
+            redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+            grant_type: 'authorization_code',
+          },
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        },
+      );
+
+      const { id_token } = tokenResponse.data;
+      const decodedIdToken = JSON.parse(
+        Buffer.from(id_token.split('.')[1], 'base64').toString(),
+      );
+
+      const email = decodedIdToken.email;
+
+      if (email === undefined) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: 'GOOGLE_EMAIL_NOT_FOUND',
+        });
+      }
+
+      const user = await prisma.user.findUnique({ where: { email } });
+      if (!user) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: ResponseMessages.INVALID_CREDENTIALS,
+        });
+      }
+
+      const accessToken = await generateAccessToken({
+        email: user.email,
+        id: user.id,
+      });
+      const refreshToken = await generateRefreshToken({
+        email: user.email,
+        id: user.id,
+      });
+
+      return {
+        accessToken,
+        refreshToken,
+        user: {
+          id: user.id,
+          userName: user.userName,
+          email: user.email,
+          name: user.name,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        },
+      };
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw error;
+      }
+      throw new HttpError({
+        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        message: ResponseMessages.INTERNAL_SERVER_ERROR,
+      });
+    }
   }
 
   public async refreshToken(

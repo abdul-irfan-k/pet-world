@@ -51,6 +51,10 @@ export class AuthRoutes {
       // schemaValidator(logoutSchema),
       this._authController.logout.bind(this._authController),
     );
+    router.post(
+      '/google-auth',
+      this._authController.signInWithGoogle.bind(this._authController),
+    );
 
     router.get(
       '/me',
