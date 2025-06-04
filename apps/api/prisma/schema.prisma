@@ -9,21 +9,23 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(cuid())
-  name       String
-  userName   String    @unique
-  email      String    @unique
-  phone      String?
-  age        Int?
-  address    Json?
-  gender     String?
-  password   String
-  isDisabled Boolean   @default(false)
-  isVerified Boolean   @default(false)
-  lastLogin  DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  isDeleted  Boolean   @default(false)
+  id                     String    @id @default(cuid())
+  name                   String
+  userName               String    @unique
+  email                  String    @unique
+  phone                  String?
+  age                    Int?
+  address                Json?
+  gender                 String?
+  password               String
+  isDisabled             Boolean   @default(false)
+  isVerified             Boolean   @default(false)
+  lastLogin              DateTime?
+  stripeCustomerId       String?   @unique
+  stripeConnectedAccount String?   @unique
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  isDeleted              Boolean   @default(false)
 
   pets             Pet[]
   locations        Location[]
@@ -150,18 +152,24 @@ enum PaymentStatus {
 }
 
 model Payment {
-  id                String        @id @default(cuid())
+  id                String  @id @default(cuid())
   userId            String
   receiverId        String
-  adoptionId        String?       @unique
-  transactionNumber String        @unique
-  isDonation        Boolean       @default(false)
-  platformFee       Float
-  totalPaid         Float
-  paymentStatus     PaymentStatus @default(pending)
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @default(now())
-  isDeleted         Boolean       @default(false)
+  adoptionId        String? @unique
+  transactionNumber String  @unique
+
+  isDonation  Boolean @default(false)
+  platformFee Float
+  totalPaid   Float
+
+  currency              String
+  stripePaymentIntentId String?
+  stripeChargeId        String?
+
+  paymentStatus PaymentStatus @default(pending)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now())
+  isDeleted     Boolean       @default(false)
 
   user     User     @relation("SentPayments", fields: [userId], references: [id])
   receiver User     @relation("ReceivedPayments", fields: [receiverId], references: [id])
