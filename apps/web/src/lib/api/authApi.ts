@@ -25,6 +25,27 @@ type AuthMutationOptions<TVariables> = UseMutationOptions<
   TVariables
 >;
 
+const signup = async (credentials: SignUpInput): Promise<AuthResponse> => {
+  const { data } = await apiClient.post('/auth/signup', credentials);
+  return data;
+};
+
+export const useSignUpMutation = (
+  option?: AuthMutationOptions<SignUpInput>,
+) => {
+  return useMutation<AuthResponse, AxiosError, SignUpInput>({
+    mutationFn: signup,
+    ...option,
+    onMutate: () => {
+      return {
+        meta: {
+          notify: true,
+        },
+      };
+    },
+  });
+};
+
 const signIn = async (credentials: SignInInput): Promise<AuthResponse> => {
   const { data } = await apiClient.post('/auth/signin', credentials);
   return data;
@@ -46,16 +67,16 @@ export const useSignInMutation = (
   });
 };
 
-const signup = async (credentials: SignUpInput): Promise<AuthResponse> => {
-  const { data } = await apiClient.post('/auth/signup', credentials);
-  return data;
+const signInWithGoogle = async (data: { idToken: string }) => {
+  const response = await apiClient.post('/auth/google-auth', data);
+  return response.data;
 };
 
-export const useSignUpMutation = (
-  option?: AuthMutationOptions<SignUpInput>,
+export const useSignInWithGoogleMutation = (
+  option?: AuthMutationOptions<{ idToken: string }>,
 ) => {
-  return useMutation<AuthResponse, AxiosError, SignUpInput>({
-    mutationFn: signup,
+  return useMutation<AuthResponse, AxiosError, { idToken: string }>({
+    mutationFn: signInWithGoogle,
     ...option,
     onMutate: () => {
       return {

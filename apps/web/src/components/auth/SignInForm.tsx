@@ -8,6 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { GoogleAuth } from './GoogleAuth';
+
 import { Button } from '@/components/ui/button';
 import { EmailField, PasswordField } from '@/components/ui/form/inputs';
 import { useSignInMutation } from '@/lib/api/authApi';
@@ -86,11 +88,7 @@ const SignInForm = () => {
             >
               Sign in
             </Button>
-            <div className="flex items-center justify-center rounded-lg bg-white px-[18px] py-2.5 outline-1 outline-offset-[-1px] outline-[#d5d6da]">
-              <span className="text-base font-semibold leading-normal text-[#414651]">
-                Sign in with Google
-              </span>
-            </div>
+            <GoogleAuth />
           </div>
 
           <div className="flex justify-center">
