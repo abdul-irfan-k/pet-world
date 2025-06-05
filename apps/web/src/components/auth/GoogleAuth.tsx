@@ -14,6 +14,7 @@ const GoogleAuth = () => {
   const { login } = useAuthStore();
 
   const { mutate } = useSignInWithGoogleMutation({
+    //eslint-disable-next-line
     onSuccess: (response: any) => {
       const { data } = response;
       login(data.user);
