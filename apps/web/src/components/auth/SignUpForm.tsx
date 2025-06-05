@@ -87,13 +87,8 @@ const SignUpForm = () => {
           onClick={handleSubmit(onSubmit)}
           isLoading={isPending}
         >
-          Sign up{' '}
+          Sign up
         </Button>
-        <div className="flex items-center justify-center rounded-lg bg-white px-[18px] py-2.5 outline outline-offset-[-1px] outline-[#d5d6da]">
-          <span className="text-base font-semibold leading-normal text-[#414651]">
-            Sign up with Google
-          </span>
-        </div>
       </div>
 
       <div className="flex justify-center">

@@ -5,12 +5,12 @@ import { useRouter } from 'next/navigation';
 import {
   User,
   MapPin,
-  ShoppingBag,
   Mail,
   Lock,
   Eye,
   Link2,
   LogOut,
+  Wallet,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button/Button';
@@ -19,7 +19,7 @@ import { useLogoutMutation } from '@/lib/api/authApi';
 const settingsLinks = [
   { label: 'Account Details', icon: User, href: '/settings/account' },
   { label: 'My Addresses', icon: MapPin, href: '/settings/addresses' },
-  { label: 'Shop Preferences', icon: ShoppingBag, href: '/settings/shop' },
+  { label: 'Payment Methods', icon: Wallet, href: '/settings/payments' },
   {
     label: 'Communication Preferences',
     icon: Mail,
