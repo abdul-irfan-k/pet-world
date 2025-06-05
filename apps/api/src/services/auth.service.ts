@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { OAuth2Client } from 'google-auth-library';
 import { TokenExpiredError } from 'jsonwebtoken';
 
 import type {
@@ -18,7 +19,7 @@ import type {
   iSignInWithGoogleDTO,
 } from './interfaces/IAuthService';
 
-import { logger, prisma } from '@/config';
+import { GOOGLE_CLIENT_ID, logger, prisma } from '@/config';
 import { HttpStatusCode, ResponseMessages, OtpAction } from '@/constants';
 import {
   verifyPassword,
@@ -32,6 +33,8 @@ import {
   sendEmail,
   verifyRefreshToken,
 } from '@/utils';
+
+const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 export class AuthService implements IAuthService {
   public async signup(args: ISignUpDTO): Promise<ISignUpResponseDTO> {
@@ -122,37 +125,26 @@ export class AuthService implements IAuthService {
     args: iSignInWithGoogleDTO,
   ): Promise<ISignInResponseDTO> {
     try {
-      if (!args || !args.code) {
+      const { idToken } = args;
+      if (idToken === undefined) {
         throw new HttpError({
           statusCode: HttpStatusCode.BAD_REQUEST,
           message: 'INVALID_GOOGLE_SIGNIN_REQUEST',
         });
       }
-      const { code } = args;
+      const ticket = await googleClient.verifyIdToken({
+        idToken: idToken,
+        audience: GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
 
-      const tokenResponse = await axios.post(
-        'https://oauth2.googleapis.com/token',
-        null,
-        {
-          params: {
-            code: code,
-            client_id: process.env.GOOGLE_CLIENT_ID,
-            client_secret: process.env.GOOGLE_CLIENT_SECRET,
-            redirect_uri: process.env.GOOGLE_REDIRECT_URI,
-            grant_type: 'authorization_code',
-          },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        },
-      );
-
-      const { id_token } = tokenResponse.data;
-      const decodedIdToken = JSON.parse(
-        Buffer.from(id_token.split('.')[1], 'base64').toString(),
-      );
-
-      const email = decodedIdToken.email;
+      if (!payload) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: 'GOOGLE_PAYLOAD_NOT_FOUND',
+        });
+      }
+      const email = payload.email;
 
       if (email === undefined) {
         throw new HttpError({

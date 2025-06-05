@@ -14,7 +14,7 @@ export interface ISignInDTO {
 }
 
 export interface iSignInWithGoogleDTO {
-  code: string;
+  idToken: string;
 }
 export interface ISignInResponseDTO {
   accessToken: string;

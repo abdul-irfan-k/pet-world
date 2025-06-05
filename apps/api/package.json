@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "ts-node-dev  -r tsconfig-paths/register --respawn --transpile-only src/index.ts",
+    "dev": "ts-node-dev --inspect=9229  -r tsconfig-paths/register --respawn --transpile-only src/index.ts",
     "build": "tsc &&  tsc-alias",
     "start": "node dist/index.js",
     "prisma:generate": "prisma generate",
@@ -27,6 +27,7 @@
     "deep-email-validator": "^0.1.21",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
+    "google-auth-library": "^9.15.1",
     "helmet": "^7.2.0",
     "ioredis": "^5.6.1",
     "jsonwebtoken": "^9.0.2",

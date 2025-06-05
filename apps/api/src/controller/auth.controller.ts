@@ -88,16 +88,16 @@ export class AuthController implements IAuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { code } = req.body;
+      const { idToken } = req.body;
 
-      if (!code) {
+      if (!idToken) {
         throw new HttpError({
           statusCode: HttpStatusCode.BAD_REQUEST,
-          message: 'Google authorization code is required.',
+          message: 'Google authorization id token is required.',
         });
       }
 
-      const result = await this._authService.signInWithGoogle({ code });
+      const result = await this._authService.signInWithGoogle({ idToken });
 
       const isProduction = NODE_ENV === 'production';
       res.cookie('accessToken', result.accessToken, {
