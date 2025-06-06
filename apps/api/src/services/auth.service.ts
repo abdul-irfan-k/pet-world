@@ -121,9 +121,7 @@ export class AuthService implements IAuthService {
     };
   }
 
-  public async signInWithGoogle(
-    args: iSignInWithGoogleDTO,
-  ): Promise<ISignInResponseDTO> {
+  public async signInWithGoogle(args: iSignInWithGoogleDTO): Promise<ISignInResponseDTO> {
     try {
       const { idToken } = args;
       if (idToken === undefined) {
@@ -193,9 +191,7 @@ export class AuthService implements IAuthService {
     }
   }
 
-  public async refreshToken(
-    args: IRefreshTokenDTO,
-  ): Promise<IRefreshTokenResponseDTO> {
+  public async refreshToken(args: IRefreshTokenDTO): Promise<IRefreshTokenResponseDTO> {
     try {
       //eslint-disable-next-line
       //@ts-ignore
@@ -290,9 +286,7 @@ export class AuthService implements IAuthService {
     }
   }
 
-  public async verifyForgotPassword(
-    args: IVerifyForgotPasswordDTO,
-  ): Promise<IVerifyForgotPasswordResponseDTO> {
+  public async verifyForgotPassword(args: IVerifyForgotPasswordDTO): Promise<IVerifyForgotPasswordResponseDTO> {
     try {
       const { email, code, newPassword } = args;
 
@@ -351,10 +345,7 @@ export class AuthService implements IAuthService {
       ]);
       return { success: true, message: ResponseMessages.SUCCESS };
     } catch (error) {
-      logger.error(
-        'Error verifying forgot password (resetting password):',
-        error,
-      );
+      logger.error('Error verifying forgot password (resetting password):', error);
       if (error instanceof HttpError) {
         throw error;
       }
@@ -370,9 +361,7 @@ export class AuthService implements IAuthService {
     return Promise.resolve();
   }
 
-  public async me(
-    args: IGetUserDetailsDTO,
-  ): Promise<IGetUserDetailsResponseDTO> {
+  public async me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponseDTO> {
     const { id } = args;
 
     const user = await prisma.user.findUnique({

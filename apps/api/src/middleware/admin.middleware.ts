@@ -11,11 +11,7 @@ interface IAdminPayload extends JwtPayload {
   role: string;
 }
 
-export const adminAuthMiddleware = async (
-  req: Request,
-  _res: Response,
-  next: NextFunction,
-) => {
+export const adminAuthMiddleware = async (req: Request, _res: Response, next: NextFunction) => {
   try {
     let token: string | undefined;
     const authHeader = req.headers.authorization;
@@ -58,10 +54,7 @@ export const adminAuthMiddleware = async (
     next();
   } catch (error) {
     if (error instanceof TokenExpiredError) {
-      logger.warn(
-        'Admin token has expired:',
-        (error as TokenExpiredError).expiredAt,
-      );
+      logger.warn('Admin token has expired:', (error as TokenExpiredError).expiredAt);
       return next(
         new HttpError({
           message: 'ADMIN_ACCESS_TOKEN_EXPIRED',

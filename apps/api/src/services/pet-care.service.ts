@@ -22,9 +22,7 @@ import { PetCareRequest } from '@/types/PetCareRequest';
 import { HttpError } from '@/utils';
 
 export class PetCareService implements IPetCareService {
-  public async createPetCareRequest(
-    data: ICreatePetCareRequestDTO,
-  ): Promise<{ petCareRequest: PetCareRequest }> {
+  public async createPetCareRequest(data: ICreatePetCareRequestDTO): Promise<{ petCareRequest: PetCareRequest }> {
     const newPetCareRequest = await prisma.petCareRequest.create({
       data: {
         ...data,
@@ -34,9 +32,7 @@ export class PetCareService implements IPetCareService {
     return { petCareRequest: newPetCareRequest as PetCareRequest };
   }
 
-  public async updatePetCareRequest(
-    data: IUpdatePetCareRequestDTO,
-  ): Promise<{ petCareRequest: PetCareRequest }> {
+  public async updatePetCareRequest(data: IUpdatePetCareRequestDTO): Promise<{ petCareRequest: PetCareRequest }> {
     const { id, ownerId, ...updateData } = data;
     const existingRequest = await prisma.petCareRequest.findUnique({
       where: { id },
@@ -59,10 +55,7 @@ export class PetCareService implements IPetCareService {
     const updatedPetCareRequest = await prisma.petCareRequest.update({
       where: { id },
       data: {
-        ...(updateData as Omit<
-          typeof updateData,
-          'questions' | 'locationId' | 'petId'
-        >),
+        ...(updateData as Omit<typeof updateData, 'questions' | 'locationId' | 'petId'>),
         questions: updateData.questions as Prisma.InputJsonValue,
       },
     });
@@ -78,9 +71,7 @@ export class PetCareService implements IPetCareService {
     return { petCareRequest: petCareRequest as PetCareRequest | null };
   }
 
-  public async deletePetCareRequest(
-    data: IDeletePetCareRequestDTO,
-  ): Promise<void> {
+  public async deletePetCareRequest(data: IDeletePetCareRequestDTO): Promise<void> {
     const existingRequest = await prisma.petCareRequest.findUnique({
       where: { id: data.id },
     });
@@ -143,9 +134,7 @@ export class PetCareService implements IPetCareService {
     return { petCareRequests: petCareRequests as PetCareRequest[] };
   }
 
-  public async createPetCareProposal(
-    data: ICreatePetCareProposalDTO,
-  ): Promise<{ petCareProposal: PetCareProposal }> {
+  public async createPetCareProposal(data: ICreatePetCareProposalDTO): Promise<{ petCareProposal: PetCareProposal }> {
     const { petCareRequestId, adopterId, message, proposedFee } = data;
     const newProposal = await prisma.petCareProposal.create({
       data: {
@@ -191,9 +180,7 @@ export class PetCareService implements IPetCareService {
     return { petCareProposal: proposal as PetCareProposal | null };
   }
 
-  public async updatePetCareProposal(
-    data: IUpdatePetCareProposalDTO,
-  ): Promise<{ petCareProposal: PetCareProposal }> {
+  public async updatePetCareProposal(data: IUpdatePetCareProposalDTO): Promise<{ petCareProposal: PetCareProposal }> {
     const { id, userId, ...updateData } = data;
     const existingProposal = await prisma.petCareProposal.findUnique({
       where: { id, isDeleted: false },
@@ -217,11 +204,7 @@ export class PetCareService implements IPetCareService {
       });
     }
 
-    if (
-      isProposalAdopter &&
-      updateData.status &&
-      existingProposal.status !== 'pending'
-    ) {
+    if (isProposalAdopter && updateData.status && existingProposal.status !== 'pending') {
       throw new HttpError({
         statusCode: HttpStatusCode.FORBIDDEN,
         message: ResponseMessages.ADOPTER_CANNOT_CHANGE_STATUS,
@@ -238,9 +221,7 @@ export class PetCareService implements IPetCareService {
     return { petCareProposal: updatedProposal as PetCareProposal };
   }
 
-  public async deletePetCareProposal(
-    data: IDeletePetCareProposalDTO,
-  ): Promise<void> {
+  public async deletePetCareProposal(data: IDeletePetCareProposalDTO): Promise<void> {
     const { id, userId } = data;
     const existingProposal = await prisma.petCareProposal.findUnique({
       where: { id },
@@ -340,9 +321,7 @@ export class PetCareService implements IPetCareService {
     return { petCareProposals: petCareProposals as PetCareProposal[] };
   }
 
-  public async approvePetCareProposal(
-    data: IGetPetCareProposalByIdDTO,
-  ): Promise<{ petCareProposal: PetCareProposal }> {
+  public async approvePetCareProposal(data: IGetPetCareProposalByIdDTO): Promise<{ petCareProposal: PetCareProposal }> {
     const { id, userId } = data;
     const existingProposal = await prisma.petCareProposal.findUnique({
       where: { id, isDeleted: false },

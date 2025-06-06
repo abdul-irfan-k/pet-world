@@ -68,9 +68,7 @@ export interface IAuthService {
   signInWithGoogle(args: iSignInWithGoogleDTO): Promise<ISignInResponseDTO>;
   refreshToken(args: IRefreshTokenDTO): Promise<IRefreshTokenResponseDTO>;
   forgotPassword(args: IForgotPasswordDTO): Promise<void>;
-  verifyForgotPassword(
-    args: IVerifyForgotPasswordDTO,
-  ): Promise<IVerifyForgotPasswordResponseDTO>;
+  verifyForgotPassword(args: IVerifyForgotPasswordDTO): Promise<IVerifyForgotPasswordResponseDTO>;
   logout(args: ILogoutDTO): Promise<void>;
   me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponseDTO>;
 }

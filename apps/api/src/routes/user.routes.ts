@@ -21,17 +21,9 @@ export class UserRoutes {
       this._userController.addAddress.bind(this._userController),
     );
 
-    router.get(
-      '/addresses',
-      authMiddleware,
-      this._userController.getAddresses.bind(this._userController),
-    );
+    router.get('/addresses', authMiddleware, this._userController.getAddresses.bind(this._userController));
 
-    router.get(
-      '/addresses/:id',
-      authMiddleware,
-      this._userController.getAddressById.bind(this._userController),
-    );
+    router.get('/addresses/:id', authMiddleware, this._userController.getAddressById.bind(this._userController));
 
     router.patch(
       '/addresses/:id',
@@ -40,11 +32,7 @@ export class UserRoutes {
       this._userController.updateAddress.bind(this._userController),
     );
 
-    router.delete(
-      '/addresses/:id',
-      authMiddleware,
-      this._userController.deleteAddress.bind(this._userController),
-    );
+    router.delete('/addresses/:id', authMiddleware, this._userController.deleteAddress.bind(this._userController));
 
     return router;
   }

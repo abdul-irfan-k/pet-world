@@ -13,11 +13,7 @@ export class UserController {
   }
 
   // Address Methods
-  public async addAddress(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async addAddress(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       if (!userId) {
@@ -41,11 +37,7 @@ export class UserController {
     }
   }
 
-  public async getAddresses(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getAddresses(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       if (!userId) {
@@ -65,11 +57,7 @@ export class UserController {
     }
   }
 
-  public async getAddressById(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getAddressById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       const { id: addressId } = req.params;
@@ -99,11 +87,7 @@ export class UserController {
     }
   }
 
-  public async updateAddress(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async updateAddress(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       const { id: addressId } = req.params;
@@ -134,11 +118,7 @@ export class UserController {
     }
   }
 
-  public async deleteAddress(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async deleteAddress(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       const { id: addressId } = req.params;

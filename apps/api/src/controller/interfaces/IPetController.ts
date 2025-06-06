@@ -7,24 +7,8 @@ export interface IPetController {
   deletePet(req: Request, res: Response, next: NextFunction): Promise<void>;
   listPets(req: Request, res: Response, next: NextFunction): Promise<void>;
   getMyPets(req: Request, res: Response, next: NextFunction): Promise<void>;
-  addPetToFavorites(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void>;
-  removePetFromFavorites(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void>;
-  getFavoritePetsByUserId(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void>;
-  isPetFavoritedByUser(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void>;
+  addPetToFavorites(req: Request, res: Response, next: NextFunction): Promise<void>;
+  removePetFromFavorites(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getFavoritePetsByUserId(req: Request, res: Response, next: NextFunction): Promise<void>;
+  isPetFavoritedByUser(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

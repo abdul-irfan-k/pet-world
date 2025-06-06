@@ -34,10 +34,6 @@ export interface IPetService {
   getMyPets(ownerId: string): Promise<{ pets: Pet[] }>;
   addPetToFavorites(data: IAddPetToFavoritesDTO): Promise<{ pet: FavoritePet }>;
   removePetFromFavorites(data: IRemovePetFromFavoritesDTO): Promise<void>;
-  getFavoritePetsByUserId(
-    data: IGetFavoritePetsByUserIdDTO,
-  ): Promise<{ pets: Pet[] }>;
-  isPetFavoritedByUser(
-    data: IIsPetFavoritedByUserDTO,
-  ): Promise<{ isFavorited: { status: boolean } }>;
+  getFavoritePetsByUserId(data: IGetFavoritePetsByUserIdDTO): Promise<{ pets: Pet[] }>;
+  isPetFavoritedByUser(data: IIsPetFavoritedByUserDTO): Promise<{ isFavorited: { status: boolean } }>;
 }

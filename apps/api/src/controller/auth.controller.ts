@@ -14,11 +14,7 @@ export class AuthController implements IAuthController {
     this._authService = authService;
   }
 
-  public async signup(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password, firstName, lastName, userName } = req.body;
 
@@ -42,11 +38,7 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async signin(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password } = req.body;
 
@@ -82,11 +74,7 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async signInWithGoogle(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async signInWithGoogle(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { idToken } = req.body;
 
@@ -128,11 +116,7 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async refreshToken(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async refreshToken(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const refreshToken = req.cookies.refreshToken;
 
@@ -174,11 +158,7 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async forgotPassword(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async forgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email } = req.body;
 
@@ -193,11 +173,7 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async verifyForgotPassword(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async verifyForgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, code, newPassword } = req.body;
 
@@ -216,11 +192,7 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async logout(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       // const refreshToken = req.cookies.refreshToken;
       const id = req.user?.id;
@@ -241,11 +213,7 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async me(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async me(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const id = req.user?.id;
 

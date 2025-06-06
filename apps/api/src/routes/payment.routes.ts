@@ -16,9 +16,7 @@ export class PaymentRoutes {
     router.post(
       '/stripe/onboard',
       authMiddleware,
-      this._paymentController.onboardStripeAccount.bind(
-        this._paymentController,
-      ),
+      this._paymentController.onboardStripeAccount.bind(this._paymentController),
     );
 
     return router;

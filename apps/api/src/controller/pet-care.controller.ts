@@ -12,11 +12,7 @@ export class PetCareController implements IPetCareController {
     this._petCareService = petCareService;
   }
 
-  public async createPetCareRequest(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async createPetCareRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this._petCareService.createPetCareRequest({
         ...req.body,
@@ -33,11 +29,7 @@ export class PetCareController implements IPetCareController {
     }
   }
 
-  public async updatePetCareRequest(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async updatePetCareRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { requestId } = req.params;
       const result = await this._petCareService.updatePetCareRequest({
@@ -55,11 +47,7 @@ export class PetCareController implements IPetCareController {
     }
   }
 
-  public async getPetCareRequestById(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getPetCareRequestById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { requestId } = req.params;
       const result = await this._petCareService.getPetCareRequestById({
@@ -75,11 +63,7 @@ export class PetCareController implements IPetCareController {
     }
   }
 
-  public async deletePetCareRequest(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async deletePetCareRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { requestId } = req.params;
       await this._petCareService.deletePetCareRequest({
@@ -95,11 +79,7 @@ export class PetCareController implements IPetCareController {
     }
   }
 
-  public async listPetCareRequests(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async listPetCareRequests(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this._petCareService.listPetCareRequests({
         ...req.query,
@@ -114,11 +94,7 @@ export class PetCareController implements IPetCareController {
     }
   }
 
-  public async listMyPetCareRequests(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async listMyPetCareRequests(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this._petCareService.listMyPetCareRequests({
         userId: req.user!.id,
@@ -134,11 +110,7 @@ export class PetCareController implements IPetCareController {
     }
   }
 
-  public async createPetCareProposal(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async createPetCareProposal(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this._petCareService.createPetCareProposal({
         ...req.body,
@@ -154,11 +126,7 @@ export class PetCareController implements IPetCareController {
     }
   }
 
-  public async getPetCareProposalById(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getPetCareProposalById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { proposalId } = req.params;
       const result = await this._petCareService.getPetCareProposalById({
@@ -175,11 +143,7 @@ export class PetCareController implements IPetCareController {
     }
   }
 
-  public async updatePetCareProposal(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async updatePetCareProposal(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { proposalId } = req.params;
       const result = await this._petCareService.updatePetCareProposal({
@@ -197,11 +161,7 @@ export class PetCareController implements IPetCareController {
     }
   }
 
-  public async deletePetCareProposal(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async deletePetCareProposal(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { proposalId } = req.params;
       await this._petCareService.deletePetCareProposal({
@@ -217,16 +177,10 @@ export class PetCareController implements IPetCareController {
     }
   }
 
-  public async listPetCareProposalsByAdopterId(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async listPetCareProposalsByAdopterId(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const adopterId = req.user!.id;
-      const result = await this._petCareService.listPetCareProposalsByAdopterId(
-        { adopterId },
-      );
+      const result = await this._petCareService.listPetCareProposalsByAdopterId({ adopterId });
       res.status(HttpStatusCode.OK).json({
         status: 'success',
         data: result,
@@ -237,11 +191,7 @@ export class PetCareController implements IPetCareController {
     }
   }
 
-  public async approvePetCareProposal(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async approvePetCareProposal(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { proposalId } = req.params;
       const result = await this._petCareService.approvePetCareProposal({
@@ -258,11 +208,7 @@ export class PetCareController implements IPetCareController {
     }
   }
 
-  public async listProposalsForPetCareRequest(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async listProposalsForPetCareRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { requestId } = req.params;
       const result = await this._petCareService.listProposalsForPetCareRequest({

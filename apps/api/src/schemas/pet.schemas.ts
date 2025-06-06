@@ -1,10 +1,6 @@
 import { z } from 'zod';
 
-import type {
-  ICreatePetDTO,
-  IUpdatePetDTO,
-  IGetPetsQueryDTO,
-} from '@/services/interfaces/IPetService';
+import type { ICreatePetDTO, IUpdatePetDTO, IGetPetsQueryDTO } from '@/services/interfaces/IPetService';
 
 //eslint-disable-next-line
 //@ts-ignore
@@ -30,7 +26,5 @@ export const updatePetSchema: z.ZodType<Omit<IUpdatePetDTO, 'id'>> = z.object({
 export const listPetsSchema: z.ZodType<IGetPetsQueryDTO> = z.object({
   species: z.string().trim().min(1).optional(),
   breed: z.string().trim().min(1).optional(),
-  ageRange: z
-    .tuple([z.number().int().positive(), z.number().int().positive()])
-    .optional(),
+  ageRange: z.tuple([z.number().int().positive(), z.number().int().positive()]).optional(),
 });

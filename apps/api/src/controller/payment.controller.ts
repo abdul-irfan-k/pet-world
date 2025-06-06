@@ -14,11 +14,7 @@ export class PaymentController implements IPaymentController {
     this._paymentService = new PaymentService();
   }
 
-  public async createStripeAccount(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async createStripeAccount(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       if (!userId) {
@@ -40,11 +36,7 @@ export class PaymentController implements IPaymentController {
     }
   }
 
-  public async createStripeAccountLink(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async createStripeAccountLink(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { accountId } = req.body;
 
@@ -63,11 +55,7 @@ export class PaymentController implements IPaymentController {
     }
   }
 
-  public async onboardStripeAccount(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async onboardStripeAccount(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       if (!userId) {

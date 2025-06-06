@@ -14,9 +14,7 @@ export type IOnboardStripeAccountDTO = {
 };
 
 export interface IPaymentService {
-  createStripeAccount(
-    data: ICraeteStripeAccountDTO,
-  ): Promise<{ stripeAccount: Stripe.Response<Stripe.Account> }>;
+  createStripeAccount(data: ICraeteStripeAccountDTO): Promise<{ stripeAccount: Stripe.Response<Stripe.Account> }>;
   createStripeAccountLink(
     data: ICreateStripeAccountLinkDTO,
   ): Promise<{ stripeAccountLink: Stripe.Response<Stripe.AccountLink> }>;

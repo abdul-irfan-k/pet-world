@@ -150,13 +150,7 @@ async function main() {
       age: 4,
       profile: { description: 'Gentle and loves cuddles.' },
       gender: 'Female',
-      images: [
-        catImages[0],
-        catImages[1],
-        catImages[2],
-        catImages[3],
-        catImages[4],
-      ],
+      images: [catImages[0], catImages[1], catImages[2], catImages[3], catImages[4]],
       videos: [],
       ownerId: actualUserIds[1], // Bob
     },
@@ -179,13 +173,7 @@ async function main() {
       age: 3,
       profile: { description: 'Large and docile.' },
       gender: 'Male',
-      images: [
-        rabitImages[0],
-        rabitImages[1],
-        rabitImages[2],
-        rabitImages[3],
-        rabitImages[4],
-      ],
+      images: [rabitImages[0], rabitImages[1], rabitImages[2], rabitImages[3], rabitImages[4]],
       videos: [],
       ownerId: actualUserIds[0], // Alice
     },
@@ -208,13 +196,7 @@ async function main() {
       age: 2,
       profile: { description: 'Elegant and smart.' },
       gender: 'Female',
-      images: [
-        dogsImages[10],
-        dogsImages[0],
-        dogsImages[1],
-        dogsImages[2],
-        dogsImages[3],
-      ],
+      images: [dogsImages[10], dogsImages[0], dogsImages[1], dogsImages[2], dogsImages[3]],
       videos: [],
       ownerId: actualUserIds[2], // Charlie
     },
@@ -225,13 +207,7 @@ async function main() {
       age: 3,
       profile: { description: 'Energetic and playful.' },
       gender: 'Male',
-      images: [
-        dogsImages[1],
-        dogsImages[2],
-        dogsImages[3],
-        dogsImages[4],
-        dogsImages[5],
-      ],
+      images: [dogsImages[1], dogsImages[2], dogsImages[3], dogsImages[4], dogsImages[5]],
       videos: [],
       ownerId: actualUserIds[0], // Alice
     },
@@ -254,13 +230,7 @@ async function main() {
       age: 1,
       profile: { description: 'Curious and friendly.' },
       gender: 'Female',
-      images: [
-        dogsImages[3],
-        dogsImages[4],
-        dogsImages[5],
-        dogsImages[6],
-        dogsImages[7],
-      ],
+      images: [dogsImages[3], dogsImages[4], dogsImages[5], dogsImages[6], dogsImages[7]],
       videos: [],
       ownerId: actualUserIds[2], // Charlie
     },

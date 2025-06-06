@@ -41,13 +41,9 @@ export class AdminService implements IAdminService {
       });
     }
 
-    const token = jwt.sign(
-      { id: admin.id, email: admin.email, role: 'admin' },
-      env.JWT_ACCESS_TOKEN_SECRET,
-      {
-        expiresIn: '1d',
-      },
-    );
+    const token = jwt.sign({ id: admin.id, email: admin.email, role: 'admin' }, env.JWT_ACCESS_TOKEN_SECRET, {
+      expiresIn: '1d',
+    });
 
     const { password, ...adminWithoutPassword } = admin;
     return { token, admin: adminWithoutPassword };
@@ -58,9 +54,7 @@ export class AdminService implements IAdminService {
     return Promise.resolve();
   }
 
-  public async getAdminProfile(
-    adminId: string,
-  ): Promise<IGetAdminProfileResponse> {
+  public async getAdminProfile(adminId: string): Promise<IGetAdminProfileResponse> {
     const admin = await prisma.admin.findUnique({
       where: { id: adminId },
       select: { id: true, email: true, createdAt: true, updatedAt: true },
@@ -83,9 +77,7 @@ export class AdminService implements IAdminService {
     return { adopters };
   }
 
-  public async getAdopterById(
-    adopterId: string,
-  ): Promise<IGetAdopterByIdResponse> {
+  public async getAdopterById(adopterId: string): Promise<IGetAdopterByIdResponse> {
     const adopter = (await prisma.pet_Adopter.findUnique({
       where: { id: adopterId },
       include: { user: true },
@@ -100,9 +92,7 @@ export class AdminService implements IAdminService {
     return { adopter };
   }
 
-  public async verifyAdopterDocuments(
-    data: IVerifyAdopterDocumentsDTO,
-  ): Promise<IVerifyAdopterDocumentsResponse> {
+  public async verifyAdopterDocuments(data: IVerifyAdopterDocumentsDTO): Promise<IVerifyAdopterDocumentsResponse> {
     const { adopterId, verified } = data;
     const existingAdopter = await prisma.pet_Adopter.findUnique({
       where: { id: adopterId },
@@ -115,8 +105,7 @@ export class AdminService implements IAdminService {
       });
     }
 
-    let updatedDocuments: Prisma.InputJsonValue | undefined =
-      existingAdopter.documents ?? undefined;
+    let updatedDocuments: Prisma.InputJsonValue | undefined = existingAdopter.documents ?? undefined;
     if (typeof updatedDocuments === 'object' && updatedDocuments !== null) {
       updatedDocuments = {
         ...(updatedDocuments as object),
@@ -136,9 +125,7 @@ export class AdminService implements IAdminService {
     return { adopter: adopter as PetAdopter };
   }
 
-  public async updateAdopterDetails(
-    data: IUpdateAdopterDetailsDTO,
-  ): Promise<IUpdateAdopterDetailsResponse> {
+  public async updateAdopterDetails(data: IUpdateAdopterDetailsDTO): Promise<IUpdateAdopterDetailsResponse> {
     const { id, userId, ...updateData } = data;
 
     if (userId) {
@@ -157,23 +144,18 @@ export class AdminService implements IAdminService {
 
     const dataToUpdate: Prisma.Pet_AdopterUpdateInput = {};
 
-    if (updateData.adharNumber !== undefined)
-      dataToUpdate.adharNumber = updateData.adharNumber;
+    if (updateData.adharNumber !== undefined) dataToUpdate.adharNumber = updateData.adharNumber;
     if (updateData.documents !== undefined) {
       //eslint-disable-next-line
       //@ts-ignore
-      dataToUpdate.documents =
-        updateData.documents === null ? Prisma.DbNull : updateData.documents;
+      dataToUpdate.documents = updateData.documents === null ? Prisma.DbNull : updateData.documents;
     }
-    if (updateData.yearOfExperience !== undefined)
-      dataToUpdate.yearOfExperience = updateData.yearOfExperience;
-    if (updateData.certifications !== undefined)
-      dataToUpdate.certifications = updateData.certifications;
+    if (updateData.yearOfExperience !== undefined) dataToUpdate.yearOfExperience = updateData.yearOfExperience;
+    if (updateData.certifications !== undefined) dataToUpdate.certifications = updateData.certifications;
     if (updateData.overview !== undefined) {
       //eslint-disable-next-line
       //@ts-ignore
-      dataToUpdate.overview =
-        updateData.overview === null ? Prisma.DbNull : updateData.overview;
+      dataToUpdate.overview = updateData.overview === null ? Prisma.DbNull : updateData.overview;
     }
     dataToUpdate.updatedAt = new Date();
 
@@ -204,12 +186,7 @@ export class AdminService implements IAdminService {
   }
 
   public async getAllPets(queryParams: any): Promise<any> {
-    const {
-      page = 1,
-      limit = 10,
-      sortBy = 'createdAt',
-      sortOrder = 'desc',
-    } = queryParams;
+    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc' } = queryParams;
     const skip = (page - 1) * limit;
 
     const where: Prisma.PetWhereInput = {
@@ -296,13 +273,7 @@ export class AdminService implements IAdminService {
   }
 
   public async getAllAdoptionRequests(queryParams: any): Promise<any> {
-    const {
-      page = 1,
-      limit = 10,
-      sortBy = 'createdAt',
-      sortOrder = 'desc',
-      status,
-    } = queryParams;
+    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc', status } = queryParams;
     const skip = (page - 1) * limit;
     const where: Prisma.PetCareRequestWhereInput = {
       isDeleted: false,

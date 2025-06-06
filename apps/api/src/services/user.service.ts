@@ -11,9 +11,7 @@ import { prisma } from '@/config';
 import { Location } from '@/types/Location';
 
 export class UserService implements IUserService {
-  public async addAddress(
-    data: ICreateAddressDTO,
-  ): Promise<{ location: Location }> {
+  public async addAddress(data: ICreateAddressDTO): Promise<{ location: Location }> {
     const { userId, ...addressData } = data;
 
     if (addressData.isDefault) {
@@ -32,9 +30,7 @@ export class UserService implements IUserService {
     return { location };
   }
 
-  public async getAddressesByUserId(
-    data: IGetAddressesByUserIdDTO,
-  ): Promise<{ locations: Location[] }> {
+  public async getAddressesByUserId(data: IGetAddressesByUserIdDTO): Promise<{ locations: Location[] }> {
     const { userId } = data;
     const locations = await prisma.location.findMany({
       where: { userId, isDeleted: false },
@@ -45,9 +41,7 @@ export class UserService implements IUserService {
     return { locations };
   }
 
-  public async getAddressById(
-    data: IGetAddressByIdDTO,
-  ): Promise<{ location: Location | null }> {
+  public async getAddressById(data: IGetAddressByIdDTO): Promise<{ location: Location | null }> {
     const { userId, id: addressId } = data;
     const location = await prisma.location.findUnique({
       where: { id: addressId, userId, isDeleted: false },
@@ -55,9 +49,7 @@ export class UserService implements IUserService {
     return { location };
   }
 
-  public async updateAddress(
-    data: IUpdateAddressDTO,
-  ): Promise<{ location: Location | null }> {
+  public async updateAddress(data: IUpdateAddressDTO): Promise<{ location: Location | null }> {
     const { id: addressId, userId, ...updateData } = data;
     const existingLocation = await prisma.location.findUnique({
       where: { id: addressId, userId },
@@ -81,9 +73,7 @@ export class UserService implements IUserService {
     return { location: updatedLocation };
   }
 
-  public async deleteAddress(
-    data: IDeleteAddressDTO,
-  ): Promise<{ location: Location | null }> {
+  public async deleteAddress(data: IDeleteAddressDTO): Promise<{ location: Location | null }> {
     const { userId, id: addressId } = data;
     const existingLocation = await prisma.location.findUnique({
       where: { id: addressId, userId, isDeleted: false },
