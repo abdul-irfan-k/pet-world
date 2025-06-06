@@ -46,11 +46,12 @@ export class PaymentController implements IPaymentController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { account } = req.body;
+      const { accountId } = req.body;
 
+      const origin = req.headers.origin;
       const accountLink = await this._paymentService.createStripeAccountLink({
-        accountId: account,
-        origin: req.headers.origin,
+        accountId: accountId,
+        origin: origin,
       });
       res.status(HttpStatusCode.OK).json({
         status: 'success',
