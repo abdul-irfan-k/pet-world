@@ -16,6 +16,7 @@ import {
   UserRoutes,
 } from './routes';
 import { FavoriteRoutes } from './routes/favorites.routes';
+import { PaymentRoutes } from './routes/payment.routes';
 
 import { globalErrorHandler } from '@/middleware';
 
@@ -57,7 +58,7 @@ export class ExpressServer {
     this.app.use('/api/v1/upload/', new UploadRoutes().getRoutes());
     this.app.use('/api/v1/pet-care/', new PetCareRoutes().getRoutes());
     this.app.use('/api/v1/users/', new UserRoutes().getRoutes());
-
+    this.app.use('/api/v1/payments/', new PaymentRoutes().getRoutes());
     // Admin Routes
     this.app.use('/api/v1/admin/', new AdminRoutes().getRoutes());
   }
