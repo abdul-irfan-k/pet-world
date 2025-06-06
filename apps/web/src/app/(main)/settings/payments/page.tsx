@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { useOnboardStripeAccountMutation } from '@/lib/api/paymentApi';
 
 interface PaymentMethod {
   id: string;
@@ -12,12 +13,18 @@ interface PaymentMethod {
 }
 
 const PaymentsPage = () => {
-  const [showForm, setShowForm] = useState(false);
   //eslint-disable-next-line
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const isLoading = false;
   const isError = false;
 
+  const { mutate } = useOnboardStripeAccountMutation();
+
+  const handleAddPaymentMethod = () => {
+    mutate({
+      origin: window.location.origin,
+    });
+  };
   return (
     <div>
       <div className="flex w-[400px] flex-col gap-6">
@@ -27,7 +34,7 @@ const PaymentsPage = () => {
 
         {isLoading && <p>Loading payment methods...</p>}
         {isError && <p>Error loading payment methods.</p>}
-        {paymentMethods.length === 0 && !showForm && (
+        {paymentMethods.length === 0 && (
           <div>
             <span className="text-[16px] leading-[26px]">
               You have no saved payment methods yet. Add a payment method to
@@ -55,8 +62,7 @@ const PaymentsPage = () => {
             variant={'black'}
             size={'lg'}
             className="rounded-full"
-            onClick={() => setShowForm(true)}
-            disabled={showForm}
+            onClick={handleAddPaymentMethod}
           >
             Add payment method
           </Button>

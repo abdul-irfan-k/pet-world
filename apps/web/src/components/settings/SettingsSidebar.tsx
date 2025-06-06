@@ -15,6 +15,7 @@ import {
 
 import { Button } from '@/components/ui/button/Button';
 import { useLogoutMutation } from '@/lib/api/authApi';
+import { useAuthStore } from '@/stores/authStore';
 
 const settingsLinks = [
   { label: 'Account Details', icon: User, href: '/settings/account' },
@@ -32,8 +33,10 @@ const settingsLinks = [
 
 const SettingsSidebar = () => {
   const router = useRouter();
+  const { logout } = useAuthStore();
   const { mutate: logoutUser, isPending } = useLogoutMutation({
     onSuccess: () => {
+      logout();
       router.push('/');
     },
   });
