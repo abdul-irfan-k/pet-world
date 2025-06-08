@@ -3,8 +3,10 @@
 import { useState } from 'react';
 
 import { motion, AnimatePresence } from 'framer-motion';
+import { Search } from 'lucide-react';
 import { SelectRangeEventHandler } from 'react-day-picker';
 
+import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DatePickerWithRange } from '@/components/ui/date-picker';
@@ -52,7 +54,7 @@ const speciesList: Species[] = [
   { id: 'other', icon: '🐾', name: 'Other' },
 ];
 
-type TabKeys = 'where' | 'adoptionStart' | 'checkout' | 'species';
+type TabKeys = 'where' | 'adoptionStart' | 'adoptionEnd' | 'species';
 
 export function SearchTabs() {
   const [selectedTab, setSelectedTab] = useState<TabKeys>('where');
@@ -109,28 +111,39 @@ export function SearchTabs() {
         <div className=" ">
           <h3 className="mb-2 text-sm font-semibold">Select Adoption Date Range</h3>
           <Calendar
-            mode="range"
+            mode="single"
             numberOfMonths={2}
             classNames={{ months: 'flex flex-col sm:flex-row gap-16' }}
             //eslint-disable-next-line
             //@ts-ignore
-            onSelect={setDateRange}
-            selected={dateRange}
+            onSelect={value => setDateRange({ ...dateRange, from: value })}
+            initialFocus
+            selected={dateRange.from}
           />
         </div>
       </motion.div>
     ),
-    checkout: (
+    adoptionEnd: (
       <motion.div
-        key="checkout"
+        key="adoptionEnd"
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: -100, opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="p-4"
+        className="rounded-2xl bg-white p-8 shadow-2xl"
       >
-        <div className="w-150 h-50 block bg-yellow-300">
-          <Input placeholder="Search locations..." />
+        <div className=" ">
+          <h3 className="mb-2 text-sm font-semibold">Select Adoption Date Range</h3>
+          <Calendar
+            mode="single"
+            numberOfMonths={2}
+            classNames={{ months: 'flex flex-col sm:flex-row gap-16' }}
+            //eslint-disable-next-line
+            //@ts-ignore
+            onSelect={value => setDateRange({ ...dateRange, to: value })}
+            initialFocus
+            selected={dateRange.to}
+          />
         </div>
       </motion.div>
     ),
@@ -178,21 +191,40 @@ export function SearchTabs() {
         //@ts-ignore
         onValueChange={setSelectedTab}
       >
-        <TabsList className="flex h-20 justify-center space-x-2 rounded-full bg-gray-100">
-          <TabsTrigger className="w-full rounded-full px-8" value="where">
-            <div className="flex h-full w-full flex-col items-start gap-2">
-              Where
-              <Input placeholder="Search locations..." className="ml-4 w-full" />s
-            </div>
+        <TabsList className="w-215 flex h-20 justify-center rounded-full bg-gray-100">
+          <TabsTrigger
+            className="flex-1/2 flex w-full flex-col items-start justify-center rounded-full px-8"
+            value="where"
+          >
+            Where
+            <Input placeholder="Search locations..." className="ml-0 w-full" />
           </TabsTrigger>
-          <TabsTrigger className="w-full rounded-full px-8" value="adoptionStart">
-            Adoption Start
+          <TabsTrigger
+            className="flex-1/4 flex flex-col items-start justify-center rounded-full px-8"
+            value="adoptionStart"
+          >
+            Start Date
+            <span className="text-gray-400">Select Start Date</span>
           </TabsTrigger>
-          <TabsTrigger className="w-full rounded-full px-8" value="checkout">
-            Check-out
+          <TabsTrigger
+            className="flex-1/4 flex flex-col items-start justify-center rounded-full px-8"
+            value="adoptionEnd"
+          >
+            Start Date
+            <span className="text-gray-400">Select End Date</span>
           </TabsTrigger>
-          <TabsTrigger className="w-full rounded-full px-8" value="species">
+          <TabsTrigger
+            className="flex-1/2 relative flex flex-col items-start justify-center rounded-full px-8"
+            value="species"
+          >
             Species
+            <span className="text-gray-400">Select Species</span>
+            <div className="absolute right-0">
+              <Button rounded>
+                <Search className="h-4 w-4" />
+                <span className="text-sm font-semibold">Search</span>
+              </Button>
+            </div>
           </TabsTrigger>
         </TabsList>
 
