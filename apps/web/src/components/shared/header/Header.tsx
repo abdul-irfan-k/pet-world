@@ -6,14 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import {
-  Search,
-  ShoppingBag,
-  User2,
-  Settings,
-  Heart,
-  LogOut,
-} from 'lucide-react';
+import { Search, ShoppingBag, User2, Settings, Heart, LogOut } from 'lucide-react';
 
 import { Button } from '../../ui/button';
 
@@ -38,15 +31,9 @@ const Header = () => {
 
   return (
     <header className="w-full bg-white shadow-sm">
-      <div className="container mx-auto flex items-center justify-between px-4 py-3">
+      <div className="container mx-auto flex items-center justify-between">
         <Link href="/">
-          <Image
-            src="/logo/nike.svg"
-            alt="Pet World Logo"
-            width={70}
-            height={70}
-            className="cursor-pointer"
-          />
+          <Image src="/logo/logo.png" alt="Pet World Logo" width={150} height={50} className="cursor-pointer" />
         </Link>
 
         <nav className="hidden gap-6 text-sm font-medium text-black md:flex">
@@ -86,21 +73,11 @@ const Header = () => {
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="focus:ring-brand-500 relative h-10 w-10 overflow-hidden rounded-full border border-gray-300 focus:outline-none focus:ring-2"
                 >
-                  <Image
-                    src={'/user-profile.png'}
-                    alt={user.name || 'User Profile'}
-                    fill
-                    className="object-cover"
-                  />
+                  <Image src={'/user-profile.png'} alt={user.name || 'User Profile'} fill className="object-cover" />
                 </button>
                 {isDropdownOpen && (
                   <div className="absolute right-0 z-50 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-                    <div
-                      className="py-1"
-                      role="menu"
-                      aria-orientation="vertical"
-                      aria-labelledby="options-menu"
-                    >
+                    <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                       <Link
                         href="/settings"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
