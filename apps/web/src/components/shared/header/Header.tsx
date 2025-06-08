@@ -33,7 +33,7 @@ const Header = () => {
   return (
     <header className="fixed z-20 h-20 w-full bg-white shadow-sm">
       <div className="container relative mx-auto flex items-center justify-between">
-        <Link href="/">
+        <Link href="/" className="z-40">
           <Image src="/logo/logo.png" alt="Pet World Logo" width={150} height={50} className="cursor-pointer" />
         </Link>
 
@@ -46,7 +46,7 @@ const Header = () => {
           <Link href="/help">Help</Link>
         </nav> */}
 
-        <div className="relative flex items-center gap-3">
+        <div className="relative z-40 flex items-center gap-3">
           {!isAuthenticated && (
             <>
               <Link href="/sign-up" className="text-sm font-medium text-black">
@@ -107,7 +107,7 @@ const Header = () => {
             </>
           )}
         </div>
-        <div className="absolute left-[50%] translate-x-[-50%]">
+        <div className="absolute left-[50%] z-20 translate-x-[-50%]">
           <HeaderSearch />
         </div>
       </div>
