@@ -3,8 +3,11 @@
 import { useState } from 'react';
 
 import { motion, AnimatePresence } from 'framer-motion';
+import { SelectRangeEventHandler } from 'react-day-picker';
 
+import { Calendar } from '@/components/ui/calendar';
 import { Checkbox } from '@/components/ui/checkbox';
+import { DatePickerWithRange } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/form/inputs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -55,6 +58,10 @@ export function SearchTabs() {
   const [selectedTab, setSelectedTab] = useState<TabKeys>('where');
 
   const [selectedSpecies, setSelectedSpecies] = useState<string[]>([]);
+  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
+    from: new Date(),
+    to: new Date(new Date().setDate(new Date().getDate() + 7)),
+  });
 
   const handleSpeciesChange = (species: string, isChecked: boolean) => {
     setSelectedSpecies(prev => (isChecked ? [...prev, species] : prev.filter(s => s !== species)));
@@ -97,10 +104,19 @@ export function SearchTabs() {
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: -100, opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="p-4"
+        className="rounded-2xl bg-white p-8 shadow-2xl"
       >
-        <div className="w-150 h-50 block bg-green-300">
-          <Input placeholder="Search locations..." />
+        <div className=" ">
+          <h3 className="mb-2 text-sm font-semibold">Select Adoption Date Range</h3>
+          <Calendar
+            mode="range"
+            numberOfMonths={2}
+            classNames={{ months: 'flex flex-col sm:flex-row gap-16' }}
+            //eslint-disable-next-line
+            //@ts-ignore
+            onSelect={setDateRange}
+            selected={dateRange}
+          />
         </div>
       </motion.div>
     ),
@@ -176,7 +192,7 @@ export function SearchTabs() {
             Check-out
           </TabsTrigger>
           <TabsTrigger className="w-full rounded-full px-8" value="species">
-            Who
+            Species
           </TabsTrigger>
         </TabsList>
 
