@@ -4,15 +4,13 @@ import { useState } from 'react';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search } from 'lucide-react';
-import { SelectRangeEventHandler } from 'react-day-picker';
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Checkbox } from '@/components/ui/checkbox';
-import { DatePickerWithRange } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/form/inputs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 type SuggestedLocation = {
   id: string;
