@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { Search, ShoppingBag, User2, Settings, Heart, LogOut } from 'lucide-react';
+import { ShoppingBag, User2, Settings, Heart, LogOut } from 'lucide-react';
 
 import { Button } from '../../ui/button';
 import { HeaderSearch } from '../search/HeaderSearch';
