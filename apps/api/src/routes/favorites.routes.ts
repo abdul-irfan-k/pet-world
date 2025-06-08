@@ -14,29 +14,13 @@ export class FavoriteRoutes {
   public getRoutes(): Router {
     const router = Router();
 
-    router.post(
-      '/',
-      authMiddleware,
-      this._petController.addPetToFavorites.bind(this._petController),
-    );
+    router.post('/', authMiddleware, this._petController.addPetToFavorites.bind(this._petController));
 
-    router.delete(
-      '/:petId',
-      authMiddleware,
-      this._petController.removePetFromFavorites.bind(this._petController),
-    );
+    router.delete('/:petId', authMiddleware, this._petController.removePetFromFavorites.bind(this._petController));
 
-    router.get(
-      '/',
-      authMiddleware,
-      this._petController.getFavoritePetsByUserId.bind(this._petController),
-    );
+    router.get('/', authMiddleware, this._petController.getFavoritePetsByUserId.bind(this._petController));
 
-    router.get(
-      '/:petId/status',
-      authMiddleware,
-      this._petController.isPetFavoritedByUser.bind(this._petController),
-    );
+    router.get('/:petId/status', authMiddleware, this._petController.isPetFavoritedByUser.bind(this._petController));
 
     return router;
   }

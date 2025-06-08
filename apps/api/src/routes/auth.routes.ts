@@ -20,16 +20,8 @@ export class AuthRoutes {
   public getRoutes(): Router {
     const router = Router();
 
-    router.post(
-      '/signup',
-      schemaValidator(signUpSchema),
-      this._authController.signup.bind(this._authController),
-    );
-    router.post(
-      '/signin',
-      schemaValidator(signInSchema),
-      this._authController.signin.bind(this._authController),
-    );
+    router.post('/signup', schemaValidator(signUpSchema), this._authController.signup.bind(this._authController));
+    router.post('/signin', schemaValidator(signInSchema), this._authController.signin.bind(this._authController));
     router.post(
       '/refresh-token',
       // schemaValidator(refreshTokenSchema),
@@ -51,12 +43,9 @@ export class AuthRoutes {
       // schemaValidator(logoutSchema),
       this._authController.logout.bind(this._authController),
     );
+    router.post('/google-auth', this._authController.signInWithGoogle.bind(this._authController));
 
-    router.get(
-      '/me',
-      authMiddleware,
-      this._authController.me.bind(this._authController),
-    );
+    router.get('/me', authMiddleware, this._authController.me.bind(this._authController));
 
     return router;
   }

@@ -8,12 +8,7 @@ import {
   JWT_REFRESH_TOKEN_EXPIRES_IN,
 } from '../config/env.config';
 
-import type {
-  SignOptions,
-  VerifyOptions,
-  JwtPayload,
-  Algorithm,
-} from 'jsonwebtoken';
+import type { SignOptions, VerifyOptions, JwtPayload, Algorithm } from 'jsonwebtoken';
 
 interface IAccessTokenPayload {
   id: string;
@@ -31,10 +26,7 @@ const JWT_ALGORITHM: Algorithm = 'HS256';
 const accessSecret: jwt.Secret = JWT_ACCESS_TOKEN_SECRET!;
 const refreshSecret: jwt.Secret = JWT_REFRESH_TOKEN_SECRET!;
 
-export const generateAccessToken = (
-  payload: IAccessTokenPayload,
-  overrides?: SignOptions,
-): string => {
+export const generateAccessToken = (payload: IAccessTokenPayload, overrides?: SignOptions): string => {
   const options: SignOptions = {
     algorithm: JWT_ALGORITHM,
     // eslint-disable-next-line
@@ -46,10 +38,7 @@ export const generateAccessToken = (
   return jwt.sign(payload, accessSecret, options);
 };
 
-export const verifyAccessToken = (
-  token: string,
-  overrides?: VerifyOptions,
-): IAccessTokenPayload & JwtPayload => {
+export const verifyAccessToken = (token: string, overrides?: VerifyOptions): IAccessTokenPayload & JwtPayload => {
   const options: VerifyOptions = {
     algorithms: [JWT_ALGORITHM],
     ...overrides,
@@ -59,10 +48,7 @@ export const verifyAccessToken = (
   return decoded as IAccessTokenPayload & JwtPayload;
 };
 
-export const generateRefreshToken = (
-  payload: IRefreshTokenPayload,
-  overrides?: SignOptions,
-): string => {
+export const generateRefreshToken = (payload: IRefreshTokenPayload, overrides?: SignOptions): string => {
   const jti = payload.jti ?? uuidv4();
 
   const options: SignOptions = {
@@ -76,10 +62,7 @@ export const generateRefreshToken = (
   return jwt.sign({ ...payload, jti }, refreshSecret, options);
 };
 
-export const verifyRefreshToken = (
-  token: string,
-  overrides?: VerifyOptions,
-): IRefreshTokenPayload & JwtPayload => {
+export const verifyRefreshToken = (token: string, overrides?: VerifyOptions): IRefreshTokenPayload & JwtPayload => {
   const options: VerifyOptions = {
     algorithms: [JWT_ALGORITHM],
     ...overrides,

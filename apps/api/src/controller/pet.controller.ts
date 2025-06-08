@@ -12,11 +12,7 @@ export class PetController implements IPetController {
     this._petService = petService;
   }
 
-  public async createPet(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async createPet(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this._petService.createPet({
         ...req.body,
@@ -32,11 +28,7 @@ export class PetController implements IPetController {
     }
   }
 
-  public async updatePet(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async updatePet(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const result = await this._petService.updatePet({
@@ -54,11 +46,7 @@ export class PetController implements IPetController {
     }
   }
 
-  public async getPetById(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getPetById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const result = await this._petService.getPetById({ id });
@@ -72,11 +60,7 @@ export class PetController implements IPetController {
     }
   }
 
-  public async deletePet(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async deletePet(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       await this._petService.deletePet({ id, ownerId: req.user!.id });
@@ -89,11 +73,7 @@ export class PetController implements IPetController {
     }
   }
 
-  public async listPets(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async listPets(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this._petService.listPets({
         ...req.query,
@@ -109,11 +89,7 @@ export class PetController implements IPetController {
     }
   }
 
-  public async getMyPets(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getMyPets(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this._petService.getMyPets(req.user!.id);
       res.status(HttpStatusCode.OK).json({
@@ -126,11 +102,7 @@ export class PetController implements IPetController {
     }
   }
 
-  public async addPetToFavorites(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async addPetToFavorites(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { petId } = req.body;
       const userId = req.user!.id;
@@ -148,11 +120,7 @@ export class PetController implements IPetController {
     }
   }
 
-  public async removePetFromFavorites(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async removePetFromFavorites(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { petId } = req.params;
       const userId = req.user!.id;
@@ -166,11 +134,7 @@ export class PetController implements IPetController {
     }
   }
 
-  public async getFavoritePetsByUserId(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getFavoritePetsByUserId(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user!.id;
       const result = await this._petService.getFavoritePetsByUserId({ userId });
@@ -184,11 +148,7 @@ export class PetController implements IPetController {
     }
   }
 
-  public async isPetFavoritedByUser(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async isPetFavoritedByUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { petId } = req.params;
       const userId = req.user!.id;

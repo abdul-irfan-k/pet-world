@@ -14,11 +14,7 @@ import { HttpStatusCode, ResponseMessages } from '@/constants';
  * @returns Middleware function
  */
 export const schemaValidator = (validationSchema: z.ZodSchema) => {
-  return async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const parsed = await validationSchema.parseAsync(req.body);
       req.body = parsed;

@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { OAuth2Client } from 'google-auth-library';
 import { TokenExpiredError } from 'jsonwebtoken';
 
 import type {
@@ -14,9 +16,10 @@ import type {
   ILogoutDTO,
   IGetUserDetailsDTO,
   IGetUserDetailsResponseDTO,
+  iSignInWithGoogleDTO,
 } from './interfaces/IAuthService';
 
-import { logger, prisma } from '@/config';
+import { GOOGLE_CLIENT_ID, logger, prisma } from '@/config';
 import { HttpStatusCode, ResponseMessages, OtpAction } from '@/constants';
 import {
   verifyPassword,
@@ -30,6 +33,8 @@ import {
   sendEmail,
   verifyRefreshToken,
 } from '@/utils';
+
+const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 export class AuthService implements IAuthService {
   public async signup(args: ISignUpDTO): Promise<ISignUpResponseDTO> {
@@ -116,9 +121,77 @@ export class AuthService implements IAuthService {
     };
   }
 
-  public async refreshToken(
-    args: IRefreshTokenDTO,
-  ): Promise<IRefreshTokenResponseDTO> {
+  public async signInWithGoogle(args: iSignInWithGoogleDTO): Promise<ISignInResponseDTO> {
+    try {
+      const { idToken } = args;
+      if (idToken === undefined) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: 'INVALID_GOOGLE_SIGNIN_REQUEST',
+        });
+      }
+      const ticket = await googleClient.verifyIdToken({
+        idToken: idToken,
+        audience: GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+
+      if (!payload) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: 'GOOGLE_PAYLOAD_NOT_FOUND',
+        });
+      }
+      const email = payload.email;
+
+      if (email === undefined) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: 'GOOGLE_EMAIL_NOT_FOUND',
+        });
+      }
+
+      const user = await prisma.user.findUnique({ where: { email } });
+      if (!user) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: ResponseMessages.INVALID_CREDENTIALS,
+        });
+      }
+
+      const accessToken = await generateAccessToken({
+        email: user.email,
+        id: user.id,
+      });
+      const refreshToken = await generateRefreshToken({
+        email: user.email,
+        id: user.id,
+      });
+
+      return {
+        accessToken,
+        refreshToken,
+        user: {
+          id: user.id,
+          userName: user.userName,
+          email: user.email,
+          name: user.name,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        },
+      };
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw error;
+      }
+      throw new HttpError({
+        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        message: ResponseMessages.INTERNAL_SERVER_ERROR,
+      });
+    }
+  }
+
+  public async refreshToken(args: IRefreshTokenDTO): Promise<IRefreshTokenResponseDTO> {
     try {
       //eslint-disable-next-line
       //@ts-ignore
@@ -213,9 +286,7 @@ export class AuthService implements IAuthService {
     }
   }
 
-  public async verifyForgotPassword(
-    args: IVerifyForgotPasswordDTO,
-  ): Promise<IVerifyForgotPasswordResponseDTO> {
+  public async verifyForgotPassword(args: IVerifyForgotPasswordDTO): Promise<IVerifyForgotPasswordResponseDTO> {
     try {
       const { email, code, newPassword } = args;
 
@@ -274,10 +345,7 @@ export class AuthService implements IAuthService {
       ]);
       return { success: true, message: ResponseMessages.SUCCESS };
     } catch (error) {
-      logger.error(
-        'Error verifying forgot password (resetting password):',
-        error,
-      );
+      logger.error('Error verifying forgot password (resetting password):', error);
       if (error instanceof HttpError) {
         throw error;
       }
@@ -293,9 +361,7 @@ export class AuthService implements IAuthService {
     return Promise.resolve();
   }
 
-  public async me(
-    args: IGetUserDetailsDTO,
-  ): Promise<IGetUserDetailsResponseDTO> {
+  public async me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponseDTO> {
     const { id } = args;
 
     const user = await prisma.user.findUnique({

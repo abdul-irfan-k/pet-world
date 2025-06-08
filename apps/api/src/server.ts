@@ -7,15 +7,9 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 import { logger, PORT, CORS_ORIGINS } from './config';
-import {
-  AdminRoutes,
-  AuthRoutes,
-  PetCareRoutes,
-  PetRoutes,
-  UploadRoutes,
-  UserRoutes,
-} from './routes';
+import { AdminRoutes, AuthRoutes, PetCareRoutes, PetRoutes, UploadRoutes, UserRoutes } from './routes';
 import { FavoriteRoutes } from './routes/favorites.routes';
+import { PaymentRoutes } from './routes/payment.routes';
 
 import { globalErrorHandler } from '@/middleware';
 
@@ -34,8 +28,7 @@ export class ExpressServer {
 
   private configureMiddlewares(): void {
     const allowedOrigins = CORS_ORIGINS.split(',').map(origin => origin.trim());
-    const vercelPreviewRegex =
-      /^https:\/\/[a-zA-Z0-9-]+\.vercel\.app(?:\/.*)?$/;
+    const vercelPreviewRegex = /^https:\/\/[a-zA-Z0-9-]+\.vercel\.app(?:\/.*)?$/;
 
     this.app.use(
       cors({
@@ -57,7 +50,7 @@ export class ExpressServer {
     this.app.use('/api/v1/upload/', new UploadRoutes().getRoutes());
     this.app.use('/api/v1/pet-care/', new PetCareRoutes().getRoutes());
     this.app.use('/api/v1/users/', new UserRoutes().getRoutes());
-
+    this.app.use('/api/v1/payments/', new PaymentRoutes().getRoutes());
     // Admin Routes
     this.app.use('/api/v1/admin/', new AdminRoutes().getRoutes());
   }

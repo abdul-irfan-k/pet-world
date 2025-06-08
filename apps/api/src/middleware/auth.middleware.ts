@@ -5,11 +5,7 @@ import { logger } from '@/config';
 import { HttpStatusCode } from '@/constants';
 import { HttpError, verifyAccessToken } from '@/utils';
 
-export const authMiddleware = async (
-  req: Request,
-  _res: Response,
-  next: NextFunction,
-) => {
+export const authMiddleware = async (req: Request, _res: Response, next: NextFunction) => {
   try {
     let token: string | undefined;
     const authHeader = req.headers.authorization;

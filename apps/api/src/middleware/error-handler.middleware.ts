@@ -12,12 +12,7 @@ import { BaseHttpError } from '@/utils/errors';
  * @param res - The response object.
  * @param _next - The next function in the middleware chain.
  */
-export const globalErrorHandler = (
-  error: Error,
-  req: Request,
-  res: Response,
-  _next: NextFunction,
-) => {
+export const globalErrorHandler = (error: Error, req: Request, res: Response, _next: NextFunction) => {
   try {
     if (error instanceof BaseHttpError) {
       const { errors, logging, message, name, statusCode } = error;

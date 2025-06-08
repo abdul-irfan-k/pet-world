@@ -132,9 +132,7 @@ export class PetService implements IPetService {
     return { pets: pets as Pet[] };
   }
 
-  public async addPetToFavorites(
-    data: IAddPetToFavoritesDTO,
-  ): Promise<{ pet: FavoritePet }> {
+  public async addPetToFavorites(data: IAddPetToFavoritesDTO): Promise<{ pet: FavoritePet }> {
     const { userId, petId } = data;
     const existingFavorite = await prisma.favoritePet.findUnique({
       where: {
@@ -162,9 +160,7 @@ export class PetService implements IPetService {
     return { pet: favoritePet as FavoritePet };
   }
 
-  public async removePetFromFavorites(
-    data: IRemovePetFromFavoritesDTO,
-  ): Promise<void> {
+  public async removePetFromFavorites(data: IRemovePetFromFavoritesDTO): Promise<void> {
     const { userId, petId } = data;
     const existingFavorite = await prisma.favoritePet.findUnique({
       where: {
@@ -194,9 +190,7 @@ export class PetService implements IPetService {
     });
   }
 
-  public async getFavoritePetsByUserId(
-    data: IGetFavoritePetsByUserIdDTO,
-  ): Promise<{ pets: Pet[] }> {
+  public async getFavoritePetsByUserId(data: IGetFavoritePetsByUserIdDTO): Promise<{ pets: Pet[] }> {
     const { userId } = data;
     const favoritePets = await prisma.favoritePet.findMany({
       where: { userId, isDeleted: false },
@@ -206,9 +200,7 @@ export class PetService implements IPetService {
     return { pets };
   }
 
-  public async isPetFavoritedByUser(
-    data: IIsPetFavoritedByUserDTO,
-  ): Promise<{ isFavorited: { status: boolean } }> {
+  public async isPetFavoritedByUser(data: IIsPetFavoritedByUserDTO): Promise<{ isFavorited: { status: boolean } }> {
     const { userId, petId } = data;
     const favoritePet = await prisma.favoritePet.findUnique({
       where: {

@@ -1,19 +1,26 @@
+'use client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import {
   User,
   MapPin,
-  ShoppingBag,
   Mail,
   Lock,
   Eye,
   Link2,
+  LogOut,
+  Wallet,
 } from 'lucide-react';
+
+import { Button } from '@/components/ui/button/Button';
+import { useLogoutMutation } from '@/lib/api/authApi';
+import { useAuthStore } from '@/stores/authStore';
 
 const settingsLinks = [
   { label: 'Account Details', icon: User, href: '/settings/account' },
   { label: 'My Addresses', icon: MapPin, href: '/settings/addresses' },
-  { label: 'Shop Preferences', icon: ShoppingBag, href: '/settings/shop' },
+  { label: 'Payment Methods', icon: Wallet, href: '/settings/payments' },
   {
     label: 'Communication Preferences',
     icon: Mail,
@@ -25,6 +32,19 @@ const settingsLinks = [
 ];
 
 const SettingsSidebar = () => {
+  const router = useRouter();
+  const { logout } = useAuthStore();
+  const { mutate: logoutUser, isPending } = useLogoutMutation({
+    onSuccess: () => {
+      logout();
+      router.push('/');
+    },
+  });
+
+  const handleLogout = () => {
+    logoutUser(undefined);
+  };
+
   return (
     <div className="">
       <ul className="space-y-5">
@@ -39,6 +59,17 @@ const SettingsSidebar = () => {
             </Link>
           </li>
         ))}
+        <li>
+          <Button
+            onClick={handleLogout}
+            variant="ghost"
+            className="flex w-full items-center justify-start px-0 text-[16px] font-medium text-red-500"
+            isLoading={isPending}
+          >
+            <LogOut className="h-5 w-5" />
+            <span>Logout</span>
+          </Button>
+        </li>
       </ul>
     </div>
   );

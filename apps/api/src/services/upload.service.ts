@@ -12,12 +12,7 @@ import { cloudinary, CLOUDINARY_UPLOAD_PRESETS } from '@/config';
 import { HttpStatusCode, ResponseMessages } from '@/constants';
 import { HttpError } from '@/utils';
 export class UploadService implements IUploadService {
-  public async uploadFile({
-    file,
-    resourceType,
-    folder,
-    tags,
-  }: IUploadFileDTO): Promise<UploadResult> {
+  public async uploadFile({ file, resourceType, folder, tags }: IUploadFileDTO): Promise<UploadResult> {
     try {
       const uploadPreset = this.getUploadPreset(folder);
       const result = await cloudinary.uploader.upload(file.path, {

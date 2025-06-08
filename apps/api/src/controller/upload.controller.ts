@@ -14,11 +14,7 @@ export class UploadController implements IUploadController {
     this._uploadService = uploadService;
   }
 
-  public async uploadProfileImage(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async uploadProfileImage(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const file = req.file;
 
@@ -46,11 +42,7 @@ export class UploadController implements IUploadController {
     }
   }
 
-  public async uploadPetImage(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async uploadPetImage(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const files = req.files;
 
@@ -78,11 +70,7 @@ export class UploadController implements IUploadController {
     }
   }
 
-  public async uploadPetVideos(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async uploadPetVideos(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const file = req.file;
 
@@ -110,11 +98,7 @@ export class UploadController implements IUploadController {
     }
   }
 
-  public async deleteFile(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async deleteFile(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { publicId, resourceType } = req.body;
 
@@ -143,11 +127,7 @@ export class UploadController implements IUploadController {
     }
   }
 
-  public async deletePetVideos(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async deletePetVideos(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { publicId } = req.body;
 

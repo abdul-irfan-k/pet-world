@@ -27,9 +27,7 @@ export interface IVerifyAdopterDocumentsResponse {
   adopter: PetAdopter;
 }
 
-export type IUpdateAdopterDetailsDTO = Partial<
-  Omit<PetAdopter, 'createdAt' | 'updatedAt'>
-> & {
+export type IUpdateAdopterDetailsDTO = Partial<Omit<PetAdopter, 'createdAt' | 'updatedAt'>> & {
   id: PetAdopter['id'];
 };
 export interface IUpdateAdopterDetailsResponse {
@@ -46,12 +44,8 @@ export interface IAdminService {
   getAdminProfile(adminId: string): Promise<IGetAdminProfileResponse>;
   getAllAdopters(): Promise<IGetAllAdoptersResponse>;
   getAdopterById(adopterId: string): Promise<IGetAdopterByIdResponse>;
-  verifyAdopterDocuments(
-    data: IVerifyAdopterDocumentsDTO,
-  ): Promise<IVerifyAdopterDocumentsResponse>;
-  updateAdopterDetails(
-    data: IUpdateAdopterDetailsDTO,
-  ): Promise<IUpdateAdopterDetailsResponse>;
+  verifyAdopterDocuments(data: IVerifyAdopterDocumentsDTO): Promise<IVerifyAdopterDocumentsResponse>;
+  updateAdopterDetails(data: IUpdateAdopterDetailsDTO): Promise<IUpdateAdopterDetailsResponse>;
   deleteAdopter(data: IDeleteAdopterDTO): Promise<void>;
 
   // Pet management

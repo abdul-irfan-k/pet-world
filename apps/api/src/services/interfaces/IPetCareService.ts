@@ -2,29 +2,13 @@ import { PetCareProposal } from '@/types/PetCare';
 import { PetCareRequest } from '@/types/PetCareRequest';
 export type ICreatePetCareRequestDTO = Pick<
   PetCareRequest,
-  | 'ownerId'
-  | 'petId'
-  | 'locationId'
-  | 'title'
-  | 'amount'
-  | 'description'
-  | 'startDate'
-  | 'endDate'
-  | 'questions'
+  'ownerId' | 'petId' | 'locationId' | 'title' | 'amount' | 'description' | 'startDate' | 'endDate' | 'questions'
 > & { userId: string };
 
 export type IUpdatePetCareRequestDTO = Partial<
   Pick<
     PetCareRequest,
-    | 'ownerId'
-    | 'petId'
-    | 'locationId'
-    | 'title'
-    | 'amount'
-    | 'description'
-    | 'startDate'
-    | 'endDate'
-    | 'questions'
+    'ownerId' | 'petId' | 'locationId' | 'title' | 'amount' | 'description' | 'startDate' | 'endDate' | 'questions'
   >
 > & { id: string; userId: string };
 
@@ -73,33 +57,17 @@ export type IListProposalsForPetCareRequestDTO = {
 };
 
 export interface IPetCareService {
-  createPetCareRequest(
-    data: ICreatePetCareRequestDTO,
-  ): Promise<{ petCareRequest: PetCareRequest }>;
-  updatePetCareRequest(
-    data: IUpdatePetCareRequestDTO,
-  ): Promise<{ petCareRequest: PetCareRequest }>;
-  getPetCareRequestById(
-    data: IGetPetCareRequestByIdDTO,
-  ): Promise<{ petCareRequest: PetCareRequest | null }>;
+  createPetCareRequest(data: ICreatePetCareRequestDTO): Promise<{ petCareRequest: PetCareRequest }>;
+  updatePetCareRequest(data: IUpdatePetCareRequestDTO): Promise<{ petCareRequest: PetCareRequest }>;
+  getPetCareRequestById(data: IGetPetCareRequestByIdDTO): Promise<{ petCareRequest: PetCareRequest | null }>;
   deletePetCareRequest(data: IDeletePetCareRequestDTO): Promise<void>;
-  listPetCareRequests(
-    query?: IListPetCareRequestsQueryDTO,
-  ): Promise<{ petCareRequests: PetCareRequest[] }>;
-  listMyPetCareRequests(
-    query?: IListPetCareRequestsQueryDTO,
-  ): Promise<{ petCareRequests: PetCareRequest[] }>;
+  listPetCareRequests(query?: IListPetCareRequestsQueryDTO): Promise<{ petCareRequests: PetCareRequest[] }>;
+  listMyPetCareRequests(query?: IListPetCareRequestsQueryDTO): Promise<{ petCareRequests: PetCareRequest[] }>;
 
-  createPetCareProposal(
-    data: ICreatePetCareProposalDTO,
-  ): Promise<{ petCareProposal: any }>;
+  createPetCareProposal(data: ICreatePetCareProposalDTO): Promise<{ petCareProposal: any }>;
 
-  getPetCareProposalById(
-    data: IGetPetCareProposalByIdDTO,
-  ): Promise<{ petCareProposal: any | null }>;
-  updatePetCareProposal(
-    data: IUpdatePetCareProposalDTO,
-  ): Promise<{ petCareProposal: any }>;
+  getPetCareProposalById(data: IGetPetCareProposalByIdDTO): Promise<{ petCareProposal: any | null }>;
+  updatePetCareProposal(data: IUpdatePetCareProposalDTO): Promise<{ petCareProposal: any }>;
   deletePetCareProposal(data: IDeletePetCareProposalDTO): Promise<void>;
   listPetCareProposalsByAdopterId(
     data: IListPetCareProposalsByAdopterIdDTO,

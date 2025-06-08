@@ -18,6 +18,8 @@ const envSchema = z.object({
   CLOUDINARY_API_SECRET: z.string(),
   GMAIL_USER: z.string().email(),
   GMAIL_APP_PASSWORD: z.string().min(1),
+  STRIPE_SECRET_KEY: z.string().optional(),
+  GOOGLE_CLIENT_ID: z.string().optional(),
 });
 
 export const env = envSchema.parse(process.env);
@@ -38,4 +40,6 @@ export const {
   CLOUDINARY_API_SECRET,
   GMAIL_USER,
   GMAIL_APP_PASSWORD,
+  STRIPE_SECRET_KEY,
+  GOOGLE_CLIENT_ID,
 } = env;

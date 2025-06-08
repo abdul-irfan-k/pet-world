@@ -13,11 +13,7 @@ export class AdminController implements IAdminController {
     this._adminService = adminService;
   }
 
-  public async login(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this._adminService.login(req.body);
 
@@ -40,11 +36,7 @@ export class AdminController implements IAdminController {
     }
   }
 
-  public async logout(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       await this._adminService.logout(req.user?.id);
       res.cookie('adminAccessToken', '');
@@ -57,11 +49,7 @@ export class AdminController implements IAdminController {
     }
   }
 
-  public async getAdminProfile(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getAdminProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const adminId = req.user?.id;
       if (!adminId) {
@@ -82,11 +70,7 @@ export class AdminController implements IAdminController {
     }
   }
 
-  public async getAllAdopters(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getAllAdopters(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this._adminService.getAllAdopters();
       res.status(HttpStatusCode.OK).json({
@@ -99,11 +83,7 @@ export class AdminController implements IAdminController {
     }
   }
 
-  public async getAdopterById(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getAdopterById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const result = await this._adminService.getAdopterById(id);
@@ -117,11 +97,7 @@ export class AdminController implements IAdminController {
     }
   }
 
-  public async verifyAdopterDocuments(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async verifyAdopterDocuments(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const { verified } = req.body;
@@ -139,11 +115,7 @@ export class AdminController implements IAdminController {
     }
   }
 
-  public async updateAdopterDetails(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async updateAdopterDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const result = await this._adminService.updateAdopterDetails({
@@ -160,11 +132,7 @@ export class AdminController implements IAdminController {
     }
   }
 
-  public async deleteAdopter(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async deleteAdopter(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       await this._adminService.deleteAdopter({ adopterId: id });
@@ -178,11 +146,7 @@ export class AdminController implements IAdminController {
   }
 
   // Pet management
-  public async getAllPets(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getAllPets(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this._adminService.getAllPets(req.query);
       res.status(HttpStatusCode.OK).json({
@@ -195,11 +159,7 @@ export class AdminController implements IAdminController {
     }
   }
 
-  public async getPetById(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getPetById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { petId } = req.params;
       const result = await this._adminService.getPetById(petId);
@@ -213,11 +173,7 @@ export class AdminController implements IAdminController {
     }
   }
 
-  public async deletePet(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async deletePet(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { petId } = req.params;
       await this._adminService.deletePet(petId);
@@ -230,11 +186,7 @@ export class AdminController implements IAdminController {
     }
   }
 
-  public async updatePetStatus(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async updatePetStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { petId } = req.params;
       const result = await this._adminService.updatePetStatus(petId, req.body);
@@ -249,11 +201,7 @@ export class AdminController implements IAdminController {
   }
 
   // Adoption request management
-  public async getAllAdoptionRequests(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getAllAdoptionRequests(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this._adminService.getAllAdoptionRequests(req.query);
       res.status(HttpStatusCode.OK).json({
@@ -266,11 +214,7 @@ export class AdminController implements IAdminController {
     }
   }
 
-  public async getAdoptionRequestById(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async getAdoptionRequestById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { requestId } = req.params;
       const result = await this._adminService.getAdoptionRequestById(requestId);
@@ -284,11 +228,7 @@ export class AdminController implements IAdminController {
     }
   }
 
-  public async deleteAdoptionRequest(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async deleteAdoptionRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { requestId } = req.params;
       await this._adminService.deleteAdoptionRequest(requestId);

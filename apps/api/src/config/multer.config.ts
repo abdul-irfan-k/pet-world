@@ -11,33 +11,16 @@ const storage = multer.diskStorage({
   },
 });
 
-const fileFilter = (
-  req: any,
-  file: Express.Multer.File,
-  cb: multer.FileFilterCallback,
-) => {
-  const supportedImageTypes = [
-    'image/jpeg',
-    'image/png',
-    'image/jpg',
-    'image/webp',
-  ];
-  const supportedVideoTypes = [
-    'video/mp4',
-    'video/mpeg',
-    'video/quicktime',
-    'video/webm',
-  ];
+const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  const supportedImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+  const supportedVideoTypes = ['video/mp4', 'video/mpeg', 'video/quicktime', 'video/webm'];
 
   const isImage = supportedImageTypes.includes(file.mimetype);
   const isVideo = supportedVideoTypes.includes(file.mimetype);
 
   if (file.fieldname === 'profile' && isImage) {
     cb(null, true);
-  } else if (
-    (file.fieldname === 'petImages' || file.fieldname === 'petVideos') &&
-    (isImage || isVideo)
-  ) {
+  } else if ((file.fieldname === 'petImages' || file.fieldname === 'petVideos') && (isImage || isVideo)) {
     cb(null, true);
   } else {
     cb(new Error('Unsupported file format'));

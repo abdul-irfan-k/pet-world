@@ -13,6 +13,9 @@ export interface ISignInDTO {
   password: string;
 }
 
+export interface iSignInWithGoogleDTO {
+  idToken: string;
+}
 export interface ISignInResponseDTO {
   accessToken: string;
   refreshToken: string;
@@ -62,11 +65,10 @@ export interface IGetUserDetailsResponseDTO {
 export interface IAuthService {
   signup(args: ISignUpDTO): Promise<ISignUpResponseDTO>;
   signin(args: ISignInDTO): Promise<ISignInResponseDTO>;
+  signInWithGoogle(args: iSignInWithGoogleDTO): Promise<ISignInResponseDTO>;
   refreshToken(args: IRefreshTokenDTO): Promise<IRefreshTokenResponseDTO>;
   forgotPassword(args: IForgotPasswordDTO): Promise<void>;
-  verifyForgotPassword(
-    args: IVerifyForgotPasswordDTO,
-  ): Promise<IVerifyForgotPasswordResponseDTO>;
+  verifyForgotPassword(args: IVerifyForgotPasswordDTO): Promise<IVerifyForgotPasswordResponseDTO>;
   logout(args: ILogoutDTO): Promise<void>;
   me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponseDTO>;
 }

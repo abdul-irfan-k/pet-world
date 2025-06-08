@@ -1,9 +1,4 @@
-import winston, {
-  transports,
-  format,
-  LoggerOptions,
-  Logger as WinstonLogger,
-} from 'winston';
+import winston, { transports, format, LoggerOptions, Logger as WinstonLogger } from 'winston';
 
 import { NODE_ENV } from './env.config';
 
@@ -14,9 +9,7 @@ class LoggerService {
     const env = NODE_ENV || 'development';
     const isProduction = env === 'production';
 
-    const loggerTransports: LoggerOptions['transports'] = [
-      new transports.Console(),
-    ];
+    const loggerTransports: LoggerOptions['transports'] = [new transports.Console()];
 
     if (isProduction) {
       loggerTransports.push(

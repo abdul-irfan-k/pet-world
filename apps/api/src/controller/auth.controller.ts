@@ -14,11 +14,7 @@ export class AuthController implements IAuthController {
     this._authService = authService;
   }
 
-  public async signup(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password, firstName, lastName, userName } = req.body;
 
@@ -42,11 +38,7 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async signin(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password } = req.body;
 
@@ -82,11 +74,49 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async refreshToken(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async signInWithGoogle(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { idToken } = req.body;
+
+      if (!idToken) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: 'Google authorization id token is required.',
+        });
+      }
+
+      const result = await this._authService.signInWithGoogle({ idToken });
+
+      const isProduction = NODE_ENV === 'production';
+      res.cookie('accessToken', result.accessToken, {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
+      res.cookie('refreshToken', result.refreshToken, {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
+
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: {
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+          user: result.user,
+        },
+        message: ResponseMessages.LOGIN_SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async refreshToken(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const refreshToken = req.cookies.refreshToken;
 
@@ -128,11 +158,7 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async forgotPassword(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async forgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email } = req.body;
 
@@ -147,11 +173,7 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async verifyForgotPassword(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async verifyForgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, code, newPassword } = req.body;
 
@@ -170,11 +192,7 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async logout(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       // const refreshToken = req.cookies.refreshToken;
       const id = req.user?.id;
@@ -195,11 +213,7 @@ export class AuthController implements IAuthController {
     }
   }
 
-  public async me(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public async me(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const id = req.user?.id;
 

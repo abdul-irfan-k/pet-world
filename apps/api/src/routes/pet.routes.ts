@@ -14,17 +14,9 @@ export class PetRoutes {
   public getRoutes(): Router {
     const router = Router();
 
-    router.get(
-      '/',
-      schemaValidator(listPetsSchema),
-      this._petController.listPets.bind(this._petController),
-    );
+    router.get('/', schemaValidator(listPetsSchema), this._petController.listPets.bind(this._petController));
 
-    router.get(
-      '/my-pets',
-      authMiddleware,
-      this._petController.getMyPets.bind(this._petController),
-    );
+    router.get('/my-pets', authMiddleware, this._petController.getMyPets.bind(this._petController));
 
     router.post(
       '/',
@@ -40,16 +32,9 @@ export class PetRoutes {
       this._petController.updatePet.bind(this._petController),
     );
 
-    router.get(
-      '/:id',
-      this._petController.getPetById.bind(this._petController),
-    );
+    router.get('/:id', this._petController.getPetById.bind(this._petController));
 
-    router.delete(
-      '/:id',
-      authMiddleware,
-      this._petController.deletePet.bind(this._petController),
-    );
+    router.delete('/:id', authMiddleware, this._petController.deletePet.bind(this._petController));
 
     return router;
   }
