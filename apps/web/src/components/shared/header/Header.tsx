@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { Search, ShoppingBag, User2, Settings, Heart, LogOut } from 'lucide-react';
 
 import { Button } from '../../ui/button';
+import { HeaderSearch } from '../search/HeaderSearch';
 
 import { useLogoutMutation } from '@/lib/api/authApi';
 import { useAuthStore } from '@/stores/authStore';
@@ -30,27 +31,22 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full bg-white shadow-sm">
-      <div className="container mx-auto flex items-center justify-between">
+    <header className="fixed z-20 h-20 w-full bg-white shadow-sm">
+      <div className="container relative mx-auto flex items-center justify-between">
         <Link href="/">
           <Image src="/logo/logo.png" alt="Pet World Logo" width={150} height={50} className="cursor-pointer" />
         </Link>
 
-        <nav className="hidden gap-6 text-sm font-medium text-black md:flex">
+        {/* <nav className="hidden gap-6 text-sm font-medium text-black md:flex">
           <Link href="/explore">Explore</Link>
           <Link href="/stories">Stories</Link>
           <Link href="/add-pet">Add Pet</Link>
           <Link href="/my-pets">My Pets</Link>
           <Link href="/about-us">About Us</Link>
           <Link href="/help">Help</Link>
-        </nav>
+        </nav> */}
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 rounded-full border border-gray-700 px-4 py-2">
-            <Search size={16} className="text-gray-500" />
-            <span className="text-sm text-gray-600">Search all products</span>
-          </div>
-
+        <div className="relative flex items-center gap-3">
           {!isAuthenticated && (
             <>
               <Link href="/sign-up" className="text-sm font-medium text-black">
@@ -110,6 +106,9 @@ const Header = () => {
               </div>
             </>
           )}
+        </div>
+        <div className="absolute left-[50%] translate-x-[-50%]">
+          <HeaderSearch />
         </div>
       </div>
     </header>

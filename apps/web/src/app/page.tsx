@@ -2,7 +2,6 @@
 
 import { PetCard } from '@/components/pets';
 import { Footer, Header } from '@/components/shared';
-import { SearchTabs } from '@/components/shared/search/SearchTabs';
 import { Button } from '@/components/ui/button';
 import { Video } from '@/components/ui/video';
 import { useGetAllPetsQuery } from '@/lib/api/petsApi';
@@ -16,8 +15,8 @@ export default function Home() {
   return (
     <div>
       <Header />
+      <div className="block h-40 w-screen"></div>
 
-      <SearchTabs />
       <div className="grid grid-cols-1 gap-6 p-4 py-16 sm:grid-cols-2 lg:grid-cols-4">
         {isLoading && dogs.map(dog => <PetCard key={dog.id} image={dog.images[0]} {...dog} />)}
         {!isLoading && pets?.map(pet => <PetCard key={pet.id} image={pet.images[0]} {...pet} />)}
