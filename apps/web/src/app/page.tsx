@@ -2,6 +2,7 @@
 
 import { PetCard } from '@/components/pets';
 import { Footer, Header } from '@/components/shared';
+import { SearchTabs } from '@/components/shared/search/SearchTabs';
 import { Button } from '@/components/ui/button';
 import { Video } from '@/components/ui/video';
 import { useGetAllPetsQuery } from '@/lib/api/petsApi';
@@ -16,15 +17,10 @@ export default function Home() {
     <div>
       <Header />
 
+      <SearchTabs />
       <div className="grid grid-cols-1 gap-6 p-4 py-16 sm:grid-cols-2 lg:grid-cols-4">
-        {isLoading &&
-          dogs.map(dog => (
-            <PetCard key={dog.id} image={dog.images[0]} {...dog} />
-          ))}
-        {!isLoading &&
-          pets?.map(pet => (
-            <PetCard key={pet.id} image={pet.images[0]} {...pet} />
-          ))}
+        {isLoading && dogs.map(dog => <PetCard key={dog.id} image={dog.images[0]} {...dog} />)}
+        {!isLoading && pets?.map(pet => <PetCard key={pet.id} image={pet.images[0]} {...pet} />)}
       </div>
 
       <div className="container mx-auto py-16">
@@ -44,9 +40,7 @@ export default function Home() {
 
         <div className="mx-auto mt-10 flex w-[35%] flex-col items-center justify-center gap-2">
           <h1 className="text-3xl font-bold">Find Your Perfect Pet Match</h1>
-          <p className="mb-3 text-gray-600">
-            Adopt or rehome pets easily with trust and care.
-          </p>
+          <p className="mb-3 text-gray-600">Adopt or rehome pets easily with trust and care.</p>
 
           <div>
             <Button variant="primary" size="lg" className="bg-black text-white">
