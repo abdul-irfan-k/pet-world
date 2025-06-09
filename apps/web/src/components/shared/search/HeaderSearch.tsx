@@ -28,7 +28,7 @@ const HeaderSearch = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
 
-  const rawWidth = useTransform(scrollYProgress, [0, 0.08], [860, 200]);
+  const rawWidth = useTransform(scrollYProgress, [0, 0.08], [850, 250]);
   const rawHeight = useTransform(scrollYProgress, [0, 0.08], [80, 40]);
   const rawTranslateY = useTransform(scrollYProgress, [0, 0.08], [100, 0]);
 
@@ -41,6 +41,9 @@ const HeaderSearch = () => {
   const [show, setShow] = useState(false);
   useMotionValueEvent(scrollYProgress, 'change', latest => {
     setShow(latest < 0.08);
+    if (latest < 0.08) {
+      setSelectedTab(undefined);
+    }
   });
 
   return (
@@ -55,7 +58,7 @@ const HeaderSearch = () => {
           onClick={() => setSelectedTab('where')}
         >
           <span className="z-70 text-sm font-medium">Where</span>
-          <motion.div className="z-70 text-gray-700" style={{ display: show ? 'block' : 'none' }}>
+          <motion.div className="z-70 w-full text-gray-700" style={{ display: show ? 'block' : 'none' }}>
             <Input
               placeholder="Search locations..."
               className="ml-0 w-full"
@@ -72,7 +75,7 @@ const HeaderSearch = () => {
         </div>
 
         <div
-          className="flex-1/3 relative flex h-full min-w-fit cursor-pointer flex-col items-start justify-center rounded-full px-8"
+          className="flex-1/4 relative flex h-full min-w-fit cursor-pointer flex-col items-start justify-center rounded-full px-8"
           onClick={() => setSelectedTab('adoptionStart')}
         >
           <span className="z-70 text-sm font-medium">Start Date</span>
@@ -89,12 +92,12 @@ const HeaderSearch = () => {
         </div>
 
         <div
-          className="flex-1/3 relative flex h-full min-w-fit cursor-pointer flex-col items-start justify-center rounded-full px-8"
+          className="flex-1/4 relative flex h-full min-w-fit cursor-pointer flex-col items-start justify-center rounded-full px-8"
           onClick={() => setSelectedTab('adoptionEnd')}
         >
           <span className="z-70 text-sm font-medium">End Date</span>
           <motion.div className="z-70 text-gray-700" style={{ display: show ? 'block' : 'none' }}>
-            Select End Date
+            Select Date
           </motion.div>
           {selectedTab === 'adoptionEnd' && (
             <motion.div
@@ -105,12 +108,12 @@ const HeaderSearch = () => {
           )}
         </div>
         <div
-          className="flex-1/2 relative flex h-full min-w-fit cursor-pointer flex-col items-start justify-center rounded-full px-8"
+          className="flex-1/2 relative flex h-full min-w-fit cursor-pointer flex-col items-start justify-center rounded-full px-8 pr-14"
           onClick={() => setSelectedTab('species')}
         >
-          <span className="z-70 text-sm font-medium">End Date</span>
+          <span className="z-70 text-sm font-medium">Species</span>
           <motion.div className="z-70 text-gray-700" style={{ display: show ? 'block' : 'none' }}>
-            Select End Date
+            Select Species
           </motion.div>
           {selectedTab === 'species' && (
             <motion.div
@@ -119,24 +122,19 @@ const HeaderSearch = () => {
               style={{ borderRadius: 1000 }}
             />
           )}
+
+          <div className="z-80 absolute right-0">
+            <Button rounded className="h-full p-4">
+              <Search className="h-4 w-4" />
+              <motion.div className="text-white" style={{ display: show ? 'block' : 'none' }}>
+                <span className="text-sm font-semibold">Search</span>
+              </motion.div>
+            </Button>
+          </div>
         </div>
         {selectedTab === undefined && (
           <motion.div layoutId="active-tab" className="z-60 absolute inset-1 bg-white" style={{ borderRadius: 1000 }} />
         )}
-
-        {/* <div className="pr-5">Species</div> */}
-        {/* <motion.div className="z-70 text-gray-700" style={{ display: show ? 'block' : 'none' }}>
-                Select Species
-              </motion.div> */}
-        {/* <div className="absolute right-0">
-                <Button rounded className="h-full p-4">
-                  <Search className="h-4 w-4" />
-                  <motion.div className="text-white" style={{ display: show ? 'block' : 'none' }}>
-                    <span className="text-sm font-semibold">Search</span>
-                  </motion.div>
-                </Button>
-              </div> */}
-        {/* </TabsTrigger> */}
       </motion.div>
 
       {/* <div className="mt-45 absolute z-20 min-h-[150px]">
