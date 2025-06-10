@@ -22,9 +22,6 @@ vercel-debug.log*
 .env.test
 .env.*.local
 
-# 5. Editor
-.vscode/
-
 # Prisma Client
 **/generated/prisma/
 
