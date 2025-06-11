@@ -79,4 +79,27 @@ export class PaymentController implements IPaymentController {
       next(error);
     }
   }
+
+  public async getStripeAccount(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: ResponseMessages.UNAUTHORIZED,
+        });
+      }
+
+      const account = await this._paymentService.getSTripeAccount({
+        userId,
+      });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: account,
+        message: 'Stripe account retrieved successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

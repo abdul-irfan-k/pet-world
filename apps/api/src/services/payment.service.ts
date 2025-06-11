@@ -3,6 +3,7 @@ import type {
   ICreateStripeAccountLinkDTO,
   ICraeteStripeAccountDTO,
   IOnboardStripeAccountDTO,
+  IGetStripeAccountDTO,
 } from './interfaces/IPaymentService';
 import type { Stripe } from 'stripe';
 
@@ -87,6 +88,24 @@ export class PaymentService implements IPaymentService {
       origin,
     });
 
-    return { stripeAccountLink: stripeAccountLink };
+    return { stripeAccountLink };
+  }
+
+  async getSTripeAccount(data: IGetStripeAccountDTO): Promise<{ stripeAccount: Stripe.Response<Stripe.Account> }> {
+    const { userId } = data;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId, isDeleted: false },
+    });
+
+    if (!user?.stripeCustomerId) {
+      throw new HttpError({
+        message: 'Stripe account not found',
+        statusCode: HttpStatusCode.NOT_FOUND,
+      });
+    }
+
+    const account = await stripe.accounts.retrieve(user.stripeCustomerId);
+    return { stripeAccount: account };
   }
 }
