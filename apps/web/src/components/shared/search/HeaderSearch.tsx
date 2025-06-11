@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 
-import { motion, useScroll, useTransform, useMotionValueEvent, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionValueEvent, useSpring, AnimatePresence } from 'framer-motion';
 import { Search } from 'lucide-react';
 
 import { AdoptionEndTab, AdoptionStartTab, LocationTab, SpeciesTab } from './tabs';
@@ -29,7 +29,7 @@ const HeaderSearch = () => {
   const { scrollYProgress } = useScroll();
 
   const rawWidth = useTransform(scrollYProgress, [0, 0.08], [850, 250]);
-  const rawHeight = useTransform(scrollYProgress, [0, 0.08], [80, 40]);
+  const rawHeight = useTransform(scrollYProgress, [0, 0.08], [80, 80]);
   const rawTranslateY = useTransform(scrollYProgress, [0, 0.08], [100, 0]);
 
   const springOptions = { stiffness: 120, damping: 18 };
@@ -47,9 +47,9 @@ const HeaderSearch = () => {
   });
 
   return (
-    <div className="mx-auto flex w-screen items-end justify-center" ref={scrollRef}>
+    <div className="relative mx-auto flex w-screen items-end justify-center" ref={scrollRef}>
       <motion.div
-        className={'w-215 relative flex min-w-fit justify-center rounded-full bg-[#ebebeb98] p-1'}
+        className={'w-215 relative flex min-w-fit justify-center rounded-full bg-[#ebebeb98] p-2'}
         style={{ translateY, height, width }}
         transition={{ type: 'spring', stiffness: 80, damping: 20 }}
       >
@@ -57,13 +57,24 @@ const HeaderSearch = () => {
           className="flex-1/2 relative flex h-full min-w-fit cursor-pointer flex-col items-start justify-center rounded-full px-8"
           onClick={() => setSelectedTab('where')}
         >
-          <span className="z-70 text-sm font-medium">Where</span>
-          <motion.div className="z-70 w-full text-gray-700" style={{ display: show ? 'block' : 'none' }}>
-            <Input
-              placeholder="Search locations..."
-              className="ml-0 w-full"
-              style={{ display: show ? 'block' : 'none' }}
-            />
+          <motion.span
+            className="z-70 text-sm font-medium"
+            animate={{ y: show ? -8 : 0 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+          >
+            Where
+          </motion.span>
+          <motion.div
+            className="z-70 absolute top-7 mt-1 w-fit text-gray-700"
+            initial={{ opacity: 0, y: 5 }}
+            animate={{
+              opacity: show ? 1 : 0,
+              y: show ? 0 : 5,
+              pointerEvents: show ? 'auto' : 'none',
+            }}
+            transition={{ duration: 0.2 }}
+          >
+            <Input placeholder="Search locations..." className="ml-0 w-20" />
           </motion.div>
           {selectedTab === 'where' && (
             <motion.div
@@ -78,9 +89,24 @@ const HeaderSearch = () => {
           className="flex-1/4 relative flex h-full min-w-fit cursor-pointer flex-col items-start justify-center rounded-full px-8"
           onClick={() => setSelectedTab('adoptionStart')}
         >
-          <span className="z-70 text-sm font-medium">Start Date</span>
-          <motion.div className="z-70 text-gray-700" style={{ display: show ? 'block' : 'none' }}>
-            Select Start Date
+          <motion.span
+            className="z-70 text-sm font-medium"
+            animate={{ y: show ? -8 : 0 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+          >
+            Start Date
+          </motion.span>
+          <motion.div
+            className="z-70 absolute top-7 mt-1 w-fit text-gray-700"
+            initial={{ opacity: 0, y: 5 }}
+            animate={{
+              opacity: show ? 1 : 0,
+              y: show ? 0 : 5,
+              pointerEvents: show ? 'auto' : 'none',
+            }}
+            transition={{ duration: 0.2 }}
+          >
+            Select Date
           </motion.div>
           {selectedTab === 'adoptionStart' && (
             <motion.div
@@ -95,8 +121,23 @@ const HeaderSearch = () => {
           className="flex-1/4 relative flex h-full min-w-fit cursor-pointer flex-col items-start justify-center rounded-full px-8"
           onClick={() => setSelectedTab('adoptionEnd')}
         >
-          <span className="z-70 text-sm font-medium">End Date</span>
-          <motion.div className="z-70 text-gray-700" style={{ display: show ? 'block' : 'none' }}>
+          <motion.span
+            className="z-70 text-sm font-medium"
+            animate={{ y: show ? -8 : 0 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+          >
+            End Date
+          </motion.span>
+          <motion.div
+            className="z-70 absolute top-7 mt-1 w-fit text-gray-700"
+            initial={{ opacity: 0, y: 5 }}
+            animate={{
+              opacity: show ? 1 : 0,
+              y: show ? 0 : 5,
+              pointerEvents: show ? 'auto' : 'none',
+            }}
+            transition={{ duration: 0.2 }}
+          >
             Select Date
           </motion.div>
           {selectedTab === 'adoptionEnd' && (
@@ -111,8 +152,23 @@ const HeaderSearch = () => {
           className="flex-1/2 relative flex h-full min-w-fit cursor-pointer flex-col items-start justify-center rounded-full px-8 pr-14"
           onClick={() => setSelectedTab('species')}
         >
-          <span className="z-70 text-sm font-medium">Species</span>
-          <motion.div className="z-70 text-gray-700" style={{ display: show ? 'block' : 'none' }}>
+          <motion.span
+            className="z-70 text-sm font-medium"
+            animate={{ y: show ? -8 : 0 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+          >
+            Species
+          </motion.span>
+          <motion.div
+            className="z-70 absolute top-7 mt-1 w-fit text-gray-700"
+            initial={{ opacity: 0, y: 5 }}
+            animate={{
+              opacity: show ? 1 : 0,
+              y: show ? 0 : 5,
+              pointerEvents: show ? 'auto' : 'none',
+            }}
+            transition={{ duration: 0.2 }}
+          >
             Select Species
           </motion.div>
           {selectedTab === 'species' && (
@@ -127,24 +183,36 @@ const HeaderSearch = () => {
             <Button rounded className="h-full p-4">
               <Search className="h-4 w-4" />
               <motion.div className="text-white" style={{ display: show ? 'block' : 'none' }}>
-                <span className="text-sm font-semibold">Search</span>
+                <span className="z-90 text-sm font-semibold">Search</span>
               </motion.div>
             </Button>
           </div>
         </div>
         {selectedTab === undefined && (
-          <motion.div layoutId="active-tab" className="z-60 absolute inset-1 bg-white" style={{ borderRadius: 1000 }} />
+          <motion.div layoutId="active-tab" className="z-60 absolute inset-2 bg-white" style={{ borderRadius: 1000 }} />
         )}
+        <AnimatePresence mode="wait">
+          {selectedTab && (
+            <motion.div
+              key={selectedTab}
+              className="absolute z-20 mt-20 min-h-[150px]"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.2 }}
+            >
+              {selectedTab === 'where' && <LocationTab />}
+              {selectedTab === 'adoptionStart' && (
+                <AdoptionStartTab dateRange={dateRange} setDateRange={setDateRange} />
+              )}
+              {selectedTab === 'adoptionEnd' && <AdoptionEndTab dateRange={dateRange} setDateRange={setDateRange} />}
+              {selectedTab === 'species' && (
+                <SpeciesTab selectedSpecies={selectedSpecies} onSpeciesChange={handleSpeciesChange} />
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
-
-      {/* <div className="mt-45 absolute z-20 min-h-[150px]">
-        {selectedTab === 'where' && <LocationTab />}
-        {selectedTab === 'adoptionStart' && <AdoptionStartTab dateRange={dateRange} setDateRange={setDateRange} />}
-        {selectedTab === 'adoptionEnd' && <AdoptionEndTab dateRange={dateRange} setDateRange={setDateRange} />}
-        {selectedTab === 'species' && (
-          <SpeciesTab selectedSpecies={selectedSpecies} onSpeciesChange={handleSpeciesChange} />
-        )}
-      </div> */}
     </div>
   );
 };
