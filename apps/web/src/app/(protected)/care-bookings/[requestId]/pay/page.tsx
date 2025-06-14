@@ -3,12 +3,11 @@ import React, { useEffect, useState } from 'react';
 
 import { useParams, useSearchParams } from 'next/navigation';
 
-import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
+import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 
 import { useInitiatePetCarePaymentMutation } from '@/lib/api/petCareApi';
+import { StripeProvider } from '@/providers/StripeProvider';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 const PaymentPage = () => {
   const [clientSecret, setClientSecret] = useState('');
   const requestId = useParams().requestId as string;
@@ -28,16 +27,12 @@ const PaymentPage = () => {
     }
   }, [requestId, proposalId, initiatePayment]);
 
-  const appearance = { theme: 'stripe' } as const;
-
-  const loader = 'auto';
-
   return (
     <div>
       <h1>Stripe payment page</h1>
-      <Elements stripe={stripePromise} options={{ clientSecret, appearance, loader }}>
+      <StripeProvider clientSecret={clientSecret}>
         <CheckoutForm />
-      </Elements>
+      </StripeProvider>
     </div>
   );
 };
