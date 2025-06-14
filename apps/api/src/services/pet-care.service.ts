@@ -370,11 +370,7 @@ export class PetCareService implements IPetCareService {
   ): Promise<{ paymentIntentClientSecret: string | null; petCareProposal: any; petCareRequestId: string }> {
     const { userId, petCareRequestId, petCareProposalId } = data;
 
-    const petCareRequest = await prisma.petCareRequest.findFirst({
-      where: {
-        id: petCareRequestId,
-      },
-    });
+    const petCareRequest = await prisma.petCareRequest.findFirst({ where: { id: petCareRequestId } });
 
     if (!petCareRequest) {
       throw new HttpError({
@@ -390,11 +386,7 @@ export class PetCareService implements IPetCareService {
       });
     }
 
-    const petCareProposal = await prisma.petCareProposal.findFirst({
-      where: {
-        id: petCareProposalId,
-      },
-    });
+    const petCareProposal = await prisma.petCareProposal.findFirst({ where: { id: petCareProposalId } });
     if (!petCareProposal) {
       throw new HttpError({
         statusCode: HttpStatusCode.NOT_FOUND,

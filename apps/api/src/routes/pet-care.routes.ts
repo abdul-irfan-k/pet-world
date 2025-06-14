@@ -79,7 +79,7 @@ export class PetCareRoutes {
       this._petCareController.listProposalsForPetCareRequest.bind(this._petCareController),
     );
 
-    router.get(
+    router.post(
       '/requests/:requestId/initiate-payment',
       authMiddleware,
       this._petCareController.initiatePetCarePayment.bind(this._petCareController),

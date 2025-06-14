@@ -4,6 +4,7 @@ import type { NextFunction, Request, Response } from 'express';
 
 import { HttpStatusCode, ResponseMessages } from '@/constants';
 import { PetCareService } from '@/services';
+import { HttpError } from '@/utils';
 
 export class PetCareController implements IPetCareController {
   private readonly _petCareService: IPetCareService;
@@ -227,7 +228,22 @@ export class PetCareController implements IPetCareController {
 
   public async initiatePetCarePayment(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { petCareRequestId, petCareProposalId } = req.body;
+      const { proposalId: petCareProposalId } = req.body;
+      const { requestId: petCareRequestId } = req.params;
+
+      if (!petCareProposalId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: 'Pet care proposal ID is required.',
+        });
+      }
+      if (!petCareRequestId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: 'Pet care request ID is required.',
+        });
+      }
+
       const result = await this._petCareService.initiatePetCarePayment({
         userId: req.user!.id,
         petCareRequestId,
