@@ -63,7 +63,7 @@ const PaymentPage = () => {
               <label className="flex cursor-pointer items-center justify-between">
                 <div>
                   <p className="font-medium">Pay in full</p>
-                  <p className="text-sm text-gray-600">Pay the total ($380.06) now and you're all set.</p>
+                  <p className="text-sm text-gray-600">{"Pay the total ($380.06) now and you're all set."}</p>
                 </div>
                 <input type="radio" name="paymentOption" className="form-radio" defaultChecked />
               </label>
