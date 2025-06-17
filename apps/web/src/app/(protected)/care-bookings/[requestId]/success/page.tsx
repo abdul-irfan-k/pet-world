@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { ChevronLeft } from 'lucide-react';
 
 import { PaymentSuccessPopup } from '@/components/payment/PaymentSuccessPopup';
-import { Button } from '@/components/ui/button';
 
 const PaymentSuccessPage = () => {
   return (
@@ -38,11 +37,11 @@ const PaymentSuccessPage = () => {
             </div>
           </div>
           <div className="mb-6">
-            <h2 className="mb-8 text-xl font-semibold">Adopter's Rules</h2>
+            <h2 className="mb-8 text-xl font-semibold">{"Adopter's Rules"}</h2>
             <div className="rounded-lg bg-white p-4 shadow">
               <p className="mb-2">We ask every adopter to be responsible and caring.</p>
               <ul className="ml-4 list-inside list-disc">
-                <li>Follow the owner's specific care instructions.</li>
+                <li>{"Follow the owner's specific care instructions."}</li>
                 <li>Ensure the pet receives adequate food, water, and exercise.</li>
                 <li>Keep the pet safe and secure at all times.</li>
                 <li>Report any health concerns immediately to the owner.</li>
