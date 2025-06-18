@@ -47,6 +47,7 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.3",
+    "react-quill-new": "^3.4.6",
     "react-scan": "^0.3.4",
     "sonner": "^2.0.3",
     "stripe": "13.4.0",
