@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-import { ProfileHeader, ProfileInfo } from '@/components/user/profile';
+import { ProfileHeader, ProfileInfo, ProfileBookAdoption } from '@/components/user/profile';
 import { PetAdopterProfile } from '@/types/PetAdopter';
 
 const bio = `
@@ -94,15 +94,20 @@ const UserProfilePage = () => {
           location="New York, USA"
           profilePicture="/default-profile.png"
         />
-        <ProfileInfo
-          adopter={dummyPetAdopter}
-          adoption={{
-            totalPetsAdopted: 10,
-            totalAdoptionDuration: '5 years',
-            highlightSection: 'Expert in dog training and care.',
-            adoptedPetTypesBreeds: 'Golden Retrievers, Beagles, Parrots',
-          }}
-        />
+        <div>
+          <ProfileInfo
+            adopter={dummyPetAdopter}
+            adoption={{
+              totalPetsAdopted: 10,
+              totalAdoptionDuration: '5 years',
+              highlightSection: 'Expert in dog training and care.',
+              adoptedPetTypesBreeds: 'Golden Retrievers, Beagles, Parrots',
+            }}
+          />
+        </div>
+        <div className="pl-98">
+          <ProfileBookAdoption />
+        </div>
       </div>
     </div>
   );

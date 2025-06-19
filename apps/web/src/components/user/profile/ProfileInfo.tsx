@@ -103,7 +103,7 @@ const ProfileInfo: FC<ProfileInfoProps> = ({ adopter, adoption }) => {
         </div>
       </div>
 
-      <div className="w-full max-w-3xl p-10">
+      <div className="h-min-[80vh] h-full w-full p-10">
         <Editor readOnly value={value} modules={{ toolbar: false }} />
       </div>
     </div>
