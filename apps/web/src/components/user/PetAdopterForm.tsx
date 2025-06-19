@@ -14,7 +14,7 @@ import {
 } from './adopter-profile-form';
 
 const PetAdopterForm = () => {
-  const steps = ['Basic Experience', 'Preferred Pets', 'Availability & Location', 'Documents', 'Review'];
+  const steps = ['Basic Experience', 'Preferred Pets', 'Bio', 'Availability & Location', 'Documents', 'Review'];
   const [currentStep, setCurrentStep] = useState(0);
 
   return (
