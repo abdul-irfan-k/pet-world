@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-import { Header } from '@/components/shared';
+import { Footer, Header } from '@/components/shared';
 
 export default function UserProfileLayout({ children }: PropsWithChildren) {
   return (
@@ -8,6 +8,7 @@ export default function UserProfileLayout({ children }: PropsWithChildren) {
       <Header />
       <div className="block h-20 w-full"></div>
       <div className="w-full">{children}</div>
+      <Footer />
     </div>
   );
 }
