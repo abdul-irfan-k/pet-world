@@ -20,17 +20,15 @@ const BasicExperience = () => {
           <TextField
             label="How many years of experience do you have caring for pets?"
             placeholder="e.g., 5 years"
-            id="experienceYears"
-            {...register('experienceYears', { required: 'Experience years is required' })}
+            {...register('yearOfExperience', { required: 'Experience years is required' })}
             //eslint-disable-next-line
             //@ts-ignore
-            error={errors?.experienceYears?.message}
+            error={errors?.yearOfExperience?.message}
           />
         </div>
 
         <div className="space-y-3">
           <TextField
-            id="certifications"
             placeholder="e.g., Animal Care Certification, Pet First Aid"
             name="certifications"
             label="Certifications (if any)"
@@ -39,7 +37,6 @@ const BasicExperience = () => {
 
         <div className="space-y-3">
           <TextField
-            id="specialization"
             placeholder="e.g., Dog Training, Cat Behavior"
             label="Specialization (if any)"
             {...register('overview.specialization', { required: 'Specialization is required' })}
@@ -51,7 +48,6 @@ const BasicExperience = () => {
 
         <div className="space-y-3">
           <TextField
-            id="preferredPets"
             placeholder="e.g., Dogs, Cats, Birds"
             label="Preferred Pets"
             {...register('overview.preferredPets', { required: 'Preferred pets is required' })}
@@ -63,7 +59,6 @@ const BasicExperience = () => {
 
         <div className="space-y-3">
           <TextAreaField
-            id="motivation"
             placeholder="Share your passion for animal care and what drives you to help pets in need."
             rows={4}
             label="Why do you want to be a pet adopter?"

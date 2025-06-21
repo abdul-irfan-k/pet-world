@@ -16,13 +16,20 @@ import {
   Review,
 } from './adopter-profile-form';
 
-const formSteps = [
+export interface FormStep {
+  key: string;
+  title: string;
+  Component: React.ComponentType<any>;
+}
+
+export const formSteps: FormStep[] = [
   { key: 'basicExperience', title: 'Basic Information', Component: BasicExperience },
   { key: 'bio', title: 'Bio', Component: Bio },
   { key: 'availabilityLocation', title: 'Availability & Location', Component: AvailabilityLocation },
   { key: 'documents', title: 'Documents', Component: Documents },
   { key: 'review', title: 'Review', Component: Review },
 ];
+
 const progressStepLabels = formSteps.map(step => ({ heading: step.title }));
 
 const animationVariants = {
@@ -41,7 +48,15 @@ const animationVariants = {
 };
 
 const PetAdopterForm = () => {
-  const formMethods = useForm({});
+  const formMethods = useForm({
+    defaultValues: {
+      overview: {
+        location: {
+          country: 'IN',
+        },
+      },
+    },
+  });
   const [stepIndex, setStepIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState(0);
 
@@ -68,7 +83,7 @@ const PetAdopterForm = () => {
 
         <h1 className="text-3xl font-medium">{currentStep.title}</h1>
 
-        <div className="flex w-full flex-col gap-5">
+        <div className="flex flex-col gap-5">
           <AnimatePresence initial={false} custom={slideDirection}>
             <motion.div
               key={stepIndex}
@@ -83,7 +98,7 @@ const PetAdopterForm = () => {
               }}
               className="w-full"
             >
-              <StepComponent />
+              <StepComponent setStepIndex={setStepIndex} />
             </motion.div>
           </AnimatePresence>
 
