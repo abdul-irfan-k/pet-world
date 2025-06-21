@@ -34,6 +34,12 @@ export class UserRoutes {
 
     router.delete('/addresses/:id', authMiddleware, this._userController.deleteAddress.bind(this._userController));
 
+    router.post(
+      '/pet-adopter-profile',
+      authMiddleware,
+      this._userController.createPetAdopterProfile.bind(this._userController),
+    );
+
     return router;
   }
 }

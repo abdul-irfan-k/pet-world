@@ -103,7 +103,7 @@ model Pet_Adopter {
   adharNumber      String?  @unique
   documents        Json?
   yearOfExperience Int?
-  certifications   String[]
+  certifications   String[] @default([])
   overview         Json?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @default(now())
@@ -199,7 +199,7 @@ model Otp {
 model PetCare {
   id               String        @id @default(cuid())
   petId            String
-  adopterId        String
+  ownerId          String
   petCareRequestId String
   startedAt        DateTime
   endedAt          DateTime
@@ -209,13 +209,13 @@ model PetCare {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @default(now())
   isDeleted        Boolean       @default(false)
+  adopterId        String
 
   pet            Pet            @relation(fields: [petId], references: [id])
-  adopter        User           @relation(fields: [adopterId], references: [id])
+  owner          User           @relation(fields: [ownerId], references: [id])
   petCareRequest PetCareRequest @relation(fields: [petCareRequestId], references: [id])
   Payment        Payment?
-  Pet_Adopter    Pet_Adopter?   @relation(fields: [pet_AdopterId], references: [id])
-  pet_AdopterId  String?
+  Pet_Adopter    Pet_Adopter?   @relation(fields: [adopterId], references: [id])
 }
 
 model PetCareRequest {
