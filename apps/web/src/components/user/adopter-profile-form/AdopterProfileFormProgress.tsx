@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface AdopterProfileFormProgressProps {
-  steps: string[];
+  steps: { heading: string }[];
   currentStep: number;
 }
 const AdopterProfileFormProgress: FC<AdopterProfileFormProgressProps> = ({ currentStep, steps }) => {
@@ -41,7 +41,7 @@ const AdopterProfileFormProgress: FC<AdopterProfileFormProgressProps> = ({ curre
                     (isActive ? 'font text-black' : 'text-gray-400')
                   }
                 >
-                  {step}
+                  {step.heading}
                 </div>
               </div>
               {index + 1 < steps.length && (

@@ -1,38 +1,58 @@
 import React from 'react';
 
-import { Input, Label } from '@/components/ui/form/inputs';
-import { Textarea } from '@/components/ui/textarea';
+import { TextAreaField, TextField } from '@/components/ui/form/inputs';
 
 const BasicExperience = () => {
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">Your Pet Care Experience</h2>
+    <div className="w-[45vw] space-y-6 rounded-lg border border-gray-300 bg-gray-50 p-10">
       <p className="text-muted-foreground text-sm">
         Share your relevant experience as a pet adopter or animal caretaker.
       </p>
 
       <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="years">Years of Experience</Label>
-          <Input id="years" placeholder="e.g., 4" type="number" />
+        <div className="space-y-3">
+          <TextField
+            label="How many years of experience do you have caring for pets?"
+            placeholder="e.g., 5 years"
+            name="experienceYears"
+            id="experienceYears"
+          />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="certifications">Certifications (comma-separated)</Label>
-          <Input id="certifications" placeholder="e.g., Animal Welfare, Pet Grooming, Behavioral Training" />
+        <div className="space-y-3">
+          <TextField
+            id="certifications"
+            placeholder="e.g., Animal Care Certification, Pet First Aid"
+            name="certifications"
+            label="Certifications (if any)"
+          />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="specialization">Specialization</Label>
-          <Input id="specialization" placeholder="e.g., Behavioral training for dogs" />
+        <div className="space-y-3">
+          <TextField
+            id="specialization"
+            placeholder="e.g., Dog Training, Cat Behavior"
+            name="specialization"
+            label="Specialization (if any)"
+          />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="motivation">What motivates you to care for pets?</Label>
-          <Textarea
+        <div className="space-y-3">
+          <TextField
+            id="preferredPets"
+            placeholder="e.g., Dogs, Cats, Birds"
+            name="preferredPets"
+            label="Preferred Pets"
+          />
+        </div>
+
+        <div className="space-y-3">
+          <TextAreaField
             id="motivation"
+            placeholder="Share your passion for animal care and what drives you to help pets in need."
             rows={4}
-            placeholder="e.g., I’ve always had a passion for helping animals in need..."
+            name="motivation"
+            label="Why do you want to be a pet adopter?"
           />
         </div>
       </div>
