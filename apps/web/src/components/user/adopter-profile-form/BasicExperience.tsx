@@ -1,8 +1,14 @@
 import React from 'react';
 
+import { useFormContext } from 'react-hook-form';
+
 import { TextAreaField, TextField } from '@/components/ui/form/inputs';
 
 const BasicExperience = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
   return (
     <div className="w-[45vw] space-y-6 rounded-lg border border-gray-300 bg-gray-50 p-10">
       <p className="text-muted-foreground text-sm">
@@ -14,8 +20,11 @@ const BasicExperience = () => {
           <TextField
             label="How many years of experience do you have caring for pets?"
             placeholder="e.g., 5 years"
-            name="experienceYears"
             id="experienceYears"
+            {...register('experienceYears', { required: 'Experience years is required' })}
+            //eslint-disable-next-line
+            //@ts-ignore
+            error={errors?.experienceYears?.message}
           />
         </div>
 
@@ -32,8 +41,11 @@ const BasicExperience = () => {
           <TextField
             id="specialization"
             placeholder="e.g., Dog Training, Cat Behavior"
-            name="specialization"
             label="Specialization (if any)"
+            {...register('overview.specialization', { required: 'Specialization is required' })}
+            //eslint-disable-next-line
+            //@ts-ignore
+            error={errors?.overview?.specialization?.message}
           />
         </div>
 
@@ -41,8 +53,11 @@ const BasicExperience = () => {
           <TextField
             id="preferredPets"
             placeholder="e.g., Dogs, Cats, Birds"
-            name="preferredPets"
             label="Preferred Pets"
+            {...register('overview.preferredPets', { required: 'Preferred pets is required' })}
+            //eslint-disable-next-line
+            //@ts-ignore
+            error={errors?.overview?.preferredPets?.message}
           />
         </div>
 
@@ -51,8 +66,11 @@ const BasicExperience = () => {
             id="motivation"
             placeholder="Share your passion for animal care and what drives you to help pets in need."
             rows={4}
-            name="motivation"
             label="Why do you want to be a pet adopter?"
+            {...register('overview.motivation', { required: 'Motivation is required' })}
+            //eslint-disable-next-line
+            //@ts-ignore
+            error={errors?.overview?.motivation?.message}
           />
         </div>
       </div>
