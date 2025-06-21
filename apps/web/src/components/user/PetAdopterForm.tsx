@@ -78,6 +78,7 @@ const PetAdopterForm = () => {
   };
 
   const { mutate, isPending } = useCreatePetAdopterProfileMutation({
+    //eslint-disable-next-line
     onSuccess: _response => {
       formMethods.reset();
       setStepIndex(0);

@@ -25,6 +25,7 @@ const Review: React.FC<ReviewProps> = ({ setStepIndex }) => {
     setFormData(values);
   }, []);
 
+  //eslint-disable-next-line
   const renderSection = (key: string, value: any = '-') => {
     return (
       <div key={key} className="space-y-1">
