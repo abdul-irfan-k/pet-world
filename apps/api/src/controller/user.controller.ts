@@ -147,4 +147,27 @@ export class UserController {
       next(error);
     }
   }
+
+  async createPetAdopterProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: ResponseMessages.UNAUTHORIZED,
+        });
+      }
+      const result = await this._userService.createPetAdopterProfile({
+        userId,
+        ...req.body,
+      });
+      res.status(HttpStatusCode.CREATED).json({
+        status: 'success',
+        data: result,
+        message: 'Pet adopter profile created successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

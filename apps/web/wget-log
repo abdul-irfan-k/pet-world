@@ -1,0 +1,11 @@
+--2025-06-14 07:14:44--  https://deb.opera.com/archive.key
+Resolving deb.opera.com (deb.opera.com)... 64:ff9b::312c:8861, 64:ff9b::312c:8858, 49.44.136.97, ...
+Connecting to deb.opera.com (deb.opera.com)|64:ff9b::312c:8861|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 2505 (2.4K) [application/octet-stream]
+Saving to: ‘STDOUT’
+
+-                                           0%[                                                                                    ]       0  --.-KB/s               -                                         100%[===================================================================================>]   2.45K  --.-KB/s    in 0s      
+
+2025-06-14 07:14:48 (1.18 GB/s) - written to stdout [2505/2505]
+

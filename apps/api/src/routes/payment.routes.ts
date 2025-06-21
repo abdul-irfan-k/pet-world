@@ -19,6 +19,12 @@ export class PaymentRoutes {
       this._paymentController.onboardStripeAccount.bind(this._paymentController),
     );
 
+    router.get(
+      '/stripe/account',
+      authMiddleware,
+      this._paymentController.getStripeAccount.bind(this._paymentController),
+    );
+
     return router;
   }
 }

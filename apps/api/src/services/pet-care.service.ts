@@ -10,13 +10,14 @@ import {
   IDeletePetCareProposalDTO,
   IListPetCareProposalsByAdopterIdDTO,
   IListProposalsForPetCareRequestDTO,
+  IInitiatePetCarePaymentDTO,
 } from './interfaces/IPetCareService';
 
 import type { IPetCareService } from './interfaces/IPetCareService';
 import type { Prisma } from '../../generated/prisma';
 import type { PetCareProposal } from '@/types/PetCareProposal';
 
-import { prisma } from '@/config';
+import { prisma, stripe } from '@/config';
 import { HttpStatusCode, ResponseMessages } from '@/constants';
 import { PetCareRequest } from '@/types/PetCareRequest';
 import { HttpError } from '@/utils';
@@ -362,5 +363,61 @@ export class PetCareService implements IPetCareService {
     });
 
     return { petCareProposal: approvedProposal as PetCareProposal };
+  }
+
+  public async initiatePetCarePayment(
+    data: IInitiatePetCarePaymentDTO,
+  ): Promise<{ paymentIntentClientSecret: string | null; petCareProposal: any; petCareRequestId: string }> {
+    const { userId, petCareRequestId, petCareProposalId } = data;
+
+    const petCareRequest = await prisma.petCareRequest.findFirst({ where: { id: petCareRequestId } });
+
+    if (!petCareRequest) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.PET_CARE_REQUEST_NOT_FOUND,
+      });
+    }
+
+    if (petCareRequest.ownerId !== userId) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.FORBIDDEN,
+        message: ResponseMessages.UNAUTHORIZED,
+      });
+    }
+
+    const petCareProposal = await prisma.petCareProposal.findFirst({ where: { id: petCareProposalId } });
+    if (!petCareProposal) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.PET_CARE_PROPOSAL_NOT_FOUND,
+      });
+    }
+
+    const requestId = petCareRequest.id;
+    const petOwnerId = petCareRequest.ownerId;
+    const adopterId = petCareProposal.adopterId;
+    const proposedFee = petCareProposal?.proposedFee ?? 0;
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: petCareProposal?.proposedFee ?? 0,
+      currency: 'usd',
+      transfer_group: `care_request_${requestId}_${petOwnerId}_${adopterId}_${Date.now()}`,
+      metadata: {
+        platform_transaction_type: 'pet_care_payment',
+        care_request_id: requestId,
+        pet_owner_user_id: petOwnerId,
+        pet_adopter_user_id: adopterId,
+      },
+    });
+
+    return {
+      paymentIntentClientSecret: paymentIntent.client_secret,
+      petCareProposal: {
+        ...petCareProposal,
+        proposedFee,
+      },
+      petCareRequestId: petCareRequest.id,
+    };
   }
 }

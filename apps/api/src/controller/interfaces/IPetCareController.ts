@@ -12,4 +12,5 @@ export interface IPetCareController {
   deletePetCareProposal(req: Request, res: Response, next: NextFunction): Promise<void>;
   listPetCareProposalsByAdopterId(req: Request, res: Response, next: NextFunction): Promise<void>;
   listProposalsForPetCareRequest(req: Request, res: Response, next: NextFunction): Promise<void>;
+  initiatePetCarePayment(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

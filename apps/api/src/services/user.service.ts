@@ -5,10 +5,12 @@ import type {
   IGetAddressByIdDTO,
   IUpdateAddressDTO,
   IDeleteAddressDTO,
+  ICreatePetAdopterProfileDTO,
 } from '@/services/interfaces/IUserService';
 
 import { prisma } from '@/config';
 import { Location } from '@/types/Location';
+import { PetAdopter } from '@/types/User';
 
 export class UserService implements IUserService {
   public async addAddress(data: ICreateAddressDTO): Promise<{ location: Location }> {
@@ -88,5 +90,29 @@ export class UserService implements IUserService {
       data: { isDeleted: true },
     });
     return { location: deletedLocation };
+  }
+
+  public async createPetAdopterProfile(data: ICreatePetAdopterProfileDTO): Promise<{ petAdopter: PetAdopter }> {
+    const { userId, ...profileData } = data;
+
+    const existingProfile = await prisma.pet_Adopter.findUnique({
+      where: { userId },
+    });
+
+    if (existingProfile) {
+      throw new Error('Pet adopter profile already exists for this user.');
+    }
+
+    const petAdopterProfile = await prisma.pet_Adopter.create({
+      //eslint-disable-next-line
+      //@ts-ignore
+      data: {
+        ...profileData,
+        yearOfExperience: Number(profileData.yearOfExperience),
+        userId,
+      },
+    });
+
+    return { petAdopter: petAdopterProfile as PetAdopter };
   }
 }

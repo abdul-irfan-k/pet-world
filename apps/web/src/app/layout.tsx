@@ -1,5 +1,7 @@
 import { Inter } from 'next/font/google';
 
+import { Analytics } from '@vercel/analytics/next';
+
 import type { Metadata } from 'next';
 
 import '../styles/globals.css';
@@ -23,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
+        <Analytics />
         <Toaster duration={2000} />
         <AppProviders>{children}</AppProviders>
       </body>

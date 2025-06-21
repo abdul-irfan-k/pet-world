@@ -2,6 +2,8 @@
 
 import { useRef, useState } from 'react';
 
+import { usePathname } from 'next/navigation';
+
 import { motion, useScroll, useTransform, useMotionValueEvent, useSpring, AnimatePresence } from 'framer-motion';
 import { Search } from 'lucide-react';
 
@@ -13,6 +15,9 @@ import { Input } from '@/components/ui/form/inputs';
 export type TabKeys = 'where' | 'adoptionStart' | 'adoptionEnd' | 'species' | undefined;
 
 const HeaderSearch = () => {
+  const pathname = usePathname();
+
+  const scrollAnimate = pathname === '/';
   const [selectedTab, setSelectedTab] = useState<TabKeys>(undefined);
 
   const [selectedSpecies, setSelectedSpecies] = useState<string[]>([]);
@@ -28,9 +33,9 @@ const HeaderSearch = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
 
-  const rawWidth = useTransform(scrollYProgress, [0, 0.08], [850, 250]);
-  const rawHeight = useTransform(scrollYProgress, [0, 0.08], [80, 80]);
-  const rawTranslateY = useTransform(scrollYProgress, [0, 0.08], [100, 0]);
+  const rawWidth = useTransform(scrollYProgress, [0, 0.08], scrollAnimate ? [850, 250] : [250, 250]);
+  const rawHeight = useTransform(scrollYProgress, [0, 0.08], scrollAnimate ? [80, 80] : [80, 80]);
+  const rawTranslateY = useTransform(scrollYProgress, [0, 0.08], scrollAnimate ? [100, 0] : [0, 0]);
 
   const springOptions = { stiffness: 120, damping: 18 };
 
@@ -40,6 +45,7 @@ const HeaderSearch = () => {
 
   const [show, setShow] = useState(false);
   useMotionValueEvent(scrollYProgress, 'change', latest => {
+    if (!scrollAnimate) return;
     setShow(latest < 0.08);
     if (latest < 0.08) {
       setSelectedTab(undefined);
