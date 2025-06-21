@@ -3,7 +3,7 @@ import React, { FC, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
-import { ChevronRight, Link as LinkIcon, Briefcase, Clock, CheckCircle2, MapPin, Crown } from 'lucide-react';
+import { ChevronRight, Briefcase } from 'lucide-react';
 
 import { Button } from '@/components/ui/button/Button';
 import { PetAdopterProfile } from '@/types/PetAdopter';
@@ -30,6 +30,7 @@ const ProfileInfo: FC<ProfileInfoProps> = ({ adopter, adoption }) => {
   const { id: userId, overview } = adopter;
   const { totalPetsAdopted, totalAdoptionDuration, highlightSection, adoptedPetTypesBreeds } = adoption;
 
+  //eslint-disable-next-line
   const [value, setValue] = useState<string>(overview?.bio ?? 'This user has not provided any information yet.');
 
   return (

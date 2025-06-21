@@ -1,29 +1,42 @@
-import React from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
+
+import dynamic from 'next/dynamic';
 
 import { useFormContext } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
-import { Editor } from '@/components/ui/editor';
 import { PetAdopterProfile } from '@/types/PetAdopter';
 
+const Editor = dynamic(() => import('@/components/ui/editor').then(mod => mod.Editor), {
+  ssr: false,
+  loading: () => <div>Loading editor...</div>,
+});
 interface ReviewProps {
   setStepIndex: (index: number) => void;
 }
 
 const Review: React.FC<ReviewProps> = ({ setStepIndex }) => {
   const { getValues } = useFormContext();
-  const formData = getValues() as PetAdopterProfile;
+  const [formData, setFormData] = useState<PetAdopterProfile | null>(null);
+
+  useEffect(() => {
+    const values = getValues() as PetAdopterProfile;
+    setFormData(values);
+  }, []);
 
   const renderSection = (key: string, value: any = '-') => {
     return (
       <div key={key} className="space-y-1">
         <span className="font-medium capitalize text-gray-700">{key.replace(/([A-Z])/g, ' $1').trim()}:</span>
         <div className="w-full whitespace-pre-wrap rounded-md border border-gray-300 bg-white p-3 text-gray-900 shadow-sm">
-          {value}
+          {value || '-'}
         </div>
       </div>
     );
   };
+
+  if (!formData) return null;
 
   return (
     <div className="w-[45vw] space-y-6">
