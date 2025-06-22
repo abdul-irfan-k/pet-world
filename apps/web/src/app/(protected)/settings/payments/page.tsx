@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useOnboardStripeAccountMutation } from '@/lib/api/paymentApi';
 
 interface PaymentMethod {
@@ -31,34 +32,53 @@ const PaymentsPage = () => {
         <div>
           <h1 className="text-2xl">Payment Methods</h1>
         </div>
+        <Tabs defaultValue="payments" className="w-full">
+          <TabsList>
+            <TabsTrigger value="payments">Payments</TabsTrigger>
+            <TabsTrigger value="payouts">Payouts</TabsTrigger>
+          </TabsList>
 
-        {isLoading && <p>Loading payment methods...</p>}
-        {isError && <p>Error loading payment methods.</p>}
-        {paymentMethods.length === 0 && (
-          <div>
-            <span className="text-[16px] leading-[26px]">
-              You have no saved payment methods yet. Add a payment method to easily complete transactions.
-            </span>
-          </div>
-        )}
-        {paymentMethods.length > 0 && (
-          <div className="flex flex-col gap-4">
-            {paymentMethods.map(method => (
-              <div key={method.id} className="rounded-md border p-4">
-                <p className="font-semibold">{method.type}</p>
-                {method.last4 && <p>Ending in: {method.last4}</p>}
-                {method.expiry && <p>Expires: {method.expiry}</p>}
-                {method.isDefault && <span className="text-xs text-green-600">Default</span>}
+          <TabsContent value="payments" className="flex flex-col gap-4">
+            {isLoading && <p>Loading payment methods</p>}
+            {isError && <p>ERror Loading payments methods</p>}
+
+            {paymentMethods.length > 0 && (
+              <div className="flex flex-col gap-4">
+                {paymentMethods.map(method => (
+                  <div key={method.id} className="rounded-md border p-4">
+                    <p className="font-semibold">{method.type}</p>
+                    {method.last4 && <p>Ending in: {method.last4}</p>}
+                    {method.expiry && <p>Expires: {method.expiry}</p>}
+                    {method.isDefault && <span className="text-xs text-green-600">Default</span>}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        )}
+            )}
 
-        <div className="flex justify-end">
-          <Button variant={'black'} size={'lg'} className="rounded-full" onClick={handleAddPaymentMethod}>
-            Add payment method
-          </Button>
-        </div>
+            {isLoading && <p>Loading payment methods...</p>}
+            {isError && <p>Error loading payment methods.</p>}
+            {paymentMethods.length === 0 && (
+              <div>
+                <span className="text-[16px] leading-[26px]">
+                  You have no saved payment methods yet. Add a payment method to easily complete transactions.
+                </span>
+              </div>
+            )}
+            <div className="flex justify-end">
+              <Button variant={'black'} size={'lg'} className="rounded-full" onClick={handleAddPaymentMethod}>
+                Add payment method
+              </Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="payouts" className="flex flex-col gap-4">
+            <div>
+              <span className="text-[16px] leading-[26px]">
+                Payouts are not yet supported. Please check back later.
+              </span>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

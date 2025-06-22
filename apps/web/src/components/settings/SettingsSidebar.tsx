@@ -2,16 +2,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import {
-  User,
-  MapPin,
-  Mail,
-  Lock,
-  Eye,
-  Link2,
-  LogOut,
-  Wallet,
-} from 'lucide-react';
+import { User, MapPin, Mail, Lock, Eye, Link2, LogOut, Wallet } from 'lucide-react';
 
 import { Button } from '@/components/ui/button/Button';
 import { useLogoutMutation } from '@/lib/api/authApi';
@@ -20,7 +11,7 @@ import { useAuthStore } from '@/stores/authStore';
 const settingsLinks = [
   { label: 'Account Details', icon: User, href: '/settings/account' },
   { label: 'My Addresses', icon: MapPin, href: '/settings/addresses' },
-  { label: 'Payment Methods', icon: Wallet, href: '/settings/payments' },
+  { label: 'Payment & Payouts', icon: Wallet, href: '/settings/payments' },
   {
     label: 'Communication Preferences',
     icon: Mail,
