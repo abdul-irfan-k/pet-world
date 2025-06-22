@@ -4,19 +4,12 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useOnboardStripeAccountMutation } from '@/lib/api/paymentApi';
-
-interface PaymentMethod {
-  id: string;
-  type: string;
-  last4?: string;
-  expiry?: string;
-  isDefault?: boolean;
-}
+import { useGetStripeAccountQuery, useOnboardStripeAccountMutation } from '@/lib/api/paymentApi';
 
 const PaymentsPage = () => {
   const { mutate } = useOnboardStripeAccountMutation();
 
+  const { data: stripeAccount } = useGetStripeAccountQuery();
   const handleAddPaymentMethod = () => {
     mutate({
       origin: window.location.origin,
@@ -67,6 +60,25 @@ const PaymentsPage = () => {
             here.
           </p>
 
+          {stripeAccount?.data.accounts.map(account => {
+            return (
+              <Card key={account.id}>
+                <CardContent className="flex items-center justify-between">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-4">
+                      <span className="text-lg">
+                        {account.individual?.first_name} {account.individual?.last_name}
+                      </span>
+                      <span className="text-muted-foreground">Default</span>
+                      <span className="text-muted-foreground">Pending</span>
+                    </div>
+                    <span>{account.email}</span>
+                  </div>
+                  <Button variant={'outline'}>Edit</Button>
+                </CardContent>
+              </Card>
+            );
+          })}
           <Card>
             <CardContent className="flex items-center justify-between">
               <div className="flex flex-col gap-2">
