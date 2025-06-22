@@ -20,7 +20,7 @@ export class PaymentRoutes {
     );
 
     router.get(
-      '/stripe/account',
+      '/stripe/accounts',
       authMiddleware,
       this._paymentController.getStripeAccount.bind(this._paymentController),
     );

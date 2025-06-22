@@ -91,7 +91,7 @@ export class PaymentService implements IPaymentService {
     return { stripeAccountLink };
   }
 
-  async getSTripeAccount(data: IGetStripeAccountDTO): Promise<{ stripeAccount: Stripe.Response<Stripe.Account> }> {
+  async getSTripeAccount(data: IGetStripeAccountDTO): Promise<{ accounts: Stripe.Response<Stripe.Account>[] }> {
     const { userId } = data;
 
     const user = await prisma.user.findUnique({
@@ -106,6 +106,6 @@ export class PaymentService implements IPaymentService {
     }
 
     const account = await stripe.accounts.retrieve(user.stripeCustomerId);
-    return { stripeAccount: account };
+    return { accounts: [account] };
   }
 }

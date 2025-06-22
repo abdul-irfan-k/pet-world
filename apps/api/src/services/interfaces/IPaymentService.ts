@@ -24,5 +24,5 @@ export interface IPaymentService {
   onboardStripeAccount(
     data: IOnboardStripeAccountDTO,
   ): Promise<{ stripeAccountLink: Stripe.Response<Stripe.AccountLink> }>;
-  getSTripeAccount(data: IGetStripeAccountDTO): Promise<{ stripeAccount: Stripe.Response<Stripe.Account> }>;
+  getSTripeAccount(data: IGetStripeAccountDTO): Promise<{ accounts: Stripe.Response<Stripe.Account>[] }>;
 }
