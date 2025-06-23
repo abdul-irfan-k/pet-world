@@ -45,5 +45,5 @@ export interface IPetService {
   removePetFromFavorites(data: IRemovePetFromFavoritesDTO): Promise<void>;
   getFavoritePetsByUserId(data: IGetFavoritePetsByUserIdDTO): Promise<{ pets: Pet[] }>;
   isPetFavoritedByUser(data: IIsPetFavoritedByUserDTO): Promise<{ isFavorited: { status: boolean } }>;
-  getAdoptionRequestedPets(args: IGetAdoptionRequestedPetsDTO): Promise<{ petCareRequests: any }>;
+  getAdoptionRequestedPets(args: IGetAdoptionRequestedPetsDTO): Promise<{ pets: any }>;
 }

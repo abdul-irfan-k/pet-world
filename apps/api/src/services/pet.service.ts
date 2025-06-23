@@ -133,48 +133,31 @@ export class PetService implements IPetService {
     return { pets: pets as Pet[] };
   }
 
-  public async getAdoptionRequestedPets(args: IGetAdoptionRequestedPetsDTO): Promise<{ petCareRequests: any }> {
+  public async getAdoptionRequestedPets(args: IGetAdoptionRequestedPetsDTO): Promise<{ pets: any }> {
     const { skip = 0, take = 10, adoptionStartDate, adoptionEndDate, ageRange, breed, species } = args;
+
     const whereClause: Prisma.PetCareRequestWhereInput = {
       isDeleted: false,
       status: 'pending',
     };
+
     if (adoptionStartDate) {
-      whereClause.startDate = {
-        gte: adoptionStartDate,
-      };
+      whereClause.startDate = { gte: adoptionStartDate };
     }
 
     if (adoptionEndDate) {
-      whereClause.endDate = {
-        lte: adoptionEndDate,
-      };
+      whereClause.endDate = { lte: adoptionEndDate };
     }
 
+    const petFilter: Prisma.PetWhereInput = {};
     if (ageRange) {
-      whereClause.pet = {
-        age: {
-          gte: ageRange[0],
-          lte: ageRange[1],
-        },
-      };
+      petFilter.age = { gte: ageRange[0], lte: ageRange[1] };
     }
+    if (breed) petFilter.breed = breed;
+    if (species) petFilter.species = species;
 
-    if (breed) {
-      whereClause.pet = {
-        ...whereClause.pet,
-        //eslint-disable-next-line
-        //@ts-ignore
-        breed,
-      };
-    }
-    if (species) {
-      whereClause.pet = {
-        ...whereClause.pet,
-        //eslint-disable-next-line
-        //@ts-ignore
-        species,
-      };
+    if (Object.keys(petFilter).length > 0) {
+      whereClause.pet = petFilter;
     }
 
     const petCareRequests = await prisma.petCareRequest.findMany({
@@ -183,9 +166,30 @@ export class PetService implements IPetService {
       take,
       include: {
         pet: true,
+        location: {
+          select: {
+            name: true,
+            apt: true,
+            city: true,
+            state: true,
+            country: true,
+          },
+        },
       },
     });
-    return { petCareRequests };
+
+    const pets = petCareRequests.map(req => ({
+      ...req.pet,
+      adoptionRequest: {
+        id: req.id,
+        startDate: req.startDate,
+        endDate: req.endDate,
+        amount: req.amount,
+        location: req.location,
+      },
+    }));
+
+    return { pets };
   }
 
   public async addPetToFavorites(data: IAddPetToFavoritesDTO): Promise<{ pet: FavoritePet }> {
