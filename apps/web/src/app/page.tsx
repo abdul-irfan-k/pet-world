@@ -4,11 +4,11 @@ import { PetCard } from '@/components/pets';
 import { Footer, Header } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { Video } from '@/components/ui/video';
-import { useGetAllPetsQuery } from '@/lib/api/petsApi';
+import { useGetAdoptionRequestedPetsQuery } from '@/lib/api/petsApi';
 import { dogs } from '@/lib/data/dummyDogs';
 
 export default function Home() {
-  const { data: petsData, isLoading } = useGetAllPetsQuery();
+  const { data: petsData, isLoading } = useGetAdoptionRequestedPetsQuery();
 
   const pets = petsData?.data.pets;
 

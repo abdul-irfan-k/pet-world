@@ -1,6 +1,6 @@
-import { Pet, PetType } from '@/types/pet';
+import { PetType } from '@/types/pet';
 
-export const dogs: Pet[] = [
+export const dogs = [
   {
     id: 'dog-1',
     name: 'Buddy',
@@ -13,6 +13,18 @@ export const dogs: Pet[] = [
     ownerId: 'owner-1',
     createdAt: new Date(),
     updatedAt: new Date(),
+    adoptionRequest: {
+      id: 'req-1',
+      amount: '₹50',
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      location: {
+        name: 'Home 1',
+        city: 'Bangalore',
+        state: 'Karnataka',
+        country: 'India',
+      },
+    },
   },
   {
     id: 'dog-2',
@@ -26,6 +38,18 @@ export const dogs: Pet[] = [
     ownerId: 'owner-2',
     createdAt: new Date(),
     updatedAt: new Date(),
+    adoptionRequest: {
+      id: 'req-2',
+      amount: '₹60',
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+      location: {
+        name: 'Home 2',
+        city: 'Bangalore',
+        state: 'Karnataka',
+        country: 'India',
+      },
+    },
   },
   {
     id: 'dog-3',
@@ -39,6 +63,18 @@ export const dogs: Pet[] = [
     ownerId: 'owner-3',
     createdAt: new Date(),
     updatedAt: new Date(),
+    adoptionRequest: {
+      id: 'req-3',
+      amount: '₹40',
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
+      location: {
+        name: 'Home 3',
+        city: 'Bangalore',
+        state: 'Karnataka',
+        country: 'India',
+      },
+    },
   },
   {
     id: 'dog-4',
@@ -52,6 +88,18 @@ export const dogs: Pet[] = [
     ownerId: 'owner-4',
     createdAt: new Date(),
     updatedAt: new Date(),
+    adoptionRequest: {
+      id: 'req-4',
+      amount: '₹70',
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      location: {
+        name: 'Home 4',
+        city: 'Bangalore',
+        state: 'Karnataka',
+        country: 'India',
+      },
+    },
   },
   {
     id: 'dog-5',
@@ -65,6 +113,18 @@ export const dogs: Pet[] = [
     ownerId: 'owner-5',
     createdAt: new Date(),
     updatedAt: new Date(),
+    adoptionRequest: {
+      id: 'req-5',
+      amount: '₹55',
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
+      location: {
+        name: 'Home 5',
+        city: 'Bangalore',
+        state: 'Karnataka',
+        country: 'India',
+      },
+    },
   },
   {
     id: 'dog-6',
@@ -78,6 +138,18 @@ export const dogs: Pet[] = [
     ownerId: 'owner-6',
     createdAt: new Date(),
     updatedAt: new Date(),
+    adoptionRequest: {
+      id: 'req-6',
+      amount: '₹65',
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000),
+      location: {
+        name: 'Home 6',
+        city: 'Bangalore',
+        state: 'Karnataka',
+        country: 'India',
+      },
+    },
   },
   {
     id: 'dog-7',
@@ -91,6 +163,18 @@ export const dogs: Pet[] = [
     ownerId: 'owner-7',
     createdAt: new Date(),
     updatedAt: new Date(),
+    adoptionRequest: {
+      id: 'req-7',
+      amount: '₹48',
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000),
+      location: {
+        name: 'Home 7',
+        city: 'Bangalore',
+        state: 'Karnataka',
+        country: 'India',
+      },
+    },
   },
   {
     id: 'dog-8',
@@ -104,5 +188,17 @@ export const dogs: Pet[] = [
     ownerId: 'owner-8',
     createdAt: new Date(),
     updatedAt: new Date(),
+    adoptionRequest: {
+      id: 'req-8',
+      amount: '₹30',
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+      location: {
+        name: 'Home 8',
+        city: 'Bangalore',
+        state: 'Karnataka',
+        country: 'India',
+      },
+    },
   },
 ];

@@ -1,45 +1,56 @@
-import {
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from '@/components/ui/accordion';
+'use client';
+
+import React, { useState } from 'react';
+
+import { AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
-import React from 'react';
 
-const SpeciesFilter = () => {
+interface SpeciesFilterProps {
+  onChange?: (value: string[]) => void;
+}
+
+const SpeciesFilter = ({ onChange }: SpeciesFilterProps) => {
+  const [selectedSpecies, setSelectedSpecies] = useState<string[]>([]);
+
+  const handleCheckboxChange = (value: string, checked: boolean) => {
+    let updatedSpecies: string[];
+    if (checked) {
+      updatedSpecies = [...selectedSpecies, value];
+    } else {
+      updatedSpecies = selectedSpecies.filter(species => species !== value);
+    }
+    setSelectedSpecies(updatedSpecies);
+    onChange?.(updatedSpecies);
+  };
+
+  const speciesList = [
+    { id: 'dog', label: 'Dog' },
+    { id: 'cat', label: 'Cat' },
+    { id: 'rabbit', label: 'Rabbit' },
+  ];
+
   return (
-    <div>
-      <AccordionItem value="Species">
-        <AccordionTrigger>
-          <span className="text-[16px] leading-[24px] font-medium">
-            Species
-          </span>
-        </AccordionTrigger>
-        <AccordionContent>
-          <div className="flex flex-col gap-2 ">
-            <div className="flex items-center gap-2">
-              <Checkbox />
-              <label htmlFor="dog" className="text-[16px]  text-gray-700">
-                Dog
+    <AccordionItem value="Species">
+      <AccordionTrigger>
+        <span className="text-[16px] font-medium leading-[24px]">Species</span>
+      </AccordionTrigger>
+      <AccordionContent>
+        <div className="flex flex-col gap-2">
+          {speciesList.map(({ id, label }) => (
+            <div key={id} className="flex items-center gap-2">
+              <Checkbox
+                id={id}
+                checked={selectedSpecies.includes(id)}
+                onCheckedChange={checked => handleCheckboxChange(id, !!checked)}
+              />
+              <label htmlFor={id} className="text-sm text-gray-700">
+                {label}
               </label>
             </div>
-
-            <div className="flex items-center gap-2">
-              <Checkbox />
-              <label htmlFor="cat" className="text-sm text-gray-700">
-                Cat
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <Checkbox />
-              <label htmlFor="cat" className="text-sm text-gray-700">
-                Rabbit
-              </label>
-            </div>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-    </div>
+          ))}
+        </div>
+      </AccordionContent>
+    </AccordionItem>
   );
 };
 
