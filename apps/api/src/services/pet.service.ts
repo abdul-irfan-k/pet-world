@@ -9,6 +9,7 @@ import {
   IRemovePetFromFavoritesDTO,
   IGetFavoritePetsByUserIdDTO,
   IIsPetFavoritedByUserDTO,
+  IGetAdoptionRequestedPetsDTO,
 } from './interfaces/IPetService';
 
 import type { Prisma } from '../../generated/prisma';
@@ -130,6 +131,61 @@ export class PetService implements IPetService {
       where: { ownerId, isDeleted: false },
     });
     return { pets: pets as Pet[] };
+  }
+
+  public async getAdoptionRequestedPets(args: IGetAdoptionRequestedPetsDTO): Promise<{ petCareRequests: any }> {
+    const { skip = 0, take = 10, adoptionStartDate, adoptionEndDate, ageRange, breed, species } = args;
+    const whereClause: Prisma.PetCareRequestWhereInput = {
+      isDeleted: false,
+      status: 'pending',
+    };
+    if (adoptionStartDate) {
+      whereClause.startDate = {
+        gte: adoptionStartDate,
+      };
+    }
+
+    if (adoptionEndDate) {
+      whereClause.endDate = {
+        lte: adoptionEndDate,
+      };
+    }
+
+    if (ageRange) {
+      whereClause.pet = {
+        age: {
+          gte: ageRange[0],
+          lte: ageRange[1],
+        },
+      };
+    }
+
+    if (breed) {
+      whereClause.pet = {
+        ...whereClause.pet,
+        //eslint-disable-next-line
+        //@ts-ignore
+        breed,
+      };
+    }
+    if (species) {
+      whereClause.pet = {
+        ...whereClause.pet,
+        //eslint-disable-next-line
+        //@ts-ignore
+        species,
+      };
+    }
+
+    const petCareRequests = await prisma.petCareRequest.findMany({
+      where: whereClause,
+      skip,
+      take,
+      include: {
+        pet: true,
+      },
+    });
+    return { petCareRequests };
   }
 
   public async addPetToFavorites(data: IAddPetToFavoritesDTO): Promise<{ pet: FavoritePet }> {

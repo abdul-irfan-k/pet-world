@@ -102,6 +102,27 @@ export class PetController implements IPetController {
     }
   }
 
+  public async getAdoptionRequestedPets(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { adoptionStartDate, adoptionEndDate, ageRange, breed, species } = req.query;
+
+      const result = await this._petService.getAdoptionRequestedPets({
+        adoptionStartDate: adoptionStartDate ? new Date(adoptionStartDate as string) : undefined,
+        adoptionEndDate: adoptionEndDate ? new Date(adoptionEndDate as string) : undefined,
+        ageRange: ageRange ? ((ageRange as string).split(',').map(Number) as [number, number]) : undefined,
+        breed: breed as string | undefined,
+        species: species as string | undefined,
+      });
+
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   public async addPetToFavorites(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { petId } = req.body;
