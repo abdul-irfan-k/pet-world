@@ -34,10 +34,24 @@ export class UserRoutes {
 
     router.delete('/addresses/:id', authMiddleware, this._userController.deleteAddress.bind(this._userController));
 
+    router.get('/pet-adopter-profile/:id', this._userController.getPetAdopterPublicProfile.bind(this._userController));
+
     router.post(
       '/pet-adopter-profile',
       authMiddleware,
       this._userController.createPetAdopterProfile.bind(this._userController),
+    );
+
+    router.patch(
+      '/pet-adopter-profile',
+      authMiddleware,
+      this._userController.updatePetAdopterProfile.bind(this._userController),
+    );
+
+    router.get(
+      '/pet-adopter-profile/status',
+      authMiddleware,
+      this._userController.getPetAdopterProfileStatus.bind(this._userController),
     );
 
     return router;

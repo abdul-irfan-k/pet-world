@@ -170,4 +170,63 @@ export class UserController {
       next(error);
     }
   }
+
+  async getPetAdopterProfileStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: ResponseMessages.UNAUTHORIZED,
+        });
+      }
+      const result = await this._userService.getPetAdopterProfileStatus({ userId });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: 'Pet adopter profile status fetched successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getPetAdopterPublicProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { userId, id } = req.query;
+      const result = await this._userService.getPetAdopterPublicProfile({ userId: userId as string, id: id as string });
+
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: 'Pet adopter profile fetched successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updatePetAdopterProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: ResponseMessages.UNAUTHORIZED,
+        });
+      }
+      const result = await this._userService.updatePetAdopterProfile({
+        userId,
+        ...req.body,
+      });
+
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: 'Pet adopter profile updated successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

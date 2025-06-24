@@ -6,11 +6,16 @@ import type {
   IUpdateAddressDTO,
   IDeleteAddressDTO,
   ICreatePetAdopterProfileDTO,
+  IGetPetAdopterProfileStatusDTO,
+  IGetPetAdopterPublicProfileDTO,
+  IUpdatePetAdopterProfileDTO,
 } from '@/services/interfaces/IUserService';
 
 import { prisma } from '@/config';
+import { HttpStatusCode } from '@/constants';
 import { Location } from '@/types/Location';
 import { PetAdopter } from '@/types/User';
+import { HttpError } from '@/utils';
 
 export class UserService implements IUserService {
   public async addAddress(data: ICreateAddressDTO): Promise<{ location: Location }> {
@@ -114,5 +119,47 @@ export class UserService implements IUserService {
     });
 
     return { petAdopter: petAdopterProfile as PetAdopter };
+  }
+
+  public async getPetAdopterProfileStatus(data: IGetPetAdopterProfileStatusDTO): Promise<{ exists: boolean }> {
+    const { userId } = data;
+    const profile = await prisma.pet_Adopter.findUnique({ where: { userId, isDeleted: false } });
+    return { exists: !!profile };
+  }
+
+  public async getPetAdopterPublicProfile(
+    data: IGetPetAdopterPublicProfileDTO,
+  ): Promise<{ petAdopter: PetAdopter | null }> {
+    const { userId, id } = data;
+    let profile = null;
+    if (userId) {
+      profile = await prisma.pet_Adopter.findFirst({ where: { userId, isDeleted: false } });
+    } else if (id) {
+      profile = await prisma.pet_Adopter.findFirst({ where: { id, isDeleted: false } });
+    }
+
+    if (!profile) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: 'Pet adopter profile not found.',
+      });
+    }
+    return { petAdopter: profile as PetAdopter };
+  }
+
+  public async updatePetAdopterProfile(data: IUpdatePetAdopterProfileDTO): Promise<{ petAdopter: PetAdopter | null }> {
+    const { userId, ...updateData } = data;
+    const existingProfile = await prisma.pet_Adopter.findUnique({ where: { userId, isDeleted: false } });
+    if (!existingProfile) {
+      throw new HttpError({ statusCode: HttpStatusCode.NOT_FOUND, message: 'Pet adopter profile not found.' });
+    }
+
+    const updatedProfile = await prisma.pet_Adopter.update({
+      where: { userId },
+      //eslint-disable-next-line
+      //@ts-ignore
+      data: updateData,
+    });
+    return { petAdopter: updatedProfile as PetAdopter };
   }
 }

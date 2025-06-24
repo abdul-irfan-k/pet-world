@@ -16,6 +16,11 @@ export type ICreatePetAdopterProfileDTO = Pick<
   PetAdopter,
   'userId' | 'adharNumber' | 'documents' | 'yearOfExperience' | 'certifications' | 'overview'
 >;
+export type IUpdatePetAdopterProfileDTO = Partial<
+  Pick<PetAdopter, 'adharNumber' | 'documents' | 'yearOfExperience' | 'certifications' | 'overview'>
+> & { userId: string };
+export type IGetPetAdopterProfileStatusDTO = { userId: string };
+export type IGetPetAdopterPublicProfileDTO = { userId?: string; id?: string };
 export interface IUserService {
   addAddress(data: ICreateAddressDTO): Promise<{ location: Location }>;
   getAddressesByUserId(data: IGetAddressesByUserIdDTO): Promise<{ locations: Location[] }>;
@@ -23,4 +28,7 @@ export interface IUserService {
   updateAddress(data: IUpdateAddressDTO): Promise<{ location: Location | null }>;
   deleteAddress(data: IDeleteAddressDTO): Promise<{ location: Location | null }>;
   createPetAdopterProfile(userId: ICreatePetAdopterProfileDTO): Promise<{ petAdopter: PetAdopter | null }>;
+  updatePetAdopterProfile(data: IUpdatePetAdopterProfileDTO): Promise<{ petAdopter: PetAdopter | null }>;
+  getPetAdopterProfileStatus(data: IGetPetAdopterProfileStatusDTO): Promise<{ exists: boolean }>;
+  getPetAdopterPublicProfile(data: IGetPetAdopterPublicProfileDTO): Promise<{ petAdopter: PetAdopter | null }>;
 }
