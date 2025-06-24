@@ -18,8 +18,8 @@ export default function Home() {
       <div className="block h-40 w-screen"></div>
 
       <div className="grid grid-cols-1 gap-6 p-4 py-16 sm:grid-cols-2 lg:grid-cols-4">
-        {isLoading && dogs.map(dog => <PetCard key={dog.id} image={dog.images[0]} {...dog} />)}
-        {!isLoading && pets?.map(pet => <PetCard key={pet.id} image={pet.images[0]} {...pet} />)}
+        {isLoading && dogs.map(dog => <PetCard key={dog.id} {...dog} />)}
+        {!isLoading && pets?.map(pet => <PetCard key={pet.id} {...pet} />)}
       </div>
 
       <div className="container mx-auto py-16">

@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Accordion } from '../ui/accordion';
 
@@ -12,7 +12,7 @@ interface PetFiltersSidebarProps {
   setFilters: React.Dispatch<React.SetStateAction<PetFilters>>;
 }
 
-const PetFiltersSidebar = ({ filters, setFilters }: PetFiltersSidebarProps) => {
+const PetFiltersSidebar = ({ setFilters }: PetFiltersSidebarProps) => {
   const handleFilterChange = (filterType: string, value: any) => {
     setFilters(prevFilters => ({
       ...prevFilters,

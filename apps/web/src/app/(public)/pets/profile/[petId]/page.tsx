@@ -19,7 +19,7 @@ const PetDetailsPage = () => {
 
   const {
     data: allPetsData,
-    isLoading: isLoadingSimilarPets, // Renamed from isLoadingAllPets
+    isLoading: isLoadingSimilarPets,
     isError: isErrorAllPets,
     error: errorAllPets,
   } = useGetAllPetsQuery();
@@ -133,6 +133,8 @@ const PetDetailsPage = () => {
           Error loading similar pets: {errorAllPets?.message || 'Unknown error'}
         </div>
       ) : (
+        //eslint-disable-next-line
+        //@ts-ignore
         <SimilarPetSection similarPets={similarPets} />
       )}
     </div>

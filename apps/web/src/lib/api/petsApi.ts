@@ -5,7 +5,7 @@ import { apiClient } from '../api-client';
 
 import type { IAddPetInput, IUpdatePetInput } from '../schemas';
 
-import { Pet } from '@/types/pet';
+import { Pet, PetWithAdoptionRequest } from '@/types/pet';
 
 type ApiResponse<T> = {
   data: T;
@@ -15,7 +15,7 @@ type ApiResponse<T> = {
 
 type PetResponse = ApiResponse<{ pet: Pet }>;
 type PetsResponse = ApiResponse<{ pets: Pet[] }>;
-
+type PetsWithAdoptionRequestResponse = ApiResponse<{ pets: PetWithAdoptionRequest[] }>;
 type PetMutationOptions<TVariables> = UseMutationOptions<PetResponse, AxiosError, TVariables>;
 
 const createPet = async (petData: IAddPetInput): Promise<PetResponse> => {
@@ -161,16 +161,18 @@ type GetAdoptionRequestedPetsParams = {
   gender?: string[];
 };
 
-const getAdoptionRequestedPets = async (params?: GetAdoptionRequestedPetsParams): Promise<PetsResponse> => {
+const getAdoptionRequestedPets = async (
+  params?: GetAdoptionRequestedPetsParams,
+): Promise<PetsWithAdoptionRequestResponse> => {
   const { data } = await apiClient.get('/pets/adoption-requests', { params });
   return data;
 };
 
 export const useGetAdoptionRequestedPetsQuery = (
   params?: GetAdoptionRequestedPetsParams,
-  options?: UseQueryOptions<PetsResponse, AxiosError, PetsResponse>,
+  options?: UseQueryOptions<PetsWithAdoptionRequestResponse, AxiosError, PetsWithAdoptionRequestResponse>,
 ) => {
-  return useQuery<PetsResponse, AxiosError, PetsResponse>({
+  return useQuery<PetsWithAdoptionRequestResponse, AxiosError, PetsWithAdoptionRequestResponse>({
     queryKey: ['adoptionRequestedPets', params],
     queryFn: () => getAdoptionRequestedPets(params),
     ...options,
