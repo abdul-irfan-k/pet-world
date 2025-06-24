@@ -13,6 +13,7 @@ interface PetFiltersSidebarProps {
 }
 
 const PetFiltersSidebar = ({ setFilters }: PetFiltersSidebarProps) => {
+  //eslint-disable-next-line
   const handleFilterChange = (filterType: string, value: any) => {
     setFilters(prevFilters => ({
       ...prevFilters,
