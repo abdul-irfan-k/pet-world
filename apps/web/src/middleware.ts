@@ -12,10 +12,7 @@ export function middleware(request: NextRequest) {
 
   if (!token) {
     const signInUrl = new URL('/sign-in', request.url);
-    signInUrl.searchParams.set(
-      'callbackUrl',
-      request.nextUrl.pathname + request.nextUrl.search,
-    );
+    signInUrl.searchParams.set('callbackUrl', request.nextUrl.pathname + request.nextUrl.search);
     return NextResponse.redirect(signInUrl);
   }
 
@@ -27,10 +24,11 @@ export const config = {
     '/',
     '/sign-in',
     '/sign-up',
-    '/my-pets',
     '/email-verification/:path*',
+    '/dashboard/:path*',
+    '/adopter-profile/:path*',
+    '/favorites/:path*',
     '/settings/:path*',
-    '/pets/add',
-    '/pets/:petId/edit',
+    '/care-bookings/:path*',
   ],
 };

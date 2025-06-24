@@ -33,8 +33,8 @@ const UserSidebar = () => {
           <p className="mb-2 text-xs font-semibold uppercase text-gray-500">Pet Owner</p>
 
           <Link
-            href="/dashboard/owner/pets"
-            className={`flex items-center rounded-md px-3 py-2 ${isActive('/dashboard/owner/pets')}`}
+            href="/dashboard/owner/pets/"
+            className={`flex items-center rounded-md px-3 py-2 ${isActive('/dashboard/owner/pets/my-pets')}`}
           >
             <PawPrint className="mr-3 h-5 w-5" />
             <span className="text-sm">My Pets</span>
@@ -44,7 +44,7 @@ const UserSidebar = () => {
             className={`flex items-center rounded-md px-3 py-2 ${isActive('/dashboard/owner/pet-care/requests')}`}
           >
             <ShieldCheck className="mr-3 h-5 w-5" />
-            <span className="text-sm">My Requests</span>
+            <span className="text-sm">Pet Care Requests</span>
           </Link>
           <Link
             href="/dashboard/owner/adoptions"
@@ -56,7 +56,7 @@ const UserSidebar = () => {
         </div>
 
         <div>
-          <p className="mb-2 text-xs font-semibold uppercase text-gray-500">🧑‍⚕️ Pet Adopter</p>
+          <p className="mb-2 text-xs font-semibold uppercase text-gray-500">Pet Adopter</p>
 
           <Link
             href="/dashboard/adopter/proposals/completed"
