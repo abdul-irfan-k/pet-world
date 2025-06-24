@@ -4,18 +4,12 @@ import { useRouter } from 'next/navigation';
 
 import { Check, X } from 'lucide-react';
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '../ui/accordion';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { Button } from '../ui/button';
 
 import { PetPrimaryInfo } from './PetPrimaryInfo';
 
 interface PetDetailsContentProps {
-  //eslint-disable-next-line
   pet: any;
 }
 const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
@@ -36,26 +30,17 @@ const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
             size={'xl'}
             fullWidth
             className="rounded-full"
-            onClick={() => router.push(`/pet-care/proposals/${pet.id}/add`)}
+            onClick={() => router.push(`/dashboard/adopter/proposals/${pet.adoptionRequests[0].id}/add`)}
           >
             Request to adopt
           </Button>
-          <Button
-            variant={'outline'}
-            size={'xl'}
-            fullWidth
-            className="rounded-full"
-          >
+          <Button variant={'outline'} size={'xl'} fullWidth className="rounded-full">
             Add to wishlist
           </Button>
         </div>
 
         <div className="text-[20px] font-medium leading-[24px]">
-          <Accordion
-            type="multiple"
-            className="w-full"
-            defaultValue={['Personality', 'Activity', 'Diet']}
-          >
+          <Accordion type="multiple" className="w-full" defaultValue={['Personality', 'Activity', 'Diet']}>
             <AccordionItem value="Personality" className="border-none py-3">
               <AccordionTrigger className="text-[20px] font-medium leading-[24px]">
                 <span className="">Personality</span>
@@ -111,23 +96,16 @@ const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem
-              value="OwnerDescription"
-              className="border-none py-3"
-            >
+            <AccordionItem value="OwnerDescription" className="border-none py-3">
               <AccordionTrigger className="text-[20px] font-medium leading-[24px]">
                 <span>{"Owner's Description"}</span>
               </AccordionTrigger>
               <AccordionContent>
                 <div className="mt-2 grid grid-cols-1 gap-2 lg:grid-cols-2">
-                  {//eslint-disable-next-line
-                  pet.ownerDescription?.map((desc: any, index: number) => (
+                  {pet.ownerDescription?.map((desc: any, index: number) => (
                     <div key={index} className="flex items-center gap-2">
                       {desc.positive ? (
-                        <Check
-                          size={18}
-                          className="flex-shrink-0 text-green-500"
-                        />
+                        <Check size={18} className="flex-shrink-0 text-green-500" />
                       ) : (
                         <X size={18} className="flex-shrink-0 text-red-500" />
                       )}
@@ -138,10 +116,7 @@ const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem
-              value="MedicalInformation"
-              className="border-none py-3"
-            >
+            <AccordionItem value="MedicalInformation" className="border-none py-3">
               <AccordionTrigger className="text-[20px] font-medium leading-[24px]">
                 <span>Medical Information</span>
               </AccordionTrigger>
@@ -171,23 +146,17 @@ const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
                     )}
                     <span>Current Medication</span>
                   </div>
-                  {pet.medicalInfo?.medication &&
-                    pet.medicalInfo?.medicationDetails && (
-                      <div className="col-span-2">
-                        <p className="text-sm text-gray-600">
-                          Medication Details
-                        </p>
-                        <p>{pet.medicalInfo.medicationDetails}</p>
-                      </div>
-                    )}
+                  {pet.medicalInfo?.medication && pet.medicalInfo?.medicationDetails && (
+                    <div className="col-span-2">
+                      <p className="text-sm text-gray-600">Medication Details</p>
+                      <p>{pet.medicalInfo.medicationDetails}</p>
+                    </div>
+                  )}
                 </div>
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem
-              value="AdditionalDetails"
-              className="border-none py-3"
-            >
+            <AccordionItem value="AdditionalDetails" className="border-none py-3">
               <AccordionTrigger className="text-[20px] font-medium leading-[24px]">
                 <span>Additional Details</span>
               </AccordionTrigger>
@@ -195,21 +164,15 @@ const PetDetailsContent: FC<PetDetailsContentProps> = ({ pet }) => {
                 <div className="mb-6 rounded-lg bg-gray-200 p-4">
                   <div className="grid grid-cols-2 gap-y-2">
                     <div>
-                      <p className="text-sm text-gray-600">
-                        Time at current home
-                      </p>
+                      <p className="text-sm text-gray-600">Time at current home</p>
                       <p className="font-medium">{pet.timeAtCurrentHome}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">
-                        Reason for rehoming
-                      </p>
+                      <p className="text-sm text-gray-600">Reason for rehoming</p>
                       <p className="font-medium">{pet.rehomingReason}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">
-                        Duration until rehoming needed
-                      </p>
+                      <p className="text-sm text-gray-600">Duration until rehoming needed</p>
                       <p className="font-medium">{pet.keepDuration}</p>
                     </div>
                   </div>

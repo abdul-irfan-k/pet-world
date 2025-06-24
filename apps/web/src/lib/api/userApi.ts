@@ -6,6 +6,7 @@ import { IAddAddressInput, IUpdateAddressInput } from '../schemas/userSchema';
 
 import { Location } from '@/types/Location';
 import { PetAdopterProfile } from '@/types/PetAdopter';
+import { PetAdopter } from '@/types/User';
 
 type ApiResponse<T> = {
   data: T;
@@ -15,6 +16,7 @@ type ApiResponse<T> = {
 
 type AddressResponse = ApiResponse<{ location: Location }>;
 type AddressesResponse = ApiResponse<{ locations: Location[] }>;
+type PetAdopterProfileResponse = ApiResponse<{ petAdopter: PetAdopter }>;
 
 type AddressMutationOptions<TData, TVariables> = UseMutationOptions<TData, AxiosError, TVariables>;
 
@@ -92,5 +94,17 @@ export const useCreatePetAdopterProfileMutation = (
   return useMutation<CreatePetAdopterProfileResponse, AxiosError, object>({
     mutationFn: createPetAdopterProfile,
     ...options,
+  });
+};
+
+const getPetAdopterProfileStatus = async () => {
+  const { data } = await apiClient.get('/users/pet-adopter-profile/status');
+  return data;
+};
+
+export const useGetPetAdopterProfileStatusQuery = () => {
+  return useQuery<PetAdopterProfileResponse, AxiosError, PetAdopterProfileResponse>({
+    queryKey: ['petAdopterProfile'],
+    queryFn: getPetAdopterProfileStatus,
   });
 };
