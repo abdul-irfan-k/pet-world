@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "tailwindcss-animated";
 
 @theme {
     --color-gray-25: #FDFDFD;
