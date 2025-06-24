@@ -4,7 +4,7 @@ import React from 'react';
 import { useParams } from 'next/navigation';
 
 import { PetMediaCarousel, PetDetailsContent, SimilarPetSection } from '@/components/pets';
-import { useGetPetByIdQuery, useGetAllPetsQuery } from '@/lib/api/petsApi';
+import { useGetPetByIdQuery, useGetAdoptionRequestedPetsQuery } from '@/lib/api/petsApi';
 
 const PetDetailsPage = () => {
   const params = useParams();
@@ -22,7 +22,7 @@ const PetDetailsPage = () => {
     isLoading: isLoadingSimilarPets,
     isError: isErrorAllPets,
     error: errorAllPets,
-  } = useGetAllPetsQuery();
+  } = useGetAdoptionRequestedPetsQuery();
 
   if (isLoadingPetById) {
     return <div className="container mx-auto px-4 py-12 text-center">Loading pet details...</div>;
