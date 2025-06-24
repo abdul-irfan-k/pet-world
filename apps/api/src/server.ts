@@ -10,8 +10,8 @@ import { logger, PORT, CORS_ORIGINS } from './config';
 import { AdminRoutes, AuthRoutes, PetCareRoutes, PetRoutes, UploadRoutes, UserRoutes } from './routes';
 import { FavoriteRoutes } from './routes/favorites.routes';
 import { PaymentRoutes } from './routes/payment.routes';
+
 import { globalErrorHandler } from '@/middleware';
-import bcrypt from 'bcrypt';
 
 export class ExpressServer {
   private app: Application;
