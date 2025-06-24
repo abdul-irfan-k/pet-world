@@ -27,7 +27,7 @@ const UserSidebar = () => {
     pathname === href ? 'bg-green-500 text-white' : 'text-gray-700 hover:bg-gray-100';
 
   return (
-    <aside className="w-64 border-r border-gray-200 bg-white p-4">
+    <aside className="w-72 border-r border-gray-200 bg-white p-4">
       <nav className="space-y-6">
         <div>
           <p className="mb-2 text-xs font-semibold uppercase text-gray-500">Pet Owner</p>

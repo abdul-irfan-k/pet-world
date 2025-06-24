@@ -6,7 +6,7 @@ const UserDashboardHeader = () => {
           <div className="mr-2 flex h-7 w-7 items-center justify-center rounded-md bg-green-500 text-white">
             <span className="text-sm font-bold">P</span>
           </div>
-          <span className="font-semibold text-gray-800">PetSync</span>
+          <span className="font-semibold text-gray-800">Petworld</span>
         </div>
         <span className="mr-auto text-gray-700">OverView</span>
 
