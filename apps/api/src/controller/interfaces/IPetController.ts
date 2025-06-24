@@ -11,4 +11,5 @@ export interface IPetController {
   removePetFromFavorites(req: Request, res: Response, next: NextFunction): Promise<void>;
   getFavoritePetsByUserId(req: Request, res: Response, next: NextFunction): Promise<void>;
   isPetFavoritedByUser(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getAdoptionRequestedPets(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

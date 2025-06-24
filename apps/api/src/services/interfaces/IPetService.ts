@@ -25,6 +25,15 @@ export type IGetFavoritePetsByUserIdDTO = Pick<FavoritePet, 'userId'>;
 
 export type IIsPetFavoritedByUserDTO = Pick<FavoritePet, 'userId' | 'petId'>;
 
+export type IGetAdoptionRequestedPetsDTO = {
+  skip?: number;
+  take?: number;
+  adoptionStartDate?: Date;
+  adoptionEndDate?: Date;
+  species?: string;
+  breed?: string;
+  ageRange?: [number, number];
+};
 export interface IPetService {
   createPet(data: ICreatePetDTO): Promise<{ pet: Pet }>;
   updatePet(data: IUpdatePetDTO): Promise<{ pet: Pet }>;
@@ -36,4 +45,5 @@ export interface IPetService {
   removePetFromFavorites(data: IRemovePetFromFavoritesDTO): Promise<void>;
   getFavoritePetsByUserId(data: IGetFavoritePetsByUserIdDTO): Promise<{ pets: Pet[] }>;
   isPetFavoritedByUser(data: IIsPetFavoritedByUserDTO): Promise<{ isFavorited: { status: boolean } }>;
+  getAdoptionRequestedPets(args: IGetAdoptionRequestedPetsDTO): Promise<{ pets: any }>;
 }

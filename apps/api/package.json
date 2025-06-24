@@ -1,7 +1,9 @@
 {
-  "name": "api",
+  "name": "@pet-world/api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend API for the Pet World adoption platform.",
+  "author": "Abdul Irfan",
+  "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --inspect=9229  -r tsconfig-paths/register --respawn --transpile-only src/index.ts",
@@ -14,8 +16,14 @@
     "postinstall": "prisma generate"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abdul-irfan-k/pet-world"
+  },
+  "bugs": {
+    "url": "https://github.com/abdul-irfan-k/pet-world/issues"
+  },
+  "homepage": "https://github.com/abdul-irfan-k/pet-world#readme",
   "dependencies": {
     "@prisma/client": "6.7.0",
     "axios": "^1.9.0",

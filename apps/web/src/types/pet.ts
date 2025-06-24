@@ -1,3 +1,5 @@
+import { Location } from './Location';
+
 export enum PetType {
   DOG = 'dog',
   CAT = 'cat',
@@ -17,4 +19,40 @@ export type Pet = {
   ownerId: string;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type PetCareRequest = {
+  id: string;
+  ownerId: string;
+  petId: string;
+  locationId: string;
+  title: string;
+  amount: string;
+  description: string;
+  startDate: Date;
+  endDate: Date;
+  questions?: Record<string, unknown> | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type PetWithAdoptionRequest = Pet & {
+  adoptionRequest: {
+    id: string;
+    petId: string;
+    ownerId: string;
+    locationId: string;
+    title: string;
+    amount: string;
+    description: string;
+    startDate: Date;
+    endDate: Date;
+    questions?: Record<string, unknown> | null;
+    createdAt: Date;
+    updatedAt: Date;
+    location: Pick<
+      Location,
+      'id' | 'name' | 'street' | 'apt' | 'city' | 'state' | 'country' | 'postcode' | 'latitude' | 'longitude'
+    >;
+  };
 };

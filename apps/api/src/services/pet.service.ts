@@ -9,6 +9,7 @@ import {
   IRemovePetFromFavoritesDTO,
   IGetFavoritePetsByUserIdDTO,
   IIsPetFavoritedByUserDTO,
+  IGetAdoptionRequestedPetsDTO,
 } from './interfaces/IPetService';
 
 import type { Prisma } from '../../generated/prisma';
@@ -130,6 +131,65 @@ export class PetService implements IPetService {
       where: { ownerId, isDeleted: false },
     });
     return { pets: pets as Pet[] };
+  }
+
+  public async getAdoptionRequestedPets(args: IGetAdoptionRequestedPetsDTO): Promise<{ pets: any }> {
+    const { skip = 0, take = 10, adoptionStartDate, adoptionEndDate, ageRange, breed, species } = args;
+
+    const whereClause: Prisma.PetCareRequestWhereInput = {
+      isDeleted: false,
+      status: 'pending',
+    };
+
+    if (adoptionStartDate) {
+      whereClause.startDate = { gte: adoptionStartDate };
+    }
+
+    if (adoptionEndDate) {
+      whereClause.endDate = { lte: adoptionEndDate };
+    }
+
+    const petFilter: Prisma.PetWhereInput = {};
+    if (ageRange) {
+      petFilter.age = { gte: ageRange[0], lte: ageRange[1] };
+    }
+    if (breed) petFilter.breed = breed;
+    if (species) petFilter.species = species;
+
+    if (Object.keys(petFilter).length > 0) {
+      whereClause.pet = petFilter;
+    }
+
+    const petCareRequests = await prisma.petCareRequest.findMany({
+      where: whereClause,
+      skip,
+      take,
+      include: {
+        pet: true,
+        location: {
+          select: {
+            name: true,
+            apt: true,
+            city: true,
+            state: true,
+            country: true,
+          },
+        },
+      },
+    });
+
+    const pets = petCareRequests.map(req => ({
+      ...req.pet,
+      adoptionRequest: {
+        id: req.id,
+        startDate: req.startDate,
+        endDate: req.endDate,
+        amount: req.amount,
+        location: req.location,
+      },
+    }));
+
+    return { pets };
   }
 
   public async addPetToFavorites(data: IAddPetToFavoritesDTO): Promise<{ pet: FavoritePet }> {

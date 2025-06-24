@@ -25,6 +25,8 @@ export class PetRoutes {
       this._petController.createPet.bind(this._petController),
     );
 
+    router.get('/adoption-requests', this._petController.getAdoptionRequestedPets.bind(this._petController));
+
     router.put(
       '/:id',
       authMiddleware,

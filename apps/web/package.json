@@ -1,6 +1,9 @@
 {
-  "name": "web",
+  "name": "@pet-world/web",
   "version": "0.1.0",
+  "description": "Frontend for the Pet World adoption platform.",
+  "author": "Abdul Irfan",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -8,6 +11,14 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abdul-irfan-k/pet-world"
+  },
+  "bugs": {
+    "url": "https://github.com/abdul-irfan-k/pet-world/issues"
+  },
+  "homepage": "https://github.com/abdul-irfan-k/pet-world#readme",
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-accordion": "^1.2.10",

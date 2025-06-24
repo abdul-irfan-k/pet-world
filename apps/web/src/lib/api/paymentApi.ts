@@ -1,4 +1,4 @@
-import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { useMutation, UseMutationOptions, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { Stripe } from 'stripe';
 
@@ -24,28 +24,29 @@ type OnboardStripeMutationOptions<TVariables> = UseMutationOptions<
   TVariables
 >;
 
-const onboardStripeAccount = async (
-  data: IOnboardStripeAccountInput,
-): Promise<OnboardStripeAccountResponse> => {
-  const { data: responseData } = await apiClient.post(
-    '/payments/stripe/onboard',
-    data,
-  );
+const onboardStripeAccount = async (data: IOnboardStripeAccountInput): Promise<OnboardStripeAccountResponse> => {
+  const { data: responseData } = await apiClient.post('/payments/stripe/onboard', data);
   return responseData;
 };
 
-export const useOnboardStripeAccountMutation = (
-  options?: OnboardStripeMutationOptions<IOnboardStripeAccountInput>,
-) => {
-  return useMutation<
-    OnboardStripeAccountResponse,
-    AxiosError,
-    IOnboardStripeAccountInput
-  >({
+export const useOnboardStripeAccountMutation = (options?: OnboardStripeMutationOptions<IOnboardStripeAccountInput>) => {
+  return useMutation<OnboardStripeAccountResponse, AxiosError, IOnboardStripeAccountInput>({
     mutationFn: onboardStripeAccount,
     onSuccess: ({ data: { stripeAccountLink } }) => {
       window.location.href = stripeAccountLink.url;
     },
     ...options,
+  });
+};
+
+const getStripeAccount = async (): Promise<ApiResponse<{ accounts: Stripe.Account[] }>> => {
+  const { data } = await apiClient.get('/payments/stripe/accounts');
+  return data;
+};
+
+export const useGetStripeAccountQuery = () => {
+  return useQuery<ApiResponse<{ accounts: Stripe.Account[] }>, AxiosError>({
+    queryKey: ['stripe-accounts'],
+    queryFn: getStripeAccount,
   });
 };
