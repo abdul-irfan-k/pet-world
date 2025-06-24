@@ -31,4 +31,4 @@ jobs:
         run: git fetch origin main
 
       - name: Run lint-staged only on changed files
-        run: pnpm lint-staged --diff origin/main --no-stash
+        run: pnpm lint-staged --config .lintstagedrc.ci.json --diff origin/main --no-stash
