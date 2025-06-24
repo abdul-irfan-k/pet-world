@@ -1,7 +1,9 @@
 {
   "name": "pet-world",
   "version": "1.0.0",
-  "description": "",
+  "description": "Monorepo for a pet adoption platform.",
+  "author": "Abdul Irfan",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "build": "pnpm -r run build",
@@ -12,8 +14,14 @@
     "lint-staged": "lint-staged"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abdul-irfan-k/pet-world"
+  },
+  "bugs": {
+    "url": "https://github.com/abdul-irfan-k/pet-world/issues"
+  },
+  "homepage": "https://github.com/abdul-irfan-k/pet-world#readme",
   "devDependencies": {
     "@eslint/js": "^9.25.1",
     "eslint": "^9.25.1",
