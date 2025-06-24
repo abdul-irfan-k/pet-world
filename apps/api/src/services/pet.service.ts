@@ -61,6 +61,9 @@ export class PetService implements IPetService {
   public async getPetById(data: IGetPetByIdDTO): Promise<{ pet: Pet | null }> {
     const pet = await prisma.pet.findUnique({
       where: { id: data.id },
+      include: {
+        adoptionRequests: true,
+      },
     });
     return { pet: pet as Pet | null };
   }
