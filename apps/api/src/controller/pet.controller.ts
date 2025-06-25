@@ -111,7 +111,7 @@ export class PetController implements IPetController {
         adoptionEndDate: adoptionEndDate ? new Date(adoptionEndDate as string) : undefined,
         ageRange: ageRange ? ((ageRange as string).split(',').map(Number) as [number, number]) : undefined,
         breed: breed as string | undefined,
-        species: species as string | undefined,
+        species: species ? (species as string).split(',') : undefined,
       });
 
       res.status(HttpStatusCode.OK).json({

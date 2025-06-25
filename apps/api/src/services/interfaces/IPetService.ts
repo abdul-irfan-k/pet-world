@@ -30,7 +30,7 @@ export type IGetAdoptionRequestedPetsDTO = {
   take?: number;
   adoptionStartDate?: Date;
   adoptionEndDate?: Date;
-  species?: string;
+  species?: string[];
   breed?: string;
   ageRange?: [number, number];
 };

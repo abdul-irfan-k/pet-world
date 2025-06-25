@@ -157,8 +157,12 @@ export class PetService implements IPetService {
       petFilter.age = { gte: ageRange[0], lte: ageRange[1] };
     }
     if (breed) petFilter.breed = breed;
-    if (species) petFilter.species = species;
-
+    if (species) {
+      const capitalized = species.map(str => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase());
+      petFilter.species = {
+        in: capitalized,
+      };
+    }
     if (Object.keys(petFilter).length > 0) {
       whereClause.pet = petFilter;
     }
