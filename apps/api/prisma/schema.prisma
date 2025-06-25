@@ -147,8 +147,9 @@ model Account_Details {
 
 enum PaymentStatus {
   pending
-  completed
-  rejected
+  paid
+  transferred
+  refunded
 }
 
 model Payment {

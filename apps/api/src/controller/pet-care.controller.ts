@@ -209,6 +209,23 @@ export class PetCareController implements IPetCareController {
     }
   }
 
+  public async rejectPetCareProposal(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { proposalId } = req.params;
+      const result = await this._petCareService.rejectPetCareProposal({
+        id: proposalId,
+        userId: req.user!.id,
+      });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   public async listProposalsForPetCareRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { requestId } = req.params;

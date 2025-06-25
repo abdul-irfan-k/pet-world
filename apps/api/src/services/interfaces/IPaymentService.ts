@@ -25,4 +25,6 @@ export interface IPaymentService {
     data: IOnboardStripeAccountDTO,
   ): Promise<{ stripeAccountLink: Stripe.Response<Stripe.AccountLink> }>;
   getSTripeAccount(data: IGetStripeAccountDTO): Promise<{ accounts: Stripe.Response<Stripe.Account>[] }>;
+
+  handlePaymentSucceededWebhook(paymentIntent: Stripe.PaymentIntent): Promise<{ isUpdated: boolean }>;
 }
