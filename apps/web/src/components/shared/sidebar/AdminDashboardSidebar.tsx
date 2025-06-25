@@ -1,24 +1,14 @@
 import Link from 'next/link';
 
-import {
-  Users,
-  List,
-  CreditCard,
-  FileText,
-  ShieldCheck,
-  Tag,
-  LayoutGrid,
-  MapPin,
-  Search,
-} from 'lucide-react';
+import { Users, List, CreditCard, FileText, ShieldCheck, Tag, LayoutGrid, MapPin, Search } from 'lucide-react';
 
 const AdminDashboardSidebar = () => {
   return (
-    <div className="flex w-64 flex-col border-r border-gray-200 bg-white">
-      <Link href="/admin/dashboard" className="flex-shrink-0">
+    <div className="flex w-72 flex-col border-r border-gray-200 bg-white">
+      <Link href="/admin/dashboard/" className="flex-shrink-0">
         <div className="flex items-center gap-3 px-6 py-4">
           <div className="bg-brand-600 h-8 w-8 rounded-md"></div>
-          <span className="text-xl font-medium">Dashboard</span>
+          <span className="text-xl font-medium">PetWorld</span>
         </div>
       </Link>
 
@@ -35,7 +25,7 @@ const AdminDashboardSidebar = () => {
       <nav className="flex-1 space-y-3 overflow-y-auto p-3">
         <div className="space-y-0.5">
           <Link
-            href="/admin/users"
+            href="/admin/dashboard/users"
             className="group flex items-center space-x-2.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
           >
             <Users className="h-4 w-4 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
@@ -59,7 +49,7 @@ const AdminDashboardSidebar = () => {
 
         <div className="space-y-0.5 pt-3">
           <Link
-            href="/admin/pets"
+            href="/admin/dashboard/pets"
             className="group flex items-center space-x-2.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
           >
             <List className="h-4 w-4 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
@@ -92,9 +82,7 @@ const AdminDashboardSidebar = () => {
         </div>
 
         <div className="pt-3">
-          <h3 className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
-            Reviews & Reports
-          </h3>
+          <h3 className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Reviews & Reports</h3>
           <Link
             href="#"
             className="group flex items-center space-x-2.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -112,9 +100,7 @@ const AdminDashboardSidebar = () => {
         </div>
 
         <div className="pt-3">
-          <h3 className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
-            System Settings
-          </h3>
+          <h3 className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-gray-500">System Settings</h3>
           <Link
             href="#"
             className="group flex items-center space-x-2.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"

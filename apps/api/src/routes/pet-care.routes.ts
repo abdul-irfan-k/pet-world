@@ -67,6 +67,12 @@ export class PetCareRoutes {
       this._petCareController.approvePetCareProposal.bind(this._petCareController),
     );
 
+    router.put(
+      '/proposals/:proposalId/reject',
+      authMiddleware,
+      this._petCareController.rejectPetCareProposal.bind(this._petCareController),
+    );
+
     router.delete(
       '/proposals/:proposalId',
       authMiddleware,

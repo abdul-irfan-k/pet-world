@@ -70,7 +70,6 @@ export interface IPetCareService {
   listMyPetCareRequests(query?: IListPetCareRequestsQueryDTO): Promise<{ petCareRequests: PetCareRequest[] }>;
 
   createPetCareProposal(data: ICreatePetCareProposalDTO): Promise<{ petCareProposal: any }>;
-
   getPetCareProposalById(data: IGetPetCareProposalByIdDTO): Promise<{ petCareProposal: any | null }>;
   updatePetCareProposal(data: IUpdatePetCareProposalDTO): Promise<{ petCareProposal: any }>;
   deletePetCareProposal(data: IDeletePetCareProposalDTO): Promise<void>;
@@ -80,7 +79,10 @@ export interface IPetCareService {
   listProposalsForPetCareRequest(
     data: IListProposalsForPetCareRequestDTO,
   ): Promise<{ petCareProposals: PetCareProposal[] }>;
+
   approvePetCareProposal(data: IGetPetCareProposalByIdDTO): Promise<{ petCareProposal: any }>;
+  rejectPetCareProposal(data: IGetPetCareProposalByIdDTO): Promise<{ petCareProposal: any }>;
+
   initiatePetCarePayment(
     data: IInitiatePetCarePaymentDTO,
   ): Promise<{ paymentIntentClientSecret: string | null; petCareProposal: any; petCareRequestId: string }>;

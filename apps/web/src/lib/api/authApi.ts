@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  UseMutationOptions,
-  useQuery,
-} from '@tanstack/react-query';
+import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
 import { apiClient } from '../api-client';
@@ -19,20 +15,14 @@ type ApiResponse<T> = {
 
 type AuthResponse = ApiResponse<{ user: User }>;
 
-type AuthMutationOptions<TVariables> = UseMutationOptions<
-  ApiResponse<{ user: User }>,
-  AxiosError,
-  TVariables
->;
+type AuthMutationOptions<TVariables> = UseMutationOptions<ApiResponse<{ user: User }>, AxiosError, TVariables>;
 
 const signup = async (credentials: SignUpInput): Promise<AuthResponse> => {
   const { data } = await apiClient.post('/auth/signup', credentials);
   return data;
 };
 
-export const useSignUpMutation = (
-  option?: AuthMutationOptions<SignUpInput>,
-) => {
+export const useSignUpMutation = (option?: AuthMutationOptions<SignUpInput>) => {
   return useMutation<AuthResponse, AxiosError, SignUpInput>({
     mutationFn: signup,
     ...option,
@@ -51,9 +41,7 @@ const signIn = async (credentials: SignInInput): Promise<AuthResponse> => {
   return data;
 };
 
-export const useSignInMutation = (
-  option?: AuthMutationOptions<SignInInput>,
-) => {
+export const useSignInMutation = (option?: AuthMutationOptions<SignInInput>) => {
   return useMutation<AuthResponse, AxiosError, SignInInput>({
     mutationFn: signIn,
     ...option,
@@ -72,9 +60,7 @@ const signInWithGoogle = async (data: { idToken: string }) => {
   return response.data;
 };
 
-export const useSignInWithGoogleMutation = (
-  option?: AuthMutationOptions<{ idToken: string }>,
-) => {
+export const useSignInWithGoogleMutation = (option?: AuthMutationOptions<{ idToken: string }>) => {
   return useMutation<AuthResponse, AxiosError, { idToken: string }>({
     mutationFn: signInWithGoogle,
     ...option,
@@ -102,10 +88,11 @@ const fetchCurrentUser = async (): Promise<AuthResponse> => {
   return data;
 };
 
-export const useCurrentUserQuery = () => {
-  return useQuery<AuthResponse>({
+export const useCurrentUserQuery = (options?: UseQueryOptions<AuthResponse, AxiosError, AuthResponse>) => {
+  return useQuery({
     queryFn: fetchCurrentUser,
     queryKey: ['currentUser'],
     retry: 2,
+    ...options,
   });
 };

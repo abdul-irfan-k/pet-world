@@ -108,4 +108,84 @@ export class PaymentService implements IPaymentService {
     const account = await stripe.accounts.retrieve(user.stripeCustomerId);
     return { accounts: [account] };
   }
+
+  async handlePaymentSucceededWebhook(data: Stripe.PaymentIntent): Promise<{ isUpdated: boolean }> {
+    const paymentIntentId = data.id;
+    const transactionType = data.metadata.platform_transaction_type;
+
+    const updateResult = await prisma.payment.updateMany({
+      where: { stripePaymentIntentId: paymentIntentId },
+      data: { paymentStatus: 'paid' },
+    });
+
+    if (updateResult.count === 0) {
+      throw new HttpError({
+        message: 'Payment not found',
+        statusCode: HttpStatusCode.NOT_FOUND,
+      });
+    }
+
+    if (transactionType === 'pet_care_payment') {
+      const existingPayment = await prisma.payment.findFirst({
+        where: { stripePaymentIntentId: paymentIntentId },
+      });
+
+      if (!existingPayment) {
+        throw new HttpError({
+          message: 'Payment not found after update',
+          statusCode: HttpStatusCode.NOT_FOUND,
+        });
+      }
+
+      const { care_request_id, pet_owner_user_id, pet_adopter_user_id } = data.metadata;
+
+      const existingPetCare = await prisma.petCare.findFirst({
+        where: { petCareRequestId: care_request_id, adopterId: pet_adopter_user_id },
+      });
+
+      const petCareRequest = await prisma.petCareRequest.findUnique({
+        where: { id: care_request_id },
+      });
+
+      if (!petCareRequest) {
+        throw new HttpError({
+          message: 'Pet care request not found',
+          statusCode: HttpStatusCode.NOT_FOUND,
+        });
+      }
+
+      const adopter = await prisma.pet_Adopter.findUnique({
+        where: { userId: pet_adopter_user_id },
+      });
+
+      if (!adopter) {
+        throw new HttpError({
+          message: 'Adopter not found',
+          statusCode: HttpStatusCode.NOT_FOUND,
+        });
+      }
+
+      if (!existingPetCare) {
+        const newPetCare = await prisma.petCare.create({
+          data: {
+            petId: petCareRequest.petId,
+            petCareRequestId: care_request_id,
+            adopterId: adopter.id,
+            startedAt: petCareRequest.startDate || new Date(),
+            endedAt: petCareRequest.endDate || new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000),
+            ownerId: pet_owner_user_id,
+            isCompleted: false,
+            paymentStatus: 'paid',
+          },
+        });
+
+        await prisma.payment.update({
+          where: { id: existingPayment.id },
+          data: { adoptionId: newPetCare.id },
+        });
+      }
+    }
+
+    return { isUpdated: true };
+  }
 }

@@ -2,8 +2,22 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const AUTH_COOKIE_NAME = 'accessToken';
+const ADMIN_COOKIE = 'adminAccessToken';
 
 export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith('/admin')) {
+    const adminToken = request.cookies.get(ADMIN_COOKIE);
+    const isAdminSignIn = pathname === '/admin/sign-in';
+
+    if (!adminToken && !isAdminSignIn) {
+      const signInUrl = new URL('/admin/sign-in', request.url);
+      return NextResponse.redirect(signInUrl);
+    }
+    return NextResponse.next();
+  }
+
   const token = request.cookies.get(AUTH_COOKIE_NAME);
 
   const publicPaths = new Set(['/', '/sign-in', '/sign-up']);
@@ -30,5 +44,6 @@ export const config = {
     '/favorites/:path*',
     '/settings/:path*',
     '/care-bookings/:path*',
+    '/admin/:path*',
   ],
 };

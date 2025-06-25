@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
+import Stripe from 'stripe';
 
 import type { IPaymentController } from './interfaces/IPaymentController';
 import type { IPaymentService } from '@/services/interfaces/IPaymentService';
 
+import { stripe } from '@/config';
 import { HttpStatusCode, ResponseMessages } from '@/constants';
 import { PaymentService } from '@/services';
 import { HttpError } from '@/utils';
@@ -98,6 +100,38 @@ export class PaymentController implements IPaymentController {
         data: account,
         message: 'Stripe account retrieved successfully',
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async handleStripeWebhook(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const sig = req.headers['stripe-signature'] as string;
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+    let event: Stripe.Event | undefined;
+
+    try {
+      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+    } catch (error: any) {
+      res.status(HttpStatusCode.BAD_REQUEST).send(`Webhook Error: ${error.message}`);
+    }
+    try {
+      //eslint-disable-next-line
+      //@ts-ignore
+      switch (event.type) {
+        case 'payment_intent.succeeded':
+          //eslint-disable-next-line
+          //@ts-ignore
+          await this._paymentService.handlePaymentSucceededWebhook(event.data.object as Stripe.PaymentIntent);
+          break;
+
+        default:
+          //eslint-disable-next-line
+          //@ts-ignore
+          console.log(`Unhandled event type: ${event.type}`);
+      }
+
+      res.status(HttpStatusCode.OK).json({ received: true });
     } catch (error) {
       next(error);
     }

@@ -7,7 +7,15 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 import { logger, PORT, CORS_ORIGINS } from './config';
-import { AdminRoutes, AuthRoutes, PetCareRoutes, PetRoutes, UploadRoutes, UserRoutes } from './routes';
+import {
+  AdminRoutes,
+  AuthRoutes,
+  PetCareRoutes,
+  PetRoutes,
+  UploadRoutes,
+  UserRoutes,
+  StripeWebhookRoutes,
+} from './routes';
 import { FavoriteRoutes } from './routes/favorites.routes';
 import { PaymentRoutes } from './routes/payment.routes';
 
@@ -27,9 +35,10 @@ export class ExpressServer {
   }
 
   private configureMiddlewares(): void {
+    this.app.use(morgan('dev'));
+    this.app.use('/api/v1/payments', new StripeWebhookRoutes().getRoutes());
     const allowedOrigins = CORS_ORIGINS.split(',').map(origin => origin.trim());
     const vercelPreviewRegex = /^https:\/\/[a-zA-Z0-9-]+\.vercel\.app(?:\/.*)?$/;
-
     this.app.use(
       cors({
         origin: [...allowedOrigins, vercelPreviewRegex],
@@ -40,7 +49,6 @@ export class ExpressServer {
     this.app.use(cookieParser());
     this.app.use(express.json());
     this.app.use(helmet());
-    this.app.use(morgan('dev'));
   }
 
   private configureRoutes(): void {
