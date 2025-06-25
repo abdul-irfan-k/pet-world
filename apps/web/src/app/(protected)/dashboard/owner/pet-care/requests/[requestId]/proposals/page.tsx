@@ -1,14 +1,22 @@
 'use client';
-
 import React from 'react';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { useFetchProposalsForRequestQuery, Proposal } from '@/lib/api/petCareApi';
+import {
+  useFetchProposalsForRequestQuery,
+  Proposal,
+  useApprovePetCareProposalMutation,
+  useRejectPetCareProposalMutation,
+} from '@/lib/api/petCareApi';
 
 export default function PetCareRequestProposalsPage() {
   const params = useParams();
+  const router = useRouter();
+
   const requestId = params.requestId as string;
 
   const {
@@ -18,11 +26,38 @@ export default function PetCareRequestProposalsPage() {
     refetch: loadProposals,
   } = useFetchProposalsForRequestQuery(requestId, {});
 
-  //eslint-disable-next-line
-  const handleProceed = async (proposalId: string) => {};
+  const { mutate: approvePetCareProposalMutate, isPending: isApproving } = useApprovePetCareProposalMutation({
+    onSuccess(data) {
+      //eslint-disable-next-line
+      //@ts-ignore
+      const proposalId = data.data.petCareProposal.id;
+      toast.success('Proposal accessed successfully!');
+      router.push('/care-bookings/' + requestId + '/pay?proposalId=' + proposalId);
+    },
+    onError(error) {
+      toast.error(`Failed to access proposal: ${error.message}`);
+    },
+    mutationKey: ['accessPetCareProposal', requestId],
+  });
 
-  //eslint-disable-next-line
-  const handleReject = async (proposalId: string) => {};
+  const { mutate: rejectPetCareProposalMutate, isPending: isRejecting } = useRejectPetCareProposalMutation({
+    onSuccess() {
+      toast.success('Proposal rejected successfully!');
+      loadProposals();
+    },
+    onError(error) {
+      toast.error(`Failed to reject proposal: ${error.message}`);
+    },
+    mutationKey: ['rejectPetCareProposal', requestId],
+  });
+
+  const handleProceed = async (proposalId: string) => {
+    approvePetCareProposalMutate(proposalId);
+  };
+
+  const handleReject = async (proposalId: string) => {
+    rejectPetCareProposalMutate(proposalId);
+  };
 
   if (!requestId) {
     return <div className="p-6 text-center">Request ID not found in URL.</div>;
@@ -74,12 +109,22 @@ export default function PetCareRequestProposalsPage() {
                 <Button
                   variant="primary"
                   onClick={() => handleProceed(proposal.id)}
-                  disabled={proposal.status === 'ACCEPTED_BY_OWNER' || proposal.status === 'REJECTED_BY_OWNER'}
+                  disabled={
+                    proposal.status === 'ACCEPTED_BY_OWNER' ||
+                    proposal.status === 'REJECTED_BY_OWNER' ||
+                    isApproving ||
+                    isRejecting
+                  }
                   className="w-full sm:w-auto"
                 >
                   Proceed with this Proposal
                 </Button>
-                <Button variant="destructive" onClick={() => handleReject(proposal.id)} className="w-full sm:w-auto">
+                <Button
+                  variant="destructive"
+                  onClick={() => handleReject(proposal.id)}
+                  className="w-full sm:w-auto"
+                  disabled={isRejecting || isApproving}
+                >
                   Reject this Proposal
                 </Button>
               </div>

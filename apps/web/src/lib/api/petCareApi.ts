@@ -112,6 +112,30 @@ export const useFetchMyPetCareRequestsQuery = (
   });
 };
 
+export const approvePetCareProposal = async (proposalId: string): Promise<PetCareProposalResponse> => {
+  const { data } = await apiClient.put(`pet-care/proposals/${proposalId}/approve`);
+  return data;
+};
+
+export const useApprovePetCareProposalMutation = (options?: PetCareMutations<PetCareProposalResponse, string>) => {
+  return useMutation<PetCareProposalResponse, AxiosError, string>({
+    mutationFn: approvePetCareProposal,
+    ...options,
+  });
+};
+
+export const rejectPetCareProposal = async (proposalId: string): Promise<PetCareProposalResponse> => {
+  const { data } = await apiClient.put(`pet-care/proposals/${proposalId}/reject`);
+  return data;
+};
+
+export const useRejectPetCareProposalMutation = (options?: PetCareMutations<PetCareProposalResponse, string>) => {
+  return useMutation<PetCareProposalResponse, AxiosError, string>({
+    mutationFn: rejectPetCareProposal,
+    ...options,
+  });
+};
+
 interface InitiatePetCarePaymentInput {
   requestId: string;
   proposalId: string;

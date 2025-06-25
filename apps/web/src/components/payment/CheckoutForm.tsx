@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 
+import { useParams } from 'next/navigation';
+
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
+  const requestId = useParams().requestId as string;
 
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +22,7 @@ const CheckoutForm = () => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: 'http://localhost:3000/complete',
+        return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/care-bookings/${requestId}/success`,
       },
     });
 
