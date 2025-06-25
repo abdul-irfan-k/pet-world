@@ -72,7 +72,7 @@ export class AdminController implements IAdminController {
 
   public async getAllAdopters(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const result = await this._adminService.getAllAdopters();
+      const result = await this._adminService.getAllUsers(req.query);
       res.status(HttpStatusCode.OK).json({
         status: 'success',
         data: result,

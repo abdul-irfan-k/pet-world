@@ -6,6 +6,7 @@ import type {
   IGetAdminProfileResponse,
   IGetAdopterByIdResponse,
   IGetAllAdoptersResponse,
+  IGetAllUsersResponse,
   ILoginAdminDTO,
   ILoginAdminResponse,
   IUpdateAdopterDetailsDTO,
@@ -67,6 +68,34 @@ export class AdminService implements IAdminService {
       });
     }
     return { admin };
+  }
+
+  public async getAllUsers(queryParams: any): Promise<IGetAllUsersResponse> {
+    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc' } = queryParams;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.UserWhereInput = {
+      isDeleted: false,
+    };
+
+    const users = await prisma.user.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: {
+        [sortBy]: sortOrder,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        userName: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return { users } as IGetAllUsersResponse;
   }
 
   public async getAllAdopters(): Promise<IGetAllAdoptersResponse> {

@@ -1,5 +1,5 @@
 import type { Admin } from '@/types/Admin';
-import type { PetAdopter } from '@/types/User';
+import type { PetAdopter, User } from '@/types/User';
 
 export type ILoginAdminDTO = Pick<Admin, 'email' | 'password'>;
 export interface ILoginAdminResponse {
@@ -15,6 +15,9 @@ export interface IGetAllAdoptersResponse {
   adopters: PetAdopter[];
 }
 
+export interface IGetAllUsersResponse {
+  users: User[];
+}
 export interface IGetAdopterByIdResponse {
   adopter: PetAdopter | null;
 }
@@ -42,6 +45,7 @@ export interface IAdminService {
   login(data: ILoginAdminDTO): Promise<ILoginAdminResponse>;
   logout(adminId: string | undefined): Promise<void>;
   getAdminProfile(adminId: string): Promise<IGetAdminProfileResponse>;
+  getAllUsers(queryParams: any): Promise<IGetAllUsersResponse>; // Replace 'any' with specific DTO/Response types
   getAllAdopters(): Promise<IGetAllAdoptersResponse>;
   getAdopterById(adopterId: string): Promise<IGetAdopterByIdResponse>;
   verifyAdopterDocuments(data: IVerifyAdopterDocumentsDTO): Promise<IVerifyAdopterDocumentsResponse>;
