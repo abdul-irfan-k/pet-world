@@ -97,7 +97,7 @@ const PetCard = ({ id, name, breed, age, gender, images, adoptionRequest, tag, i
             {age} years · {gender} · {adoptionRequest?.location?.city}
           </p>
 
-          <p className="mt-1 text-sm font-semibold text-gray-900">Adoption Fee: {adoptionRequest.amount}</p>
+          <p className="mt-1 text-sm font-semibold text-gray-900">Adoption Fee: {adoptionRequest?.amount}</p>
         </div>
       </div>
     </Link>

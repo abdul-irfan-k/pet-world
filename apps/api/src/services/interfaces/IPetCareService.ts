@@ -28,7 +28,7 @@ export type IListPetCareRequestsQueryDTO = Partial<{
 
 export type ICreatePetCareProposalDTO = Pick<
   PetCareProposal,
-  'adopterId' | 'petCareRequestId' | 'message' | 'proposedFee'
+  'adopterId' | 'petCareRequestId' | 'message' | 'proposedFee' | 'answers'
 >;
 
 export type IGetPetCareProposalByIdDTO = Pick<PetCareProposal, 'id'> & {

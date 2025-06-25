@@ -31,7 +31,7 @@ export default function MyPetCareRequestsPage() {
           <Button onClick={() => loadRequests()} variant="outline" size="sm">
             Refresh Requests
           </Button>
-          <Link href="/pet-care/request/add">
+          <Link href="/dashboard/owner/pet-care/requests/add">
             <Button variant="black" size="lg">
               <PlusCircle className="mr-2 h-5 w-5" />
               Add New Pet Care Request
@@ -43,7 +43,7 @@ export default function MyPetCareRequestsPage() {
       {petCareRequests.length === 0 ? (
         <div className="mt-10 text-center text-gray-500">
           <p className="text-lg">You have not created any pet care requests yet.</p>
-          <Link href="/pet-care/request/add" className="mt-2 inline-block">
+          <Link href="/dashboard/owner/pet-care/requests/add" className="mt-2 inline-block">
             <Button variant="outline">Create Your First Request</Button>
           </Link>
         </div>
@@ -56,7 +56,7 @@ export default function MyPetCareRequestsPage() {
             >
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-gray-800">{request.title || 'Pet Care Request'}</h2>
-                <Link href={`/pet-care/my-requests/${request.id}/proposals`}>
+                <Link href={`/dashboard/owner/pet-care/requests/${request.id}/proposals`}>
                   <Button variant="link" size="sm">
                     View Proposals
                   </Button>

@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { motion, useScroll, useTransform, useMotionValueEvent, useSpring, AnimatePresence } from 'framer-motion';
 import { Search } from 'lucide-react';
@@ -16,6 +16,7 @@ export type TabKeys = 'where' | 'adoptionStart' | 'adoptionEnd' | 'species' | un
 
 const HeaderSearch = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const scrollAnimate = pathname === '/';
   const [selectedTab, setSelectedTab] = useState<TabKeys>(undefined);
@@ -52,6 +53,9 @@ const HeaderSearch = () => {
     }
   });
 
+  const handleSearchClick = () => {
+    router.push(`/pets?species=${selectedSpecies.join(',')}`);
+  };
   return (
     <div className="relative mx-auto flex w-screen items-end justify-center" ref={scrollRef}>
       <motion.div
@@ -186,7 +190,7 @@ const HeaderSearch = () => {
           )}
 
           <div className="z-80 absolute right-0">
-            <Button rounded className="h-full p-4">
+            <Button rounded className="h-full p-4" onClick={handleSearchClick}>
               <Search className="h-4 w-4" />
               <motion.div className="text-white" style={{ display: show ? 'block' : 'none' }}>
                 <span className="z-90 text-sm font-semibold">Search</span>

@@ -27,7 +27,7 @@ export default function MyPetsPage() {
     <div className="w-full p-6">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-semibold">My Pets</h1>
-        <Link href="/pets/add">
+        <Link href="/dashboard/owner/pets/add">
           <Button variant="black" size="lg">
             <PlusCircle className="mr-2 h-5 w-5" />
             Add New Pet
@@ -40,7 +40,7 @@ export default function MyPetsPage() {
       ) : (
         <div className="text-center text-gray-500">
           <p className="mb-4 text-lg">{"You haven't added any pets yet."}</p>
-          <Link href="/pets/add">
+          <Link href="/dashboard/owner/pets/add">
             <Button variant="outline" size="lg">
               Add Your First Pet
             </Button>

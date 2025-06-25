@@ -1,4 +1,4 @@
-const PetOwnerHeader = () => {
+const UserDashboardHeader = () => {
   return (
     <header className="border-b border-gray-200 bg-white px-6 py-3">
       <div className="flex items-center">
@@ -6,7 +6,7 @@ const PetOwnerHeader = () => {
           <div className="mr-2 flex h-7 w-7 items-center justify-center rounded-md bg-green-500 text-white">
             <span className="text-sm font-bold">P</span>
           </div>
-          <span className="font-semibold text-gray-800">PetSync</span>
+          <span className="font-semibold text-gray-800">Petworld</span>
         </div>
         <span className="mr-auto text-gray-700">OverView</span>
 
@@ -30,19 +30,9 @@ const PetOwnerHeader = () => {
             <span className="text-gray-400">▼</span>
           </div>
         </div>
-
-        <div className="ml-2 flex items-center">
-          <div className="mr-1 flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
-            <span className="text-xs font-medium">KA</span>
-          </div>
-          <div className="text-xs">
-            <p className="font-medium">Owner</p>
-            <p className="text-gray-500">Manager</p>
-          </div>
-        </div>
       </div>
     </header>
   );
 };
 
-export { PetOwnerHeader };
+export { UserDashboardHeader };

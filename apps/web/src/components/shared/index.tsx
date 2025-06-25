@@ -1,6 +1,6 @@
 export { AuthInitializer } from './AuthInitializer';
 export { Footer } from './Footer';
 export { Header } from './header/Header';
-export { PetOwnerHeader } from './header/PetOwnerHeader';
-export { PetOwnerSidebar } from './sidebar/PetOwnerSidebar';
+export { UserDashboardHeader } from './header/UserDashboardHeader';
+export { UserSidebar } from './sidebar/UserSidebar';
 export { AdminDashboardSidebar } from './sidebar/AdminDashboardSidebar';

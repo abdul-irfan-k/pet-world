@@ -164,7 +164,14 @@ type GetAdoptionRequestedPetsParams = {
 const getAdoptionRequestedPets = async (
   params?: GetAdoptionRequestedPetsParams,
 ): Promise<PetsWithAdoptionRequestResponse> => {
-  const { data } = await apiClient.get('/pets/adoption-requests', { params });
+  const queryString = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (Array.isArray(value) && value.length > 0) {
+      queryString.set(key, value.join(','));
+    }
+  });
+  const { data } = await apiClient.get(`/pets/adoption-requests?${queryString.toString()}`);
   return data;
 };
 

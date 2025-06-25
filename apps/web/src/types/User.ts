@@ -11,3 +11,15 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface PetAdopter {
+  id: string;
+  userId: string;
+  adharNumber?: string | null;
+  documents?: Record<string, unknown> | null;
+  yearOfExperience?: number | null;
+  certifications: string[];
+  overview?: Record<string, unknown> | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
