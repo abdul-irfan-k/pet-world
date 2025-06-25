@@ -37,6 +37,7 @@ export type PetCareProposal = {
   message: string;
   proposedFee: number;
   status: string;
+  answers?: Record<string, unknown> | null;
   createdAt: Date;
   updatedAt: Date;
 };

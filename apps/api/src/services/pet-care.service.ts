@@ -136,13 +136,16 @@ export class PetCareService implements IPetCareService {
   }
 
   public async createPetCareProposal(data: ICreatePetCareProposalDTO): Promise<{ petCareProposal: PetCareProposal }> {
-    const { petCareRequestId, adopterId, message, proposedFee } = data;
+    const { petCareRequestId, adopterId, message, proposedFee, answers } = data;
     const newProposal = await prisma.petCareProposal.create({
       data: {
         petCareRequestId,
         adopterId,
         message,
         proposedFee,
+        //eslint-disable-next-line
+        //@ts-ignore
+        answers: answers ?? null,
       },
     });
     return { petCareProposal: newProposal as PetCareProposal };
@@ -268,7 +271,14 @@ export class PetCareService implements IPetCareService {
         petCareRequest: {
           include: {
             pet: true,
-            user: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                userName: true,
+              },
+            },
           },
         },
       },
@@ -281,7 +291,6 @@ export class PetCareService implements IPetCareService {
   ): Promise<{ petCareProposals: PetCareProposal[] }> {
     const { petCareRequestId, userId } = data;
 
-    // First, verify that the user is the owner of the pet care request
     const petCareRequest = await prisma.petCareRequest.findUnique({
       where: { id: petCareRequestId },
     });
@@ -307,16 +316,15 @@ export class PetCareService implements IPetCareService {
       },
       include: {
         adopter: {
-          // Assuming you want to include adopter details
           select: {
             id: true,
             name: true,
-            email: true, // Add other fields as necessary
+            email: true,
           },
         },
       },
       orderBy: {
-        createdAt: 'desc', // Optional: order by creation date
+        createdAt: 'desc',
       },
     });
     return { petCareProposals: petCareProposals as PetCareProposal[] };
@@ -356,7 +364,7 @@ export class PetCareService implements IPetCareService {
     await prisma.petCareProposal.updateMany({
       where: {
         petCareRequestId: existingProposal.petCareRequestId,
-        id: { not: id }, // Exclude the approved proposal
+        id: { not: id },
         status: 'pending',
       },
       data: { status: 'rejected' },
