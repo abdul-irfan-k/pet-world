@@ -17,52 +17,20 @@ import {
 import { columns } from '@/components/admin/pets/PetColumn';
 import PetTable from '@/components/admin/pets/PetTable';
 import { Button } from '@/components/ui/button';
-import { Pet } from '@/types/pet';
-
-const pets: Pet[] = [
-  {
-    id: 'clxvoj8f0000008l3g1h2b0k7',
-    name: 'Buddy',
-    species: 'Dog',
-    images: ['/pets/buddy.jpg'],
-    videos: [],
-    age: 3,
-    breed: 'Golden Retriever',
-    gender: 'Male',
-    ownerId: 'clxvoj8f0000008l3g1h2b0k8',
-    createdAt: new Date('2024-01-15T10:00:00.000Z'),
-    updatedAt: new Date('2024-01-15T10:00:00.000Z'),
-    petBiometricId: 'bio123',
-  },
-  {
-    id: 'clxvoj8f0000108l3g1h2b0k9',
-    name: 'Lucy',
-    species: 'Cat',
-    images: ['/pets/lucy.jpg'],
-    videos: [],
-    age: 2,
-    breed: 'Siamese',
-    gender: 'Female',
-    ownerId: 'clxvoj8f0000008l3g1h2b0k8',
-    createdAt: new Date('2023-11-20T14:30:00.000Z'),
-    updatedAt: new Date('2023-11-20T14:30:00.000Z'),
-  },
-];
+import { useAdminPetsQuery } from '@/lib/api/adminApi';
 
 const AdminPetsManagementPage = () => {
+  const { data } = useAdminPetsQuery();
+
   return (
     <div className="flex-1 overflow-auto bg-gray-50 p-8">
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-semibold text-gray-800">
             Pet Management{` `}
-            <span className="text-sm font-normal text-gray-500">
-              {pets.length}
-            </span>
+            <span className="text-sm font-normal text-gray-500">{data?.data.pets.length}</span>
           </h2>
-          <p className="text-sm text-gray-600">
-            Manage your pets and their details here.
-          </p>
+          <p className="text-sm text-gray-600">Manage your pets and their details here.</p>
         </div>
         <Button variant="primary" size="default">
           <Plus className="h-4 w-4" />
@@ -75,18 +43,10 @@ const AdminPetsManagementPage = () => {
           <Button variant="outline" size="sm">
             Table
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-500 hover:bg-gray-100"
-          >
+          <Button variant="ghost" size="sm" className="text-gray-500 hover:bg-gray-100">
             Board
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-500 hover:bg-gray-100"
-          >
+          <Button variant="ghost" size="sm" className="text-gray-500 hover:bg-gray-100">
             List
           </Button>
         </div>
@@ -127,18 +87,14 @@ const AdminPetsManagementPage = () => {
           <span>Gender</span>
           <ChevronDown className="h-4 w-4" />
         </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-brand-600 hover:bg-brand-50"
-        >
+        <Button variant="ghost" size="sm" className="text-brand-600 hover:bg-brand-50">
           <Plus className="h-4 w-4" />
           <span>Add filter</span>
         </Button>
       </div>
 
       <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
-        <PetTable columns={columns} data={pets} />
+        <PetTable columns={columns} data={data?.data.pets || []} />
       </div>
 
       <div className="mt-6 flex items-center justify-between">
@@ -150,14 +106,15 @@ const AdminPetsManagementPage = () => {
             <option>50</option>
           </select>
           {` `}
-          1-{pets.length > 10 ? 10 : pets.length} of {pets.length} rows
+          1-{data?.data.pets && data?.data.pets.length > 10 ? 10 : data?.data.pets.length} of {data?.data.pets.length}{' '}
+          rows
         </div>
         <div className="flex items-center space-x-1">
           <Button
             variant="ghost"
             size="icon"
             className="text-gray-500 hover:bg-gray-100 disabled:opacity-50"
-            disabled={pets.length <= 10}
+            disabled={data?.data.pets && data?.data.pets.length <= 10}
           >
             <ChevronsLeft className="h-4 w-4" />
           </Button>
@@ -165,7 +122,7 @@ const AdminPetsManagementPage = () => {
             variant="ghost"
             size="icon"
             className="text-gray-500 hover:bg-gray-100 disabled:opacity-50"
-            disabled={pets.length <= 10}
+            disabled={data?.data.pets && data?.data.pets.length <= 10}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -176,7 +133,7 @@ const AdminPetsManagementPage = () => {
             variant="ghost"
             size="icon"
             className="text-gray-500 hover:bg-gray-100"
-            disabled={pets.length <= 10} // Example disabled logic
+            disabled={data?.data.pets && data?.data.pets.length <= 10}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
@@ -184,7 +141,7 @@ const AdminPetsManagementPage = () => {
             variant="ghost"
             size="icon"
             className="text-gray-500 hover:bg-gray-100"
-            disabled={pets.length <= 10} // Example disabled logic
+            disabled={data?.data.pets && data?.data.pets.length <= 10}
           >
             <ChevronsRight className="h-4 w-4" />
           </Button>
