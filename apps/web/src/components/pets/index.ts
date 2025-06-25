@@ -1,4 +1,5 @@
 export { AddPetForm } from './AddPetForm';
+export { AddPetCareProposalForm } from './AddPetCareProposalForm';
 export { PetCard } from './PetCard';
 export { PetMediaCarousel } from './PetMediaCarousel';
 export { PetDetailsContent } from './PetDetailsContent';

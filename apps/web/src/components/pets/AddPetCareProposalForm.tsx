@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -10,15 +10,14 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { TextAreaField, TextField } from '@/components/ui/form/inputs';
 import { useCreatePetCareProposalMutation } from '@/lib/api/petCareApi';
-import {
-  addPetCareProposalSchema,
-  IAddPetCareProposalInput,
-} from '@/lib/schemas/petCareSchema';
+import { addPetCareProposalSchema, IAddPetCareProposalInput } from '@/lib/schemas/petCareSchema';
+import { PetCareRequest } from '@/types/pet';
 
-const AddPetCareProposalForm = () => {
+interface AddPetCareProposalFormProps {
+  petCareRequest: PetCareRequest;
+}
+const AddPetCareProposalForm = ({ petCareRequest }: AddPetCareProposalFormProps) => {
   const router = useRouter();
-  const params = useParams();
-  const petCareRequestId = params.id as string;
 
   const {
     register,
@@ -28,34 +27,35 @@ const AddPetCareProposalForm = () => {
   } = useForm<IAddPetCareProposalInput>({
     resolver: zodResolver(addPetCareProposalSchema),
     defaultValues: {
-      petCareRequestId: petCareRequestId || '',
+      petCareRequestId: petCareRequest.id || '',
       message: '',
       proposedFee: 0,
+      answers: {},
     },
   });
 
-  const { mutate: createPetCareProposal, isPending: isCreatingProposal } =
-    useCreatePetCareProposalMutation({
-      onSuccess: () => {
-        toast.success('Pet care proposal submitted successfully!');
-        reset();
-        router.push(`/pet-care/requests/${petCareRequestId}`);
-      },
-      onError: () => {
-        toast.error('Failed to submit proposal. Please try again.');
-      },
-    });
+  const { mutate: createPetCareProposal, isPending: isCreatingProposal } = useCreatePetCareProposalMutation({
+    onSuccess: () => {
+      toast.success('Pet care proposal submitted successfully!');
+      reset();
+      router.push(`/dashboard/pet-care/requests/${petCareRequest.id}`);
+    },
+    onError: () => {
+      toast.error('Failed to submit proposal. Please try again.');
+    },
+  });
 
   const onSubmit = (data: IAddPetCareProposalInput) => {
-    if (!petCareRequestId) {
+    if (!petCareRequest.id) {
       toast.error('Pet Care Request ID is missing. Cannot submit proposal.');
       return;
     }
     createPetCareProposal({
       ...data,
-      petCareRequestId,
+      petCareRequestId: petCareRequest.id,
     });
   };
+  console.log('petCareRequest', errors, petCareRequest);
 
   return (
     <div className="flex-1 overflow-auto p-6">
@@ -83,7 +83,7 @@ const AddPetCareProposalForm = () => {
             <div className="rounded-lg bg-white p-6 shadow-sm">
               <h2 className="mb-4 text-lg font-medium">Proposal Details</h2>
 
-              <input type="hidden" {...register('petCareRequestId')} />
+              <input type="hidden" {...register('petCareRequestId')} value={petCareRequest.id} />
 
               <div className="mb-4">
                 <TextField
@@ -95,6 +95,19 @@ const AddPetCareProposalForm = () => {
                   error={errors.proposedFee?.message}
                 />
               </div>
+
+              {petCareRequest.questions !== undefined &&
+                petCareRequest.questions !== null &&
+                Object.entries(petCareRequest.questions).map(([key]) => (
+                  <div key={key} className="mb-4">
+                    <TextField
+                      label={key}
+                      placeholder={`Answer to: ${key}`}
+                      {...register(`answers.${key}`, { required: true })}
+                      error={errors.answers?.[key]?.message}
+                    />
+                  </div>
+                ))}
 
               <div className="mb-4">
                 <TextAreaField
@@ -113,15 +126,13 @@ const AddPetCareProposalForm = () => {
             <div className="rounded-lg bg-white p-6 shadow-sm">
               <h2 className="mb-4 text-lg font-medium">Proposal Summary</h2>
               <p className="text-sm text-gray-600">
-                You are submitting a proposal for a pet care request. Ensure
-                your message is clear and your proposed fee is competitive.
+                You are submitting a proposal for a pet care request. Ensure your message is clear and your proposed fee
+                is competitive.
               </p>
             </div>
 
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-lg font-medium">
-                Tips for a Strong Proposal
-              </h2>
+              <h2 className="mb-4 text-lg font-medium">Tips for a Strong Proposal</h2>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-start">
                   <span className="mr-2">✅</span>
@@ -137,10 +148,7 @@ const AddPetCareProposalForm = () => {
                 </li>
                 <li className="flex items-start">
                   <span className="mr-2">✅</span>
-                  <span>
-                    Double-check your proposed fee and message before
-                    submitting.
-                  </span>
+                  <span>Double-check your proposed fee and message before submitting.</span>
                 </li>
               </ul>
             </div>

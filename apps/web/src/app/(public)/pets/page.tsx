@@ -52,7 +52,6 @@ const PetsPage = () => {
       size: getQueryArray('size'),
       gender: getQueryArray('gender'),
     };
-
     setFilters(prevFilters => ({
       ...prevFilters,
       ...newFilters,
