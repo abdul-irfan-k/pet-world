@@ -1,10 +1,12 @@
 'use client';
 import React from 'react';
 
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 
 import { toast } from 'sonner';
 
+import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   useFetchProposalsForRequestQuery,
@@ -93,7 +95,25 @@ export default function PetCareRequestProposalsPage() {
               key={proposal.id}
               className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
             >
-              <h2 className="text-xl font-semibold text-gray-800">{proposal.proposerName || 'N/A'}</h2>
+              <div
+                className="flex items-center gap-3"
+                onClick={
+                  //eslint-disable-next-line
+                  //@ts-ignore
+                  () => router.push('/users/' + proposal?.adopter.id + '/profile')
+                }
+              >
+                <Avatar className="h-10 w-10">
+                  <Image src={'/user-profile.png'} alt={'User Profile'} fill className="object-cover" />
+                </Avatar>
+                <h2 className="text-xl font-semibold text-gray-800">
+                  {
+                    //eslint-disable-next-line
+                    //@ts-ignore
+                    proposal.adopter.name || 'N/A'
+                  }
+                </h2>
+              </div>
               <p className="mt-2 whitespace-pre-wrap text-gray-600">{proposal.message}</p>
               {proposal.status && (
                 <p className="mt-1 text-sm text-gray-500">

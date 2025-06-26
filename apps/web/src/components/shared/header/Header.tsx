@@ -105,7 +105,7 @@ const Header = () => {
                       <div className="my-2 border-t" />
 
                       <Link
-                        href="/settings/profile"
+                        href={'/users/' + user.id + '/profile'}
                         className="flex items-center px-4 py-2 text-sm text-black hover:bg-gray-100 hover:text-black"
                         role="menuitem"
                       >

@@ -2,10 +2,13 @@
 import React from 'react';
 
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 import { SearchIcon } from 'lucide-react';
 
+import { Spinner } from '@/components/ui/spinnner';
 import { ProfileHeader, ProfileInfo, ProfileBookAdoption, ProfileWorkHistory } from '@/components/user/profile';
+import { useGetPetAdopterPublicProfileQuery } from '@/lib/api/userApi';
 import { PetAdopterProfile } from '@/types/PetAdopter';
 
 const bio = `
@@ -50,53 +53,71 @@ const bio = `
 </ol>
 
 `;
-const dummyPetAdopter: PetAdopterProfile = {
-  id: 'ckz123abc456',
-  userId: 'usr123abc456',
-  adharNumber: '1234-5678-9012',
-  documents: {
-    aadhaar: {
-      name: 'Aadhaar Card',
-      url: 'https://example.com/uploads/aadhaar.pdf',
-    },
-    certificate: {
-      name: 'Animal Care Certification',
-      url: 'https://example.com/uploads/certificate.pdf',
-    },
-  },
-  yearOfExperience: 4,
-  certifications: ['Animal Welfare', 'Pet Grooming'],
-  overview: {
-    bio,
-    motivation: 'Ensuring every pet has a loving home.',
-    specialization: 'Behavioral training for dogs.',
-    preferredPets: ['Dogs', 'Birds'],
-    location: {
-      city: 'Uppinangady',
-      state: 'Karnataka',
-      country: 'India',
-    },
-    availability: {
-      days: ['Saturday', 'Sunday'],
-      time: '9am - 5pm',
-    },
-  },
-  createdAt: '2024-06-01T12:34:56Z',
-  updatedAt: '2024-06-10T08:00:00Z',
-  isDeleted: false,
-};
 
 const UserProfilePage = () => {
+  const userId = useParams().userId as string;
+
+  const { data, isLoading } = useGetPetAdopterPublicProfileQuery(userId);
+  console.log('user profile', data);
+
+  const dummyPetAdopter: PetAdopterProfile = {
+    //eslint-disable-next-line
+    //@ts-ignore
+    documents: {
+      aadhaar: {
+        name: 'Aadhaar Card',
+        url: 'https://example.com/uploads/aadhaar.pdf',
+      },
+      certificate: {
+        name: 'Animal Care Certification',
+        url: 'https://example.com/uploads/certificate.pdf',
+      },
+    },
+    certifications: ['Animal Welfare', 'Pet Grooming'],
+    //eslint-disable-next-line
+    //@ts-ignore
+    overview: {
+      bio,
+      motivation: 'Ensuring every pet has a loving home.',
+      specialization: 'Behavioral training for dogs.',
+      preferredPets: ['Dogs', 'Birds'],
+      location: {
+        city: 'Uppinangady',
+        state: 'Karnataka',
+        country: 'India',
+      },
+      availability: {
+        days: ['Saturday', 'Sunday'],
+        time: '9am - 5pm',
+      },
+    },
+
+    // eslint-disable-next-line
+    //@ts-ignore
+    ...data?.data.petAdopter,
+  };
+
+  if (isLoading) {
+    return (
+      <div className="px-15">
+        Loading...
+        <Spinner />
+      </div>
+    );
+  }
   return (
     <div>
       <div className="px-15">
         <ProfileHeader
-          name="John Doe"
+          name={'John Doe'}
           userName="johndoe"
           userId="12345"
           isVerified={true}
           location="New York, USA"
           profilePicture="/default-profile.png"
+          //eslint-disable-next-line
+          //@ts-ignore
+          {...data?.data.petAdopter.user}
         />
         <div>
           <ProfileInfo

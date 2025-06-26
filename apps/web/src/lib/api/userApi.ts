@@ -108,3 +108,20 @@ export const useGetPetAdopterProfileStatusQuery = () => {
     queryFn: getPetAdopterProfileStatus,
   });
 };
+
+const getPetAdopterPublicProfile = async (id: string): Promise<PetAdopterProfileResponse> => {
+  const { data } = await apiClient.get(`/users/pet-adopter-profile/${id}`);
+  return data;
+};
+
+export const useGetPetAdopterPublicProfileQuery = (
+  id: string,
+  options?: UseQueryOptions<PetAdopterProfileResponse, AxiosError, PetAdopterProfileResponse>,
+) => {
+  return useQuery<PetAdopterProfileResponse, AxiosError, PetAdopterProfileResponse>({
+    queryKey: ['petAdopterProfile', id],
+    queryFn: () => getPetAdopterPublicProfile(id),
+    enabled: !!id,
+    ...options,
+  });
+};
