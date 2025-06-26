@@ -133,9 +133,15 @@ export class UserService implements IUserService {
     const { userId, id } = data;
     let profile = null;
     if (userId) {
-      profile = await prisma.pet_Adopter.findFirst({ where: { userId, isDeleted: false } });
+      profile = await prisma.pet_Adopter.findFirst({
+        where: { userId, isDeleted: false },
+        include: { user: { select: { id: true, name: true, email: true } } },
+      });
     } else if (id) {
-      profile = await prisma.pet_Adopter.findFirst({ where: { id, isDeleted: false } });
+      profile = await prisma.pet_Adopter.findFirst({
+        where: { id, isDeleted: false },
+        include: { user: { select: { id: true, name: true, email: true } } },
+      });
     }
 
     if (!profile) {

@@ -193,8 +193,8 @@ export class UserController {
 
   async getPetAdopterPublicProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { userId, id } = req.query;
-      const result = await this._userService.getPetAdopterPublicProfile({ userId: userId as string, id: id as string });
+      const id = req.params.id;
+      const result = await this._userService.getPetAdopterPublicProfile({ userId: id, id: id as string });
 
       res.status(HttpStatusCode.OK).json({
         status: 'success',
