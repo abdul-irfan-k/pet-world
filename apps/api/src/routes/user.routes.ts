@@ -25,7 +25,7 @@ export class UserRoutes {
 
     router.get('/addresses/:id', authMiddleware, this._userController.getAddressById.bind(this._userController));
 
-    router.patch(
+    router.put(
       '/addresses/:id',
       authMiddleware,
       schemaValidator(updateAddressSchema),
@@ -47,7 +47,7 @@ export class UserRoutes {
       this._userController.createPetAdopterProfile.bind(this._userController),
     );
 
-    router.patch(
+    router.put(
       '/pet-adopter-profile',
       authMiddleware,
       this._userController.updatePetAdopterProfile.bind(this._userController),
