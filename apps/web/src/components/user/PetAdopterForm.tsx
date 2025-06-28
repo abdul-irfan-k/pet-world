@@ -17,7 +17,7 @@ import {
   Review,
 } from './adopter-profile-form';
 
-import { useCreatePetAdopterProfileMutation } from '@/lib/api/userApi';
+import { useCreatePetAdopterProfileMutation, useUpdatePetAdopterProfileMutation } from '@/lib/api/userApi';
 
 export interface FormStep {
   key: string;
@@ -49,13 +49,19 @@ const animationVariants = {
   }),
 };
 
-const PetAdopterForm = () => {
+interface PetAdopterFormProps {
+  mode?: 'create' | 'edit';
+  initialData?: any;
+}
+
+const PetAdopterForm = ({ mode = 'create', initialData = {} }: PetAdopterFormProps) => {
   const formMethods = useForm({
     defaultValues: {
       overview: {
         location: {
           country: 'IN',
         },
+        ...initialData,
       },
     },
   });
@@ -77,14 +83,31 @@ const PetAdopterForm = () => {
     setStepIndex(prev => Math.max(prev - 1, 0));
   };
 
-  const { mutate, isPending } = useCreatePetAdopterProfileMutation({
-    //eslint-disable-next-line
+  const { mutate: createProfileMutate, isPending: isCreating } = useCreatePetAdopterProfileMutation({
     onSuccess: _response => {
       formMethods.reset();
       setStepIndex(0);
       setSlideDirection(0);
-      toast.success('Congrajulation You now became pet adopter', {
+      toast.success('Congratulations You now became pet adopter', {
         description: 'Your profile has been submitted for review.',
+        duration: 3000,
+      });
+    },
+    onError: error => {
+      toast.error(`Error: ${error.message}`, {
+        description: 'Please try again later.',
+        duration: 3000,
+      });
+    },
+  });
+
+  const { mutate: updateProfileMutate, isPending: isUpdating } = useUpdatePetAdopterProfileMutation({
+    onSuccess: _response => {
+      formMethods.reset();
+      setStepIndex(0);
+      setSlideDirection(0);
+      toast.success('Profile updated successfully', {
+        description: 'Your profile has been updated.',
         duration: 3000,
       });
     },
@@ -98,7 +121,11 @@ const PetAdopterForm = () => {
 
   const handleSubmitForm = () => {
     const formData = formMethods.getValues();
-    mutate(formData);
+    if (mode === 'edit') {
+      updateProfileMutate(formData);
+    } else {
+      createProfileMutate(formData);
+    }
   };
 
   return (
@@ -140,9 +167,9 @@ const PetAdopterForm = () => {
             <Button
               variant="primary"
               onClick={stepIndex === formSteps.length - 1 ? handleSubmitForm : goToNextStep}
-              disabled={isPending}
+              disabled={isCreating || isUpdating}
             >
-              {stepIndex === formSteps.length - 1 ? 'Submit' : 'Next'}
+              {stepIndex === formSteps.length - 1 ? (mode === 'edit' ? 'Update' : 'Submit') : 'Next'}
             </Button>
           </div>
         </div>

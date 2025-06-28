@@ -125,3 +125,32 @@ export const useGetPetAdopterPublicProfileQuery = (
     ...options,
   });
 };
+
+const getMyPetAdopterProfile = async (): Promise<PetAdopterProfileResponse> => {
+  const { data } = await apiClient.get('/users/pet-adopter-profile/me');
+  return data;
+};
+
+export const useGetMyPetAdopterProfileQuery = (
+  options?: UseQueryOptions<PetAdopterProfileResponse, AxiosError, PetAdopterProfileResponse>,
+) => {
+  return useQuery<PetAdopterProfileResponse, AxiosError, PetAdopterProfileResponse>({
+    queryKey: ['myPetAdopterProfile'],
+    queryFn: getMyPetAdopterProfile,
+    ...options,
+  });
+};
+
+const updatePetAdopterProfile = async (profileData: object): Promise<CreatePetAdopterProfileResponse> => {
+  const { data } = await apiClient.put('/users/pet-adopter-profile', profileData);
+  return data;
+};
+
+export const useUpdatePetAdopterProfileMutation = (
+  options?: AddressMutationOptions<CreatePetAdopterProfileResponse, object>,
+) => {
+  return useMutation<CreatePetAdopterProfileResponse, AxiosError, object>({
+    mutationFn: updatePetAdopterProfile,
+    ...options,
+  });
+};
