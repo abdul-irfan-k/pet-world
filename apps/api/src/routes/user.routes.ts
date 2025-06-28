@@ -39,6 +39,11 @@ export class UserRoutes {
       authMiddleware,
       this._userController.getPetAdopterProfileStatus.bind(this._userController),
     );
+    router.get(
+      '/pet-adopter-profile/me',
+      authMiddleware,
+      this._userController.getPetAdopterProfile.bind(this._userController),
+    );
     router.get('/pet-adopter-profile/:id', this._userController.getPetAdopterPublicProfile.bind(this._userController));
 
     router.post(

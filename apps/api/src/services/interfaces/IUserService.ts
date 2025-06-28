@@ -27,8 +27,10 @@ export interface IUserService {
   getAddressById(data: IGetAddressByIdDTO): Promise<{ location: Location | null }>;
   updateAddress(data: IUpdateAddressDTO): Promise<{ location: Location | null }>;
   deleteAddress(data: IDeleteAddressDTO): Promise<{ location: Location | null }>;
+
   createPetAdopterProfile(userId: ICreatePetAdopterProfileDTO): Promise<{ petAdopter: PetAdopter | null }>;
   updatePetAdopterProfile(data: IUpdatePetAdopterProfileDTO): Promise<{ petAdopter: PetAdopter | null }>;
   getPetAdopterProfileStatus(data: IGetPetAdopterProfileStatusDTO): Promise<{ exists: boolean }>;
+  getPetAdopterProfile(data: IGetPetAdopterPublicProfileDTO): Promise<{ petAdopter: PetAdopter | null }>;
   getPetAdopterPublicProfile(data: IGetPetAdopterPublicProfileDTO): Promise<{ petAdopter: PetAdopter | null }>;
 }

@@ -191,6 +191,26 @@ export class UserController {
     }
   }
 
+  async getPetAdopterProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: ResponseMessages.UNAUTHORIZED,
+        });
+      }
+      const result = await this._userService.getPetAdopterProfile({ userId });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: 'Pet adopter profile fetched successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getPetAdopterPublicProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const id = req.params.id;

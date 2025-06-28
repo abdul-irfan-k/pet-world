@@ -127,6 +127,28 @@ export class UserService implements IUserService {
     return { exists: !!profile };
   }
 
+  public async getPetAdopterProfile(data: IGetPetAdopterPublicProfileDTO): Promise<{ petAdopter: PetAdopter | null }> {
+    const { userId, id } = data;
+    let profile = null;
+    if (userId) {
+      profile = await prisma.pet_Adopter.findUnique({
+        where: { userId, isDeleted: false },
+      });
+    } else if (id) {
+      profile = await prisma.pet_Adopter.findUnique({
+        where: { id, isDeleted: false },
+      });
+    }
+
+    if (!profile) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: 'Pet adopter profile not found.',
+      });
+    }
+    return { petAdopter: profile as PetAdopter };
+  }
+
   public async getPetAdopterPublicProfile(
     data: IGetPetAdopterPublicProfileDTO,
   ): Promise<{ petAdopter: PetAdopter | null }> {
