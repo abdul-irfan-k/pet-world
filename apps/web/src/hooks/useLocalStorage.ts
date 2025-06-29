@@ -1,31 +1,36 @@
 import { useEffect, useState } from 'react';
 
 export function useLocalStorage<T>(key: string, initialValue?: T) {
-  const getStoredValue = () => {
-    if (typeof window === 'undefined') return initialValue;
-    try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      console.error(`Error reading localStorage key "${key}":`, error);
-      return initialValue;
-    }
-  };
-  const storedValue = getStoredValue();
-
-  const [value, setValue] = useState<T | undefined>(storedValue);
+  const [value, setValue] = useState<T | undefined>(initialValue);
 
   const setItem = (newValue: T) => {
-    setValue(newValue);
-    localStorage.setItem(key, JSON.stringify(newValue));
+    if (typeof window !== 'undefined') {
+      setValue(newValue);
+      localStorage.setItem(key, JSON.stringify(newValue));
+    }
   };
 
   const removeItem = () => {
-    setValue(undefined);
-    localStorage.removeItem(key);
+    if (typeof window !== 'undefined') {
+      setValue(undefined);
+      localStorage.removeItem(key);
+    }
   };
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    try {
+      const item = localStorage.getItem(key);
+      setValue(item ? JSON.parse(item) : initialValue);
+    } catch (error) {
+      console.error(`Error reading localStorage key "${key}":`, error);
+      setValue(initialValue);
+    }
+  }, [key]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === key) {
         if (event.newValue) {
@@ -39,7 +44,7 @@ export function useLocalStorage<T>(key: string, initialValue?: T) {
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, []);
+  }, [key]);
 
   return { data: value, setData: setItem, removeData: removeItem };
 }
