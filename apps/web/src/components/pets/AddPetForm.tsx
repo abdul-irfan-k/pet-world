@@ -13,17 +13,24 @@ import { Button } from '@/components/ui/button';
 import { TextField } from '@/components/ui/form/inputs';
 import { Label } from '@/components/ui/form/inputs';
 import { Textarea } from '@/components/ui/textarea';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useCreatePetMutation } from '@/lib/api/petsApi';
 import { addPetSchema, IAddPetInput } from '@/lib/schemas/petSchema';
 
 const AddPetForm = () => {
   const router = useRouter();
-  const [selectedGender, setSelectedGender] = useState<string | null>(null);
+  const [isMediaUploading, setIsMediaUploading] = useState(false);
+  const {
+    data: draftPetData,
+    removeData: removeDraftPetData,
+    setData: setDraftPetData,
+  } = useLocalStorage<IAddPetInput>('add-pet-form');
+
+  const [selectedGender, setSelectedGender] = useState<string | null>(draftPetData?.gender ?? null);
   const [media, setMedia] = useState<{ images: string[]; videos: string[] }>({
     images: [],
     videos: [],
   });
-  const [isMediaUploading, setIsMediaUploading] = useState(false);
 
   const {
     register,
@@ -32,19 +39,19 @@ const AddPetForm = () => {
     setValue,
     watch,
     reset,
+    getValues,
   } = useForm<IAddPetInput>({
     resolver: zodResolver(addPetSchema),
     defaultValues: {
-      name: '',
-      species: '',
-      breed: '',
-      age: undefined,
+      age: 1,
       profile: {},
+      ...(draftPetData || {}),
     },
   });
 
   const { mutate: createPet, isPending: isCreatingPet } = useCreatePetMutation({
     onSuccess: response => {
+      removeDraftPetData();
       toast.success(response.message || 'Pet added successfully!', {
         description: `Name: ${response.data.pet.name}, Species: ${response.data.pet.species}`,
       });
@@ -75,6 +82,12 @@ const AddPetForm = () => {
     });
   };
 
+  const onSaveDraft = () => {
+    const formData = getValues();
+    setDraftPetData(formData);
+    toast.success('Draft saved successfully!');
+  };
+
   return (
     <div className="flex-1 overflow-auto p-6">
       <div className="mb-6 flex items-center justify-between">
@@ -83,7 +96,7 @@ const AddPetForm = () => {
           <h1 className="text-xl font-medium">Add New Pet</h1>
         </div>
         <div className="flex items-center space-x-4">
-          <Button size={'lg'} variant="outline" rounded>
+          <Button size={'lg'} variant="outline" rounded onClick={onSaveDraft}>
             <span className="mr-2 text-gray-700">📄</span>
             Save Draft
           </Button>
@@ -118,17 +131,11 @@ const AddPetForm = () => {
               </div>
 
               <div className="mb-4">
-                <TextField
-                  label="Pet Biometric ID (Optional)"
-                  placeholder="e.g., PETID-39421"
-                  className="w-full"
-                />
+                <TextField label="Pet Biometric ID (Optional)" placeholder="e.g., PETID-39421" className="w-full" />
               </div>
 
               <div className="mb-4">
-                <Label className="mb-1 block text-sm font-medium text-gray-700">
-                  Species*
-                </Label>
+                <Label className="mb-1 block text-sm font-medium text-gray-700">Species*</Label>
                 <div className="mb-2 text-sm text-gray-500">Select Species</div>
                 <div className="flex space-x-3">
                   {['Dog 🐶', 'Cat 🐱', 'Rabbit 🐰'].map(speciesItem => {
@@ -153,11 +160,7 @@ const AddPetForm = () => {
                     );
                   })}
                 </div>
-                {errors.species && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {errors.species.message}
-                  </p>
-                )}
+                {errors.species && <p className="mt-1 text-xs text-red-500">{errors.species.message}</p>}
               </div>
 
               <div className="mb-4">
@@ -171,9 +174,7 @@ const AddPetForm = () => {
               </div>
 
               <div className="mb-4">
-                <Label className="mb-1 block text-sm font-medium text-gray-700">
-                  Gender
-                </Label>
+                <Label className="mb-1 block text-sm font-medium text-gray-700">Gender</Label>
                 <div className="mb-2 text-sm text-gray-500">Select Gender</div>
                 <div className="flex space-x-3">
                   {['Male', 'Female', 'Unknown'].map(gender => (
@@ -204,9 +205,7 @@ const AddPetForm = () => {
               </div>
 
               <div className="mb-4">
-                <Label className="mb-1 block text-sm font-medium text-gray-700">
-                  Description
-                </Label>
+                <Label className="mb-1 block text-sm font-medium text-gray-700">Description</Label>
                 <Textarea
                   placeholder="Buddy is a well-trained golden retriever, friendly with children and other pets. Needs a new home as I'll be relocating abroad."
                   rows={4}
@@ -215,23 +214,14 @@ const AddPetForm = () => {
               </div>
 
               <div className="mb-4">
-                <Label className="mb-1 block text-sm font-medium text-gray-700">
-                  Location
-                </Label>
-                <TextField
-                  placeholder="e.g., Mangalore, Karnataka"
-                  className="w-full"
-                  type="text"
-                />
+                <Label className="mb-1 block text-sm font-medium text-gray-700">Location</Label>
+                <TextField placeholder="e.g., Mangalore, Karnataka" className="w-full" type="text" />
               </div>
             </div>
           </div>
 
           <div className="space-y-6 md:col-span-1">
-            <UploadMediaSection
-              setIsMediaUploading={setIsMediaUploading}
-              setMedia={setMedia}
-            />
+            <UploadMediaSection setIsMediaUploading={setIsMediaUploading} setMedia={setMedia} />
           </div>
         </div>
       </div>
