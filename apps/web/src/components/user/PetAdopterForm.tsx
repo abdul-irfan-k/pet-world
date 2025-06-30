@@ -54,6 +54,7 @@ const animationVariants = {
 
 interface PetAdopterFormProps {
   mode?: 'create' | 'edit';
+  //eslint-disable-next-line
   initialData?: any;
 }
 
