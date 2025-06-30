@@ -40,9 +40,7 @@ const defaultInfo = {
 };
 const UserProfilePage = () => {
   const userId = useParams().userId as string;
-
   const { data, isLoading } = useGetPetAdopterPublicProfileQuery(userId);
-  console.log('user profile', data);
 
   if (isLoading) {
     return (
@@ -67,10 +65,12 @@ const UserProfilePage = () => {
         <ProfileHeader
           name={'John Doe'}
           userName="johndoe"
-          userId="12345"
           isVerified={true}
           location="New York, USA"
           profilePicture="/default-profile.png"
+          //eslint-disable-next-line
+          //@ts-ignore
+          userId={data?.data.petAdopter.user.id}
           //eslint-disable-next-line
           //@ts-ignore
           {...data?.data.petAdopter.user}

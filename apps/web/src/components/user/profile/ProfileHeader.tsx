@@ -1,8 +1,12 @@
 import React, { FC } from 'react';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { CheckCircle2, MapPin, Crown, Award, Share } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/stores';
 
 interface ProfileHeaderProps {
   name: string;
@@ -13,9 +17,13 @@ interface ProfileHeaderProps {
   profilePicture?: string;
 }
 
-const ProfileHeader: FC<ProfileHeaderProps> = ({ name, isVerified, location, profilePicture }) => {
+const ProfileHeader: FC<ProfileHeaderProps> = ({ name, isVerified, location, profilePicture, userId }) => {
+  const router = useRouter();
+  const { user } = useAuthStore();
+
   const jobSuccessPercentage = 100;
   const isTopRatedPlus = true;
+  const isCurrentUser = user?.id == userId;
 
   return (
     <div className="flex items-center justify-between rounded-lg p-4 shadow-sm">
@@ -55,9 +63,17 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, isVerified, location, pro
           </div>
         </div>
       </div>
-      <div className="flex cursor-pointer items-center gap-1 text-green-600 hover:text-green-700">
-        <span className="text-sm font-medium">Share</span>
-        <Share className="h-4 w-4" />
+      <div className="flex items-center gap-3">
+        {isCurrentUser && (
+          <Button onClick={() => router.push(`/adopter-profile/edit`)} variant={'outline'}>
+            Edit Profile
+          </Button>
+        )}
+
+        <Button variant={'outline'} className="flex items-center gap-1">
+          <span className="text-sm font-medium">Share</span>
+          <Share className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );

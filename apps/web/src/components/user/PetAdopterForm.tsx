@@ -2,6 +2,9 @@
 
 import React, { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
+import { useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm, FormProvider } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -55,19 +58,22 @@ interface PetAdopterFormProps {
 }
 
 const PetAdopterForm = ({ mode = 'create', initialData = {} }: PetAdopterFormProps) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   const formMethods = useForm({
     defaultValues: {
       overview: {
         location: {
           country: 'IN',
         },
-        ...initialData,
       },
+      ...initialData,
     },
   });
+
   const [stepIndex, setStepIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState(0);
-
   const currentStep = formSteps[stepIndex];
 
   const goToNextStep = async () => {
@@ -84,7 +90,7 @@ const PetAdopterForm = ({ mode = 'create', initialData = {} }: PetAdopterFormPro
   };
 
   const { mutate: createProfileMutate, isPending: isCreating } = useCreatePetAdopterProfileMutation({
-    onSuccess: _response => {
+    onSuccess: response => {
       formMethods.reset();
       setStepIndex(0);
       setSlideDirection(0);
@@ -92,6 +98,7 @@ const PetAdopterForm = ({ mode = 'create', initialData = {} }: PetAdopterFormPro
         description: 'Your profile has been submitted for review.',
         duration: 3000,
       });
+      router.push(`/users/${response.data.petAdopter.userId}/profile`);
     },
     onError: error => {
       toast.error(`Error: ${error.message}`, {
@@ -102,7 +109,7 @@ const PetAdopterForm = ({ mode = 'create', initialData = {} }: PetAdopterFormPro
   });
 
   const { mutate: updateProfileMutate, isPending: isUpdating } = useUpdatePetAdopterProfileMutation({
-    onSuccess: _response => {
+    onSuccess: response => {
       formMethods.reset();
       setStepIndex(0);
       setSlideDirection(0);
@@ -110,6 +117,8 @@ const PetAdopterForm = ({ mode = 'create', initialData = {} }: PetAdopterFormPro
         description: 'Your profile has been updated.',
         duration: 3000,
       });
+      queryClient.invalidateQueries({ queryKey: ['myPetAdopterProfile'] });
+      router.push(`/users/${response.data.petAdopter.userId}/profile`);
     },
     onError: error => {
       toast.error(`Error: ${error.message}`, {
