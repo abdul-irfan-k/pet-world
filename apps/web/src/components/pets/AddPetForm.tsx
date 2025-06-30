@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -16,17 +16,18 @@ import { Textarea } from '@/components/ui/textarea';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useCreatePetMutation } from '@/lib/api/petsApi';
 import { addPetSchema, IAddPetInput } from '@/lib/schemas/petSchema';
+import { cn } from '@/lib/utils';
 
 const AddPetForm = () => {
   const router = useRouter();
-  const [isMediaUploading, setIsMediaUploading] = useState(false);
   const {
     data: draftPetData,
     removeData: removeDraftPetData,
     setData: setDraftPetData,
   } = useLocalStorage<IAddPetInput>('add-pet-form');
 
-  const [selectedGender, setSelectedGender] = useState<string | null>(draftPetData?.gender ?? null);
+  const [isMediaUploading, setIsMediaUploading] = useState(false);
+  const [selectedGender, setSelectedGender] = useState<string | undefined>(undefined);
   const [media, setMedia] = useState<{ images: string[]; videos: string[] }>({
     images: [],
     videos: [],
@@ -42,11 +43,6 @@ const AddPetForm = () => {
     getValues,
   } = useForm<IAddPetInput>({
     resolver: zodResolver(addPetSchema),
-    defaultValues: {
-      age: 1,
-      profile: {},
-      ...(draftPetData || {}),
-    },
   });
 
   const { mutate: createPet, isPending: isCreatingPet } = useCreatePetMutation({
@@ -84,9 +80,18 @@ const AddPetForm = () => {
 
   const onSaveDraft = () => {
     const formData = getValues();
-    setDraftPetData(formData);
+    setDraftPetData({ ...formData, gender: selectedGender, images: media.images, videos: media.videos });
     toast.success('Draft saved successfully!');
   };
+
+  useEffect(() => {
+    if (draftPetData) {
+      reset({
+        ...draftPetData,
+      });
+      if (draftPetData.gender) setSelectedGender(draftPetData.gender);
+    }
+  }, [draftPetData]);
 
   return (
     <div className="flex-1 overflow-auto p-6">
@@ -131,7 +136,13 @@ const AddPetForm = () => {
               </div>
 
               <div className="mb-4">
-                <TextField label="Pet Biometric ID (Optional)" placeholder="e.g., PETID-39421" className="w-full" />
+                <TextField
+                  label="Pet Biometric ID (Optional)"
+                  placeholder="e.g., PETID-39421"
+                  className="w-full"
+                  {...register('petBiometricId')}
+                  error={errors.petBiometricId?.message}
+                />
               </div>
 
               <div className="mb-4">
@@ -140,19 +151,20 @@ const AddPetForm = () => {
                 <div className="flex space-x-3">
                   {['Dog 🐶', 'Cat 🐱', 'Rabbit 🐰'].map(speciesItem => {
                     const speciesValue = speciesItem.split(' ')[0];
+                    const isSelected = watchedSpecies
+                      ? watchedSpecies === speciesValue
+                      : draftPetData?.species === speciesValue;
+
                     return (
                       <button
                         key={speciesValue}
                         type="button"
-                        className={`flex items-center justify-center rounded-md px-6 py-3 ${
-                          watchedSpecies === speciesValue
-                            ? 'border-2 border-green-500 bg-green-100'
-                            : 'border border-gray-200 bg-gray-50'
-                        }`}
+                        className={cn(
+                          'flex items-center justify-center rounded-md px-6 py-3',
+                          isSelected ? 'border-2 border-green-500 bg-green-100' : 'border border-gray-200 bg-gray-50',
+                        )}
                         onClick={() => {
-                          setValue('species', speciesValue, {
-                            shouldValidate: true,
-                          });
+                          setValue('species', speciesValue);
                         }}
                       >
                         <span className="text-sm">{speciesItem}</span>
