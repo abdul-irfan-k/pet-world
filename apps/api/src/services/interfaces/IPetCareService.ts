@@ -56,11 +56,6 @@ export type IListProposalsForPetCareRequestDTO = {
   userId: string;
 };
 
-export type IInitiatePetCarePaymentDTO = {
-  userId: string;
-  petCareRequestId: string;
-  petCareProposalId: string;
-};
 export interface IPetCareService {
   createPetCareRequest(data: ICreatePetCareRequestDTO): Promise<{ petCareRequest: PetCareRequest }>;
   updatePetCareRequest(data: IUpdatePetCareRequestDTO): Promise<{ petCareRequest: PetCareRequest }>;
@@ -82,8 +77,4 @@ export interface IPetCareService {
 
   approvePetCareProposal(data: IGetPetCareProposalByIdDTO): Promise<{ petCareProposal: any }>;
   rejectPetCareProposal(data: IGetPetCareProposalByIdDTO): Promise<{ petCareProposal: any }>;
-
-  initiatePetCarePayment(
-    data: IInitiatePetCarePaymentDTO,
-  ): Promise<{ paymentIntentClientSecret: string | null; petCareProposal: any; petCareRequestId: string }>;
 }

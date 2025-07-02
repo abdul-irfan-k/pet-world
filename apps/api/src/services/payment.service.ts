@@ -4,11 +4,12 @@ import type {
   ICraeteStripeAccountDTO,
   IOnboardStripeAccountDTO,
   IGetStripeAccountDTO,
+  IInitiatePetCarePaymentDTO,
 } from './interfaces/IPaymentService';
 import type { Stripe } from 'stripe';
 
 import { prisma, stripe } from '@/config';
-import { HttpStatusCode } from '@/constants';
+import { HttpStatusCode, ResponseMessages } from '@/constants';
 import { HttpError } from '@/utils';
 
 export class PaymentService implements IPaymentService {
@@ -187,5 +188,89 @@ export class PaymentService implements IPaymentService {
     }
 
     return { isUpdated: true };
+  }
+
+  public async initiatePetCarePayment(
+    data: IInitiatePetCarePaymentDTO,
+  ): Promise<{ paymentIntentClientSecret: string | null; petCareProposal: any; petCareRequestId: string }> {
+    const { userId, petCareRequestId, petCareProposalId } = data;
+
+    const petCareRequest = await prisma.petCareRequest.findFirst({ where: { id: petCareRequestId } });
+
+    if (!petCareRequest) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.PET_CARE_REQUEST_NOT_FOUND,
+      });
+    }
+
+    if (petCareRequest.ownerId !== userId) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.FORBIDDEN,
+        message: ResponseMessages.UNAUTHORIZED,
+      });
+    }
+
+    const petCareProposal = await prisma.petCareProposal.findFirst({ where: { id: petCareProposalId } });
+    if (!petCareProposal) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.PET_CARE_PROPOSAL_NOT_FOUND,
+      });
+    }
+
+    const adopter = await prisma.user.findUnique({
+      where: { id: petCareProposal.adopterId },
+    });
+
+    if (!adopter?.stripeCustomerId) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.BAD_REQUEST,
+        message: 'Adopter does not have a Stripe connected account',
+      });
+    }
+
+    const proposedFee = petCareProposal?.proposedFee;
+    const platformFee = Math.round(proposedFee * 0.03);
+    const requestId = petCareRequest.id;
+    const petOwnerId = petCareRequest.ownerId;
+    const adopterId = petCareProposal.adopterId;
+    const transactionNumber = `TXN_${Date.now()}`;
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: proposedFee,
+      currency: 'usd',
+      capture_method: 'automatic',
+      transfer_group: `care_request_${petCareRequestId}_${userId}_${adopter.id}`,
+      metadata: {
+        platform_transaction_type: 'pet_care_payment',
+        care_request_id: requestId,
+        pet_owner_user_id: petOwnerId,
+        pet_adopter_user_id: adopterId,
+      },
+    });
+
+    await prisma.payment.create({
+      data: {
+        userId: petOwnerId,
+        receiverId: adopterId,
+        transactionNumber,
+        isDonation: false,
+        platformFee,
+        totalPaid: proposedFee,
+        currency: 'usd',
+        stripePaymentIntentId: paymentIntent.id,
+        paymentStatus: 'pending',
+      },
+    });
+
+    return {
+      paymentIntentClientSecret: paymentIntent.client_secret,
+      petCareProposal: {
+        ...petCareProposal,
+        proposedFee,
+      },
+      petCareRequestId: petCareRequest.id,
+    };
   }
 }

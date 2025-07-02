@@ -136,4 +136,37 @@ export class PaymentController implements IPaymentController {
       next(error);
     }
   }
+
+  public async initiatePetCarePayment(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { proposalId: petCareProposalId } = req.body;
+      const { requestId: petCareRequestId } = req.params;
+
+      if (!petCareProposalId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: 'Pet care proposal ID is required.',
+        });
+      }
+      if (!petCareRequestId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: 'Pet care request ID is required.',
+        });
+      }
+
+      const result = await this._paymentService.initiatePetCarePayment({
+        userId: req.user!.id,
+        petCareRequestId,
+        petCareProposalId,
+      });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: ResponseMessages.SUCCESS,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
