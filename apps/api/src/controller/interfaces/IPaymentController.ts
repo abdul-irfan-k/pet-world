@@ -6,4 +6,5 @@ export interface IPaymentController {
   onboardStripeAccount(req: Request, res: Response, next: NextFunction): Promise<void>;
   getStripeAccount(req: Request, res: Response, next: NextFunction): Promise<void>;
   initiatePetCarePayment(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getEarnings(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

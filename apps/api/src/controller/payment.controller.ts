@@ -169,4 +169,25 @@ export class PaymentController implements IPaymentController {
       next(error);
     }
   }
+
+  public async getEarnings(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: ResponseMessages.UNAUTHORIZED,
+        });
+      }
+
+      const earnings = await this._paymentService.getEarnings({ userId });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: earnings,
+        message: 'Earnings retrieved successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

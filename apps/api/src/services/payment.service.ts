@@ -5,6 +5,7 @@ import type {
   IOnboardStripeAccountDTO,
   IGetStripeAccountDTO,
   IInitiatePetCarePaymentDTO,
+  IGetEarningsDTO,
 } from './interfaces/IPaymentService';
 import type { Stripe } from 'stripe';
 
@@ -272,5 +273,36 @@ export class PaymentService implements IPaymentService {
       },
       petCareRequestId: petCareRequest.id,
     };
+  }
+
+  public async getEarnings(data: IGetEarningsDTO): Promise<{ totalEarnings: number; inProgressEarnings: number }> {
+    const { userId } = data;
+
+    const allPayments = await prisma.payment.findMany({
+      where: {
+        receiverId: userId,
+      },
+      select: {
+        totalPaid: true,
+        platformFee: true,
+        createdAt: true,
+        isTransferred: true,
+      },
+    });
+    if (!allPayments) return { inProgressEarnings: 0, totalEarnings: 0 };
+
+    const transferredPayments = await allPayments.filter(payment => payment.isTransferred);
+    const pendingPayments = await allPayments.filter(payment => !payment.isTransferred);
+
+    const totalEarnings = transferredPayments.reduce(
+      (sum, payment) => sum + (payment.totalPaid - payment.platformFee),
+      0,
+    );
+
+    const inProgressEarnings = pendingPayments.reduce(
+      (sum, payment) => sum + (payment.totalPaid - payment.platformFee),
+      0,
+    );
+    return { totalEarnings, inProgressEarnings };
   }
 }

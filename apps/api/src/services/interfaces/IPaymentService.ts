@@ -12,15 +12,20 @@ export type IOnboardStripeAccountDTO = {
   userId: string;
   origin: string | undefined;
 };
-export interface IGetStripeAccountDTO {
+export type IGetStripeAccountDTO = {
   userId: string;
-}
+};
 
 export type IInitiatePetCarePaymentDTO = {
   userId: string;
   petCareRequestId: string;
   petCareProposalId: string;
 };
+
+export type IGetEarningsDTO = {
+  userId: string;
+};
+
 export interface IPaymentService {
   createStripeAccount(data: ICraeteStripeAccountDTO): Promise<{ stripeAccount: Stripe.Response<Stripe.Account> }>;
   createStripeAccountLink(
@@ -34,6 +39,7 @@ export interface IPaymentService {
   initiatePetCarePayment(
     data: IInitiatePetCarePaymentDTO,
   ): Promise<{ paymentIntentClientSecret: string | null; petCareProposal: any; petCareRequestId: string }>;
+  getEarnings(data: IGetEarningsDTO): Promise<{ totalEarnings: number; inProgressEarnings: number }>;
 
   handlePaymentSucceededWebhook(paymentIntent: Stripe.PaymentIntent): Promise<{ isUpdated: boolean }>;
 }
