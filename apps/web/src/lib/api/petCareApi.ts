@@ -148,7 +148,7 @@ export const initiatePetCarePayment = async ({
   proposalId,
   requestId,
 }: InitiatePetCarePaymentInput): Promise<ApiResponse<InitiatePetCarePaymentResponse>> => {
-  const { data } = await apiClient.post(`pet-care/requests/${requestId}/initiate-payment`, {
+  const { data } = await apiClient.post(`payments/pet-care-requests/requests/${requestId}/initiate-payment`, {
     proposalId,
   });
   return data;

@@ -13,14 +13,25 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useGetEarningsQuery } from '@/lib/api/paymentApi';
 
-const earningsData = [
+const dummyEarningData = [
   { period: 'Jul', earnings: 500 },
   { period: 'Aug', earnings: 750 },
   { period: 'Sep', earnings: 900 },
   { period: 'Oct', earnings: 300 },
 ];
+
 const AdopterEarningsPage = () => {
+  const { data, error, isLoading } = useGetEarningsQuery();
+
+  if (isLoading) {
+    return <div className="p-6">Loading your Earnings</div>;
+  }
+
+  if (error) {
+    return <div className="p-6 text-red-500">Error fetching earnings: {error.message}</div>;
+  }
   return (
     <div className="flex-1 overflow-auto p-6">
       <div className="mb-6 flex items-center justify-between">
@@ -57,7 +68,7 @@ const AdopterEarningsPage = () => {
         <Card className="border border-gray-200 bg-white shadow-sm">
           <CardContent className="px-4">
             <p className="mb-1 text-sm text-gray-500">Total Earnings</p>
-            <p className="text-2xl font-bold text-gray-800">₹4,500</p>
+            <p className="text-2xl font-bold text-gray-800">₹{data?.data.totalEarnings}</p>
           </CardContent>
         </Card>
         <Card className="border border-gray-200 bg-white shadow-sm">
@@ -69,7 +80,7 @@ const AdopterEarningsPage = () => {
         <Card className="border border-gray-200 bg-white shadow-sm">
           <CardContent className="px-4">
             <p className="mb-1 text-sm text-gray-500">In Progress</p>
-            <p className="text-2xl font-bold text-gray-800">₹800</p>
+            <p className="text-2xl font-bold text-gray-800">₹{data?.data.inProgressEarnings}</p>
           </CardContent>
         </Card>
       </div>
@@ -79,7 +90,7 @@ const AdopterEarningsPage = () => {
           <CardContent className="p-6">
             <h2 className="mb-4 text-lg font-medium text-gray-800">Earnings Over Time</h2>
             <ResponsiveContainer width="100%" height={350}>
-              <AreaChart data={earningsData}>
+              <AreaChart data={data?.data.earningsByPeriod.length ? data?.data.earningsByPeriod : dummyEarningData}>
                 <XAxis dataKey="period" stroke="#9ca3af" />
                 <YAxis stroke="#9ca3af" />
                 <Tooltip />
