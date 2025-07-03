@@ -42,8 +42,8 @@ export interface IPaymentService {
   getEarnings(data: IGetEarningsDTO): Promise<{
     totalEarnings: number;
     inProgressEarnings: number;
-    monthlyEarnings: {
-      month: string;
+    earningsByPeriod: {
+      period: string;
       earnings: number;
     }[];
   }>;

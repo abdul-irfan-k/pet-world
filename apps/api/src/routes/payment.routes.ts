@@ -31,7 +31,7 @@ export class PaymentRoutes {
       this._paymentController.initiatePetCarePayment.bind(this._paymentController),
     );
 
-    router.post('/earnings/me', authMiddleware, this._paymentController.getEarnings.bind(this._paymentController));
+    router.get('/earnings/me', authMiddleware, this._paymentController.getEarnings.bind(this._paymentController));
 
     return router;
   }

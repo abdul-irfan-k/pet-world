@@ -280,8 +280,8 @@ export class PaymentService implements IPaymentService {
   public async getEarnings(data: IGetEarningsDTO): Promise<{
     totalEarnings: number;
     inProgressEarnings: number;
-    monthlyEarnings: {
-      month: string;
+    earningsByPeriod: {
+      period: string;
       earnings: number;
     }[];
   }> {
@@ -298,7 +298,7 @@ export class PaymentService implements IPaymentService {
         isTransferred: true,
       },
     });
-    if (!allPayments) return { inProgressEarnings: 0, totalEarnings: 0, monthlyEarnings: [] };
+    if (!allPayments) return { inProgressEarnings: 0, totalEarnings: 0, earningsByPeriod: [] };
 
     const transferredPayments = await allPayments.filter(payment => payment.isTransferred);
     const pendingPayments = await allPayments.filter(payment => !payment.isTransferred);
@@ -319,11 +319,11 @@ export class PaymentService implements IPaymentService {
       monthlyMap.set(month, (monthlyMap.get(month) || 0) + (payment.totalPaid - payment.platformFee));
     });
 
-    const monthlyEarnings = Array.from(monthlyMap.entries()).map(([month, earnings]) => ({
-      month,
+    const earningsByPeriod = Array.from(monthlyMap.entries()).map(([period, earnings]) => ({
+      period,
       earnings,
     }));
 
-    return { totalEarnings, inProgressEarnings, monthlyEarnings };
+    return { totalEarnings, inProgressEarnings, earningsByPeriod };
   }
 }
