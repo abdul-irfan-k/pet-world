@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import type {
   IPaymentService,
   ICreateStripeAccountLinkDTO,
@@ -275,7 +277,14 @@ export class PaymentService implements IPaymentService {
     };
   }
 
-  public async getEarnings(data: IGetEarningsDTO): Promise<{ totalEarnings: number; inProgressEarnings: number }> {
+  public async getEarnings(data: IGetEarningsDTO): Promise<{
+    totalEarnings: number;
+    inProgressEarnings: number;
+    monthlyEarnings: {
+      month: string;
+      earnings: number;
+    }[];
+  }> {
     const { userId } = data;
 
     const allPayments = await prisma.payment.findMany({
@@ -289,7 +298,7 @@ export class PaymentService implements IPaymentService {
         isTransferred: true,
       },
     });
-    if (!allPayments) return { inProgressEarnings: 0, totalEarnings: 0 };
+    if (!allPayments) return { inProgressEarnings: 0, totalEarnings: 0, monthlyEarnings: [] };
 
     const transferredPayments = await allPayments.filter(payment => payment.isTransferred);
     const pendingPayments = await allPayments.filter(payment => !payment.isTransferred);
@@ -303,6 +312,18 @@ export class PaymentService implements IPaymentService {
       (sum, payment) => sum + (payment.totalPaid - payment.platformFee),
       0,
     );
-    return { totalEarnings, inProgressEarnings };
+
+    const monthlyMap = new Map<string, number>();
+    transferredPayments.forEach(payment => {
+      const month = dayjs(payment.createdAt).format('MMM');
+      monthlyMap.set(month, (monthlyMap.get(month) || 0) + (payment.totalPaid - payment.platformFee));
+    });
+
+    const monthlyEarnings = Array.from(monthlyMap.entries()).map(([month, earnings]) => ({
+      month,
+      earnings,
+    }));
+
+    return { totalEarnings, inProgressEarnings, monthlyEarnings };
   }
 }

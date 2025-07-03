@@ -39,7 +39,14 @@ export interface IPaymentService {
   initiatePetCarePayment(
     data: IInitiatePetCarePaymentDTO,
   ): Promise<{ paymentIntentClientSecret: string | null; petCareProposal: any; petCareRequestId: string }>;
-  getEarnings(data: IGetEarningsDTO): Promise<{ totalEarnings: number; inProgressEarnings: number }>;
+  getEarnings(data: IGetEarningsDTO): Promise<{
+    totalEarnings: number;
+    inProgressEarnings: number;
+    monthlyEarnings: {
+      month: string;
+      earnings: number;
+    }[];
+  }>;
 
   handlePaymentSucceededWebhook(paymentIntent: Stripe.PaymentIntent): Promise<{ isUpdated: boolean }>;
 }
