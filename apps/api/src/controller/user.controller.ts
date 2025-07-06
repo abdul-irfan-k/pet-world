@@ -26,6 +26,28 @@ export class UserController {
     }
   }
 
+  public async updateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: ResponseMessages.UNAUTHORIZED,
+        });
+      }
+      const result = await this._userService.updateUser({
+        id: userId,
+        ...req.body,
+      });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: 'User updated successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   // Address Methods
   public async addAddress(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {

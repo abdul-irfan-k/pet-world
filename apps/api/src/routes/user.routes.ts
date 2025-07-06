@@ -15,6 +15,7 @@ export class UserRoutes {
     const router = Router();
 
     router.get('/check-username', this._userController.checkUserNameExists.bind(this._userController));
+    router.put('/me', authMiddleware, this._userController.updateUser.bind(this._userController));
 
     router.post(
       '/addresses',

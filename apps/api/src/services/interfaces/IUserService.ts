@@ -4,6 +4,7 @@ import { PetAdopter, User } from '@/types/User';
 
 // --- User ---
 export type ICheckUserNameExistsDTO = Pick<User, 'userName'>;
+export type IUpdateUserDTO = Partial<Omit<User, 'createdAt' | 'updatedAt' | 'password'>>;
 
 // --- Address ---
 export type ICreateAddressDTO = Omit<Location, 'id' | 'createdAt' | 'updatedAt'>;
@@ -33,6 +34,7 @@ export type IGetPetAdopterPublicProfileDTO = { userId?: string; id?: string };
 export interface IUserService {
   // --- User ---
   checkUserNameExists(username: ICheckUserNameExistsDTO): Promise<{ exists: boolean; availableUsername?: string }>;
+  updateUser(data: IUpdateUserDTO): Promise<{ user: User | null }>;
 
   // --- Address ---
   addAddress(data: ICreateAddressDTO): Promise<{ location: Location }>;

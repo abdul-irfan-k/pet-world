@@ -1,6 +1,15 @@
 import { z } from 'zod';
 
-import type { ICreateAddressDTO, IUpdateAddressDTO } from '@/services/interfaces/IUserService';
+import type { ICreateAddressDTO, IUpdateAddressDTO, IUpdateUserDTO } from '@/services/interfaces/IUserService';
+
+export const updateUserSchema: z.ZodType<Omit<IUpdateUserDTO, 'id'>> = z.object({
+  name: z.string().min(2, 'Name is required').optional(),
+  userName: z.string().min(2, 'Username is required').optional(),
+  email: z.string().email('Invalid email address').optional(),
+  phone: z.string().optional(),
+  profileImage: z.string().optional(),
+  dateOfBirth: z.string().optional(),
+});
 
 export const createAddressSchema: z.ZodType<Omit<ICreateAddressDTO, 'userId'>> = z.object({
   name: z.string().min(1, 'Name is required'),

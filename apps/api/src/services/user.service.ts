@@ -10,12 +10,13 @@ import type {
   IGetPetAdopterPublicProfileDTO,
   IUpdatePetAdopterProfileDTO,
   ICheckUserNameExistsDTO,
+  IUpdateUserDTO,
 } from '@/services/interfaces/IUserService';
 
 import { prisma } from '@/config';
 import { HttpStatusCode } from '@/constants';
 import { Location } from '@/types/Location';
-import { PetAdopter } from '@/types/User';
+import { PetAdopter, User } from '@/types/User';
 import { HttpError } from '@/utils';
 
 export class UserService implements IUserService {
@@ -33,6 +34,37 @@ export class UserService implements IUserService {
     }
 
     return { exists: false };
+  }
+
+  public async updateUser(data: IUpdateUserDTO): Promise<{ user: User | null }> {
+    const { id, ...updateData } = data;
+    const existingUser = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!existingUser) {
+      return { user: null };
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      //eslint-disable-next-line
+      //@ts-ignore
+      data: updateData,
+    });
+
+    if (!updatedUser) return { user: null };
+
+    return {
+      user: {
+        id: updatedUser.id,
+        userName: updatedUser.userName,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        phone: updatedUser.phone,
+        profileImage: updatedUser.profileImage,
+      },
+    } as { user: User | null };
   }
 
   // --- address ---

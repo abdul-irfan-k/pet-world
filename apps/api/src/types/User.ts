@@ -8,6 +8,7 @@ export type User = {
   address?: Record<string, unknown> | null;
   gender?: string | null;
   password?: string;
+  profileImage?: string | null;
   isDisabled: boolean;
   isVerified: boolean;
   lastLogin?: Date | null;
