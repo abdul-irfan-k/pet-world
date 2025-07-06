@@ -20,6 +20,23 @@ type PetAdopterProfileResponse = ApiResponse<{ petAdopter: PetAdopter }>;
 
 type AddressMutationOptions<TData, TVariables> = UseMutationOptions<TData, AxiosError, TVariables>;
 
+const checkUserNameAvailability = async (userName: string): Promise<ApiResponse<{ exists: boolean }>> => {
+  const { data } = await apiClient.get(`/users/check-username?userName=${userName}`);
+  return data;
+};
+
+export const useCheckUserNameAvailabilityQuery = (
+  username: string,
+  options?: UseQueryOptions<ApiResponse<{ exists: boolean }>, AxiosError, ApiResponse<{ exists: boolean }>>,
+) => {
+  return useQuery<ApiResponse<{ exists: boolean }>, AxiosError, ApiResponse<{ exists: boolean }>>({
+    queryKey: ['checkUserName', username],
+    queryFn: () => checkUserNameAvailability(username),
+    enabled: !!username,
+    ...options,
+  });
+};
+
 const createAddress = async (addressData: IAddAddressInput): Promise<AddressResponse> => {
   const { data } = await apiClient.post('/users/addresses', addressData);
   return data;

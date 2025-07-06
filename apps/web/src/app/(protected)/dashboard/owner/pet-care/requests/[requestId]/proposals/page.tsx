@@ -84,69 +84,81 @@ export default function PetCareRequestProposalsPage() {
         </Button>
       </div>
 
-      {proposals.length === 0 ? (
+      {proposals.length === 0 && (
         <div className="mt-10 text-center text-gray-500">
           <p className="text-lg">No proposals have been received for this request yet.</p>
         </div>
-      ) : (
+      )}
+      {proposals.length > 0 && (
         <div className="space-y-6">
           {proposals.map(proposal => (
             <div
               key={proposal.id}
               className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
             >
-              <div
-                className="flex items-center gap-3"
-                onClick={
-                  //eslint-disable-next-line
-                  //@ts-ignore
-                  () => router.push('/users/' + proposal?.adopter.id + '/profile')
-                }
-              >
-                <Avatar className="h-10 w-10">
-                  <Image src={'/user-profile.png'} alt={'User Profile'} fill className="object-cover" />
-                </Avatar>
-                <h2 className="text-xl font-semibold text-gray-800">
-                  {
+              <div className="flex gap-4">
+                <div
+                  className="relative flex items-center gap-3"
+                  onClick={
                     //eslint-disable-next-line
                     //@ts-ignore
-                    proposal.adopter.name || 'N/A'
+                    () => router.push('/users/' + proposal?.adopter.id + '/profile')
                   }
-                </h2>
-              </div>
-              <p className="mt-2 whitespace-pre-wrap text-gray-600">{proposal.message}</p>
-              {proposal.status && (
-                <p className="mt-1 text-sm text-gray-500">
-                  Status:{' '}
-                  <span
-                    className={`font-medium ${proposal.status === 'ACCEPTED_BY_OWNER' ? 'text-green-600' : proposal.status === 'REJECTED_BY_OWNER' ? 'text-red-600' : 'text-yellow-600'}`}
+                >
+                  <Avatar className="relative h-16 w-16">
+                    <Image src={'/user-profile.png'} alt={'User Profile'} fill className="object-cover" />
+                  </Avatar>
+                </div>
+
+                <div className="flex-1 space-y-1">
+                  <div className="flex flex-col">
+                    <h2 className="text-lg font-semibold text-green-600">
+                      {
+                        //eslint-disable-next-line
+                        //@ts-ignore
+                        proposal.adopter.name || 'N/A'
+                      }
+                    </h2>
+                    <span className="text-sm text-gray-700">Freelancer & Content Creator</span>
+                    <span className="text-sm text-gray-500">United States</span>
+                  </div>
+                  <p className="mt-2 text-sm text-gray-700">
+                    <span className="font-semibold">Cover letter -</span> {proposal.message}
+                  </p>
+                  {proposal.status && (
+                    <p className="mt-1 text-sm text-gray-500">
+                      Status:
+                      <span
+                        className={`font-medium ${proposal.status === 'ACCEPTED_BY_OWNER' ? 'text-green-600' : proposal.status === 'REJECTED_BY_OWNER' ? 'text-red-600' : 'text-yellow-600'}`}
+                      >
+                        {proposal.status.replace(/_/g, ' ')}
+                      </span>
+                    </p>
+                  )}
+                </div>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <Button
+                    variant="destructive"
+                    className="w-full sm:w-auto"
+                    onClick={() => handleReject(proposal.id)}
+                    disabled={isRejecting || isApproving}
                   >
-                    {proposal.status.replace(/_/g, ' ')}
-                  </span>
-                </p>
-              )}
-              <div className="mt-4 flex flex-col space-y-2 sm:flex-row sm:space-x-3 sm:space-y-0">
-                <Button
-                  variant="primary"
-                  onClick={() => handleProceed(proposal.id)}
-                  disabled={
-                    proposal.status === 'ACCEPTED_BY_OWNER' ||
-                    proposal.status === 'REJECTED_BY_OWNER' ||
-                    isApproving ||
-                    isRejecting
-                  }
-                  className="w-full sm:w-auto"
-                >
-                  Proceed with this Proposal
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={() => handleReject(proposal.id)}
-                  className="w-full sm:w-auto"
-                  disabled={isRejecting || isApproving}
-                >
-                  Reject this Proposal
-                </Button>
+                    Reject
+                  </Button>
+                  <Button
+                    variant="primary"
+                    className="bg-green-600 text-white hover:bg-green-700"
+                    onClick={() => handleProceed(proposal.id)}
+                    disabled={
+                      proposal.status === 'ACCEPTED_BY_OWNER' ||
+                      proposal.status === 'REJECTED_BY_OWNER' ||
+                      isApproving ||
+                      isRejecting
+                    }
+                  >
+                    Hire
+                  </Button>
+                </div>
               </div>
             </div>
           ))}

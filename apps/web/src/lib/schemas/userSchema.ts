@@ -1,5 +1,15 @@
 import { z } from 'zod';
 
+export const updateUserSchema = z.object({
+  name: z.string().min(2, 'Name is required').optional(),
+  userName: z.string().min(2, 'Username is required').optional(),
+  email: z.string().email('Invalid email address').optional(),
+  phone: z.string().optional(),
+  profileImage: z.string().optional(),
+  dateOfBirth: z.string().optional(),
+});
+export type IUpdateUserInput = z.infer<typeof updateUserSchema>;
+
 export const addAddressSchema = z.object({
   name: z.string().trim().min(1, 'Name cannot be empty'),
   street: z.string().trim().min(1, 'Street cannot be empty'),
