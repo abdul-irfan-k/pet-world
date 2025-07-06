@@ -1,5 +1,6 @@
 import { useRef, useCallback, useEffect } from 'react';
 
+//eslint-disable-next-line
 type AnyFunction = (...args: any[]) => void;
 
 export function useDebounceCallback<T extends AnyFunction>(func: T, delay = 1000): T {

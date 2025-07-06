@@ -6,7 +6,7 @@ import { IAddAddressInput, IUpdateAddressInput } from '../schemas/userSchema';
 
 import { Location } from '@/types/Location';
 import { PetAdopterProfile } from '@/types/PetAdopter';
-import { PetAdopter } from '@/types/User';
+import { PetAdopter, User } from '@/types/User';
 
 type ApiResponse<T> = {
   data: T;
@@ -33,6 +33,20 @@ export const useCheckUserNameAvailabilityQuery = (
     queryKey: ['checkUserName', username],
     queryFn: () => checkUserNameAvailability(username),
     enabled: !!username,
+    ...options,
+  });
+};
+
+const updateUser = async (userData: object): Promise<ApiResponse<{ user: User }>> => {
+  const { data } = await apiClient.put('/users/me', userData);
+  return data;
+};
+
+export const useUpdateUserMutation = (
+  options?: UseMutationOptions<ApiResponse<{ user: User }>, AxiosError, object>,
+) => {
+  return useMutation<ApiResponse<{ user: User }>, AxiosError, object>({
+    mutationFn: updateUser,
     ...options,
   });
 };

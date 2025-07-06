@@ -3,17 +3,18 @@ import React, { useEffect } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { TextField, PasswordField, EmailField } from '@/components/ui/form/inputs';
 import { Spinner } from '@/components/ui/spinnner';
 import { useDebounce } from '@/hooks/useDebounce';
-import { useCheckUserNameAvailabilityQuery } from '@/lib/api/userApi';
+import { useCheckUserNameAvailabilityQuery, useUpdateUserMutation } from '@/lib/api/userApi';
 import { IUpdateUserInput, updateUserSchema } from '@/lib/schemas';
 import { useAuthStore } from '@/stores';
 
 const AccountSettingPage = () => {
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
 
   const {
     register,
@@ -23,6 +24,7 @@ const AccountSettingPage = () => {
     watch,
     setError,
     clearErrors,
+    getValues,
   } = useForm<IUpdateUserInput>({
     defaultValues: {},
     resolver: zodResolver(updateUserSchema),
@@ -36,6 +38,7 @@ const AccountSettingPage = () => {
   const { data: isUserNameAvailable } = useCheckUserNameAvailabilityQuery(debouncedUserName, {
     skip: !debouncedUserName || debouncedUserName.length < 3 || !isDirty || userName === user?.userName,
   });
+
   useEffect(() => {
     if (isUserNameAvailable && isUserNameAvailable.data.exists && isDirty) {
       setError('userName', {
@@ -52,16 +55,34 @@ const AccountSettingPage = () => {
       reset({
         name: user.name || '',
         userName: user.userName || '',
-        //eslint-disable-next-line
-        //@ts-ignore
-        dateOfBirth: user.dateOfBirth || '',
+        dateOfBirth: user.dateOfBirth ?? undefined,
         email: user.email || '',
         phone: user.phone || '',
       });
     }
   }, [user, reset]);
 
-  const onSubmit = () => {};
+  const { mutate: updateUserMutate } = useUpdateUserMutation({
+    onSuccess: data => {
+      if (data.data.user) {
+        toast.success('Sign in successful', { description: 'Welcome back to our platform!', duration: 3000 });
+        reset({
+          ...data.data.user,
+          phone: data.data.user.phone || '',
+          dateOfBirth: data.data.user.dateOfBirth || undefined,
+        });
+        setUser(data.data.user);
+      }
+    },
+    onError: error => {
+      console.error('Error updating user:', error);
+    },
+  });
+
+  const onSubmit = () => {
+    const formData = getValues();
+    updateUserMutate(formData);
+  };
 
   return (
     <div className="">

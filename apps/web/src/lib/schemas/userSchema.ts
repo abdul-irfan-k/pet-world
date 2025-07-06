@@ -6,7 +6,7 @@ export const updateUserSchema = z.object({
   email: z.string().email('Invalid email address').optional(),
   phone: z.string().optional(),
   profileImage: z.string().optional(),
-  dateOfBirth: z.string().optional(),
+  dateOfBirth: z.date().optional(),
 });
 export type IUpdateUserInput = z.infer<typeof updateUserSchema>;
 
