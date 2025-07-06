@@ -18,6 +18,7 @@ model User {
   address                Json?
   gender                 String?
   password               String
+  profileImage           String?
   isDisabled             Boolean   @default(false)
   isVerified             Boolean   @default(false)
   lastLogin              DateTime?

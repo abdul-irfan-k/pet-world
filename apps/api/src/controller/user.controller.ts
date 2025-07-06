@@ -12,6 +12,20 @@ export class UserController {
     this._userService = userService;
   }
 
+  public async checkUserNameExists(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { userName } = req.query as { userName: string };
+      const result = await this._userService.checkUserNameExists({ userName });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: 'Username availability checked successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // Address Methods
   public async addAddress(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {

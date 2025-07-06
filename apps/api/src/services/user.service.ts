@@ -9,6 +9,7 @@ import type {
   IGetPetAdopterProfileStatusDTO,
   IGetPetAdopterPublicProfileDTO,
   IUpdatePetAdopterProfileDTO,
+  ICheckUserNameExistsDTO,
 } from '@/services/interfaces/IUserService';
 
 import { prisma } from '@/config';
@@ -18,6 +19,21 @@ import { PetAdopter } from '@/types/User';
 import { HttpError } from '@/utils';
 
 export class UserService implements IUserService {
+  public async checkUserNameExists(
+    data: ICheckUserNameExistsDTO,
+  ): Promise<{ exists: boolean; availableUsername?: string }> {
+    const { userName } = data;
+    const existingUser = await prisma.user.findUnique({
+      where: { userName },
+    });
+
+    if (existingUser) {
+      return { exists: true };
+    }
+
+    return { exists: false };
+  }
+
   public async addAddress(data: ICreateAddressDTO): Promise<{ location: Location }> {
     const { userId, ...addressData } = data;
 
