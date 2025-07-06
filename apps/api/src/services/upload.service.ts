@@ -5,14 +5,14 @@ import {
   IDeleteFileDTO,
   IUploadFileDTO,
   IUploadMultipleFilesDTO,
-  UploadResult,
+  IUploadFileResponse,
 } from './interfaces/IUploadService';
 
 import { cloudinary, CLOUDINARY_UPLOAD_PRESETS } from '@/config';
 import { HttpStatusCode, ResponseMessages } from '@/constants';
 import { HttpError } from '@/utils';
 export class UploadService implements IUploadService {
-  public async uploadFile({ file, resourceType, folder, tags }: IUploadFileDTO): Promise<UploadResult> {
+  public async uploadFile({ file, resourceType, folder, tags }: IUploadFileDTO): Promise<IUploadFileResponse> {
     try {
       const uploadPreset = this.getUploadPreset(folder);
       const result = await cloudinary.uploader.upload(file.path, {
@@ -47,7 +47,7 @@ export class UploadService implements IUploadService {
     resourceType,
     folder,
     tags,
-  }: IUploadMultipleFilesDTO): Promise<UploadResult[]> {
+  }: IUploadMultipleFilesDTO): Promise<IUploadFileResponse[]> {
     try {
       const uploadPreset = this.getUploadPreset(folder);
       const uploadPromises = files.map(file =>

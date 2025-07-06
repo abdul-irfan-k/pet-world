@@ -5,17 +5,17 @@ import { TokenExpiredError } from 'jsonwebtoken';
 import type {
   IAuthService,
   ISignInDTO,
-  ISignInResponseDTO,
+  ISignInResponse,
   ISignUpDTO,
-  ISignUpResponseDTO,
+  ISignUpResponse,
   IRefreshTokenDTO,
-  IRefreshTokenResponseDTO,
+  IRefreshTokenResponse,
   IForgotPasswordDTO,
   IVerifyForgotPasswordDTO,
-  IVerifyForgotPasswordResponseDTO,
+  IVerifyForgotPasswordResponse,
   ILogoutDTO,
   IGetUserDetailsDTO,
-  IGetUserDetailsResponseDTO,
+  IGetUserDetailsResponse,
   iSignInWithGoogleDTO,
 } from './interfaces/IAuthService';
 
@@ -37,7 +37,7 @@ import {
 const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 export class AuthService implements IAuthService {
-  public async signup(args: ISignUpDTO): Promise<ISignUpResponseDTO> {
+  public async signup(args: ISignUpDTO): Promise<ISignUpResponse> {
     const { email, password, firstName, lastName, userName } = args;
 
     const isEmailValid = await checkEmailExists(email);
@@ -79,7 +79,7 @@ export class AuthService implements IAuthService {
     };
   }
 
-  public async signin(args: ISignInDTO): Promise<ISignInResponseDTO> {
+  public async signin(args: ISignInDTO): Promise<ISignInResponse> {
     const { email, password } = args;
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -121,7 +121,7 @@ export class AuthService implements IAuthService {
     };
   }
 
-  public async signInWithGoogle(args: iSignInWithGoogleDTO): Promise<ISignInResponseDTO> {
+  public async signInWithGoogle(args: iSignInWithGoogleDTO): Promise<ISignInResponse> {
     try {
       const { idToken } = args;
       if (idToken === undefined) {
@@ -191,7 +191,7 @@ export class AuthService implements IAuthService {
     }
   }
 
-  public async refreshToken(args: IRefreshTokenDTO): Promise<IRefreshTokenResponseDTO> {
+  public async refreshToken(args: IRefreshTokenDTO): Promise<IRefreshTokenResponse> {
     try {
       //eslint-disable-next-line
       //@ts-ignore
@@ -286,7 +286,7 @@ export class AuthService implements IAuthService {
     }
   }
 
-  public async verifyForgotPassword(args: IVerifyForgotPasswordDTO): Promise<IVerifyForgotPasswordResponseDTO> {
+  public async verifyForgotPassword(args: IVerifyForgotPasswordDTO): Promise<IVerifyForgotPasswordResponse> {
     try {
       const { email, code, newPassword } = args;
 
@@ -361,7 +361,7 @@ export class AuthService implements IAuthService {
     return Promise.resolve();
   }
 
-  public async me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponseDTO> {
+  public async me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponse> {
     const { id } = args;
 
     const user = await prisma.user.findUnique({

@@ -19,6 +19,7 @@ import { PetAdopter } from '@/types/User';
 import { HttpError } from '@/utils';
 
 export class UserService implements IUserService {
+  // --- user ---
   public async checkUserNameExists(
     data: ICheckUserNameExistsDTO,
   ): Promise<{ exists: boolean; availableUsername?: string }> {
@@ -34,6 +35,7 @@ export class UserService implements IUserService {
     return { exists: false };
   }
 
+  // --- address ---
   public async addAddress(data: ICreateAddressDTO): Promise<{ location: Location }> {
     const { userId, ...addressData } = data;
 
@@ -113,6 +115,7 @@ export class UserService implements IUserService {
     return { location: deletedLocation };
   }
 
+  // --- pet adopter ---
   public async createPetAdopterProfile(data: ICreatePetAdopterProfileDTO): Promise<{ petAdopter: PetAdopter }> {
     const { userId, ...profileData } = data;
 

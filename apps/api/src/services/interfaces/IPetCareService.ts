@@ -1,5 +1,7 @@
 import { PetCareProposal } from '@/types/PetCare';
 import { PetCareRequest } from '@/types/PetCareRequest';
+
+// --- Pet Care Request ---
 export type ICreatePetCareRequestDTO = Pick<
   PetCareRequest,
   'ownerId' | 'petId' | 'locationId' | 'title' | 'amount' | 'description' | 'startDate' | 'endDate' | 'questions'
@@ -26,6 +28,7 @@ export type IListPetCareRequestsQueryDTO = Partial<{
   userId: string;
 }>;
 
+/// --- Pet Care Proposal ---
 export type ICreatePetCareProposalDTO = Pick<
   PetCareProposal,
   'adopterId' | 'petCareRequestId' | 'message' | 'proposedFee' | 'answers'
@@ -57,6 +60,7 @@ export type IListProposalsForPetCareRequestDTO = {
 };
 
 export interface IPetCareService {
+  // --- Pet Care Request ---
   createPetCareRequest(data: ICreatePetCareRequestDTO): Promise<{ petCareRequest: PetCareRequest }>;
   updatePetCareRequest(data: IUpdatePetCareRequestDTO): Promise<{ petCareRequest: PetCareRequest }>;
   getPetCareRequestById(data: IGetPetCareRequestByIdDTO): Promise<{ petCareRequest: PetCareRequest | null }>;
@@ -64,6 +68,7 @@ export interface IPetCareService {
   listPetCareRequests(query?: IListPetCareRequestsQueryDTO): Promise<{ petCareRequests: PetCareRequest[] }>;
   listMyPetCareRequests(query?: IListPetCareRequestsQueryDTO): Promise<{ petCareRequests: PetCareRequest[] }>;
 
+  // --- Pet Care Proposal ---
   createPetCareProposal(data: ICreatePetCareProposalDTO): Promise<{ petCareProposal: any }>;
   getPetCareProposalById(data: IGetPetCareProposalByIdDTO): Promise<{ petCareProposal: any | null }>;
   updatePetCareProposal(data: IUpdatePetCareProposalDTO): Promise<{ petCareProposal: any }>;
@@ -75,6 +80,7 @@ export interface IPetCareService {
     data: IListProposalsForPetCareRequestDTO,
   ): Promise<{ petCareProposals: PetCareProposal[] }>;
 
+  // --- Pet Care Proposal Actions ---
   approvePetCareProposal(data: IGetPetCareProposalByIdDTO): Promise<{ petCareProposal: any }>;
   rejectPetCareProposal(data: IGetPetCareProposalByIdDTO): Promise<{ petCareProposal: any }>;
 }
