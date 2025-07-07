@@ -79,7 +79,7 @@ export class AuthService implements IAuthService {
 
     const isProduction = NODE_ENV === 'production';
     if (isProduction) {
-      const otp = generateOTP(6);
+      const otp = generateOTP(4);
       const OTP_EXPIRY_MINUTES = 15;
       const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
 
@@ -92,8 +92,8 @@ export class AuthService implements IAuthService {
         },
       });
 
-      const verificationUrl = `${FRONTEND_URL}/sign-up/verify-email?code=${otp}&email=${email}`;
-      const emailHtml = getVerifyEmailTemplate(verificationUrl);
+      const verificationUrl = `${FRONTEND_URL}/email-verification/verify?code=${otp}&email=${email}`;
+      const emailHtml = getVerifyEmailTemplate(otp, verificationUrl);
       try {
         await sendEmail(email, 'Verify Your Email', emailHtml);
         logger.info('Verification email sent successfully');
@@ -299,7 +299,7 @@ export class AuthService implements IAuthService {
       },
     });
 
-    const otp = generateOTP(6);
+    const otp = generateOTP(4);
 
     const OTP_EXPIRY_MINUTES = 15;
     const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
@@ -484,7 +484,7 @@ export class AuthService implements IAuthService {
       });
     }
 
-    const otp = generateOTP(6);
+    const otp = generateOTP(4);
 
     const OTP_EXPIRY_MINUTES = 15;
     const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
@@ -498,7 +498,8 @@ export class AuthService implements IAuthService {
       },
     });
 
-    const emailHtml = getVerifyEmailTemplate(otp);
+    const verificationUrl = `${FRONTEND_URL}/email-verification/verify?code=${otp}&email=${email}`;
+    const emailHtml = getVerifyEmailTemplate(otp, verificationUrl);
 
     try {
       await sendEmail(email, 'Password Reset OTP', emailHtml);

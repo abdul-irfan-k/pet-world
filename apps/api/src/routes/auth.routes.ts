@@ -21,8 +21,8 @@ export class AuthRoutes {
     const router = Router();
 
     router.post('/signup', schemaValidator(signUpSchema), this._authController.signup.bind(this._authController));
-    router.post('/signup/verify-email', this._authController.verifyEmail.bind(this._authController));
-    router.post('/signup/verify-email/resend', this._authController.resendVerificationEmail.bind(this._authController));
+    router.post('/verify-email', this._authController.verifyEmail.bind(this._authController));
+    router.post('/verify-email/resend', this._authController.resendVerificationEmail.bind(this._authController));
 
     router.post('/signin', schemaValidator(signInSchema), this._authController.signin.bind(this._authController));
     router.post(

@@ -49,10 +49,11 @@ export class AuthController implements IAuthController {
         });
       }
 
-      await this._authService.verifyEmail({ code, email });
+      const result = await this._authService.verifyEmail({ code, email });
 
       res.status(HttpStatusCode.OK).json({
         status: 'success',
+        data: result,
         message: 'Email verified successfully.',
       });
     } catch (error) {
@@ -70,9 +71,10 @@ export class AuthController implements IAuthController {
         });
       }
 
-      await this._authService.resendVerificationEmail({ email });
+      const result = await this._authService.resendVerificationEmail({ email });
       res.status(HttpStatusCode.OK).json({
         status: 'success',
+        data: result,
         message: 'Verification email resent successfully.',
       });
     } catch (error) {
@@ -227,6 +229,7 @@ export class AuthController implements IAuthController {
 
       res.status(HttpStatusCode.OK).json({
         status: 'success',
+        data: result,
         message: result.message,
       });
     } catch (error) {
