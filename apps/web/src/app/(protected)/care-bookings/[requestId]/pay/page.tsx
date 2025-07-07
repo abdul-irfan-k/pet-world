@@ -113,7 +113,7 @@ const PaymentPage = () => {
             </div>
           </div>
 
-          <div className="border-1 mb-8 block w-full border border-gray-400"></div>
+          <div className="border-1 mb-8 block w-full border-gray-400"></div>
           <h2 className="mb-8 text-xl font-semibold">Price details</h2>
 
           <div className="mb-2 flex items-center justify-between">

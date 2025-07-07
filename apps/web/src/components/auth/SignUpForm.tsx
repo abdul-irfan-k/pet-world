@@ -9,11 +9,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import {
-  TextField,
-  EmailField,
-  PasswordField,
-} from '@/components/ui/form/inputs';
+import { TextField, EmailField, PasswordField } from '@/components/ui/form/inputs';
 import { useSignUpMutation } from '@/lib/api/authApi';
 import { SignUpInput, signUpSchema } from '@/lib/schemas';
 
@@ -34,7 +30,7 @@ const SignUpForm = () => {
         description: 'Please sign in to continue.',
         duration: 3000,
       });
-      router.push('/sign-in');
+      router.push('/email-verification/check-inbox');
     },
   });
 
@@ -82,11 +78,7 @@ const SignUpForm = () => {
       </div>
 
       <div className="flex flex-col gap-4">
-        <Button
-          size={'lg'}
-          onClick={handleSubmit(onSubmit)}
-          isLoading={isPending}
-        >
+        <Button size={'lg'} onClick={handleSubmit(onSubmit)} isLoading={isPending}>
           Sign up
         </Button>
       </div>
@@ -95,10 +87,7 @@ const SignUpForm = () => {
         <span className="text-sm font-normal leading-tight text-[#535862]">
           Already have an account?
           <span>
-            <Link
-              href={'/sign-in'}
-              className="text-sm font-semibold leading-tight text-[#6840c6]"
-            >
+            <Link href={'/sign-in'} className="text-sm font-semibold leading-tight text-[#6840c6]">
               Sign in
             </Link>
           </span>

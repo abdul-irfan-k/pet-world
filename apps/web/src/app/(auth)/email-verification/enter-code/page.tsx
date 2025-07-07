@@ -8,7 +8,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/form/inpu
 
 const EnterVerificationCodePage = () => {
   return (
-    <div className="flex h-screen items-start justify-center pt-20">
+    <div className="flex flex-col items-center px-8">
       <div className="flex w-[360px] flex-col items-center gap-8">
         <ButtonIcon size={'lg'} variant={'outline'}>
           <MailIcon style={{ width: '24px', height: '24px' }} />
