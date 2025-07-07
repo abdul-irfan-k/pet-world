@@ -5,21 +5,23 @@ import { TokenExpiredError } from 'jsonwebtoken';
 import type {
   IAuthService,
   ISignInDTO,
-  ISignInResponseDTO,
+  ISignInResponse,
   ISignUpDTO,
-  ISignUpResponseDTO,
+  ISignUpResponse,
   IRefreshTokenDTO,
-  IRefreshTokenResponseDTO,
+  IRefreshTokenResponse,
   IForgotPasswordDTO,
   IVerifyForgotPasswordDTO,
-  IVerifyForgotPasswordResponseDTO,
+  IVerifyForgotPasswordResponse,
   ILogoutDTO,
   IGetUserDetailsDTO,
-  IGetUserDetailsResponseDTO,
+  IGetUserDetailsResponse,
   iSignInWithGoogleDTO,
+  IVerifyEmailDTO,
+  IResendVerificationEmailDTO,
 } from './interfaces/IAuthService';
 
-import { GOOGLE_CLIENT_ID, logger, prisma } from '@/config';
+import { FRONTEND_URL, GOOGLE_CLIENT_ID, logger, NODE_ENV, prisma } from '@/config';
 import { HttpStatusCode, ResponseMessages, OtpAction } from '@/constants';
 import {
   verifyPassword,
@@ -32,12 +34,13 @@ import {
   getPasswordChangeTemplate,
   sendEmail,
   verifyRefreshToken,
+  getVerifyEmailTemplate,
 } from '@/utils';
 
 const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 export class AuthService implements IAuthService {
-  public async signup(args: ISignUpDTO): Promise<ISignUpResponseDTO> {
+  public async signup(args: ISignUpDTO): Promise<ISignUpResponse> {
     const { email, password, firstName, lastName, userName } = args;
 
     const isEmailValid = await checkEmailExists(email);
@@ -67,6 +70,42 @@ export class AuthService implements IAuthService {
       },
     });
 
+    if (!newUser) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        message: 'User registration failed',
+      });
+    }
+
+    const isProduction = NODE_ENV === 'production';
+    if (isProduction) {
+      const otp = generateOTP(4);
+      const OTP_EXPIRY_MINUTES = 15;
+      const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
+
+      await prisma.otp.create({
+        data: {
+          userId: newUser.id,
+          code: otp,
+          expiresAt: expiresAt,
+          action: OtpAction.VERIFY_EMAIL,
+        },
+      });
+
+      const verificationUrl = `${FRONTEND_URL}/email-verification/verify?code=${otp}&email=${email}`;
+      const emailHtml = getVerifyEmailTemplate(otp, verificationUrl);
+      try {
+        await sendEmail(email, 'Verify Your Email', emailHtml);
+        logger.info('Verification email sent successfully');
+      } catch (error) {
+        logger.error('Error sending verification email:', error);
+        throw new HttpError({
+          statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+          message: ResponseMessages.EMAIL_SEND_FAILED,
+        });
+      }
+    }
+
     return {
       user: {
         id: newUser.id,
@@ -79,7 +118,7 @@ export class AuthService implements IAuthService {
     };
   }
 
-  public async signin(args: ISignInDTO): Promise<ISignInResponseDTO> {
+  public async signin(args: ISignInDTO): Promise<ISignInResponse> {
     const { email, password } = args;
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -115,13 +154,14 @@ export class AuthService implements IAuthService {
         userName: user.userName,
         email: user.email,
         name: user.name,
+        profileImage: user.profileImage,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       },
     };
   }
 
-  public async signInWithGoogle(args: iSignInWithGoogleDTO): Promise<ISignInResponseDTO> {
+  public async signInWithGoogle(args: iSignInWithGoogleDTO): Promise<ISignInResponse> {
     try {
       const { idToken } = args;
       if (idToken === undefined) {
@@ -191,7 +231,7 @@ export class AuthService implements IAuthService {
     }
   }
 
-  public async refreshToken(args: IRefreshTokenDTO): Promise<IRefreshTokenResponseDTO> {
+  public async refreshToken(args: IRefreshTokenDTO): Promise<IRefreshTokenResponse> {
     try {
       //eslint-disable-next-line
       //@ts-ignore
@@ -259,7 +299,7 @@ export class AuthService implements IAuthService {
       },
     });
 
-    const otp = generateOTP(6);
+    const otp = generateOTP(4);
 
     const OTP_EXPIRY_MINUTES = 15;
     const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
@@ -286,7 +326,7 @@ export class AuthService implements IAuthService {
     }
   }
 
-  public async verifyForgotPassword(args: IVerifyForgotPasswordDTO): Promise<IVerifyForgotPasswordResponseDTO> {
+  public async verifyForgotPassword(args: IVerifyForgotPasswordDTO): Promise<IVerifyForgotPasswordResponse> {
     try {
       const { email, code, newPassword } = args;
 
@@ -361,7 +401,7 @@ export class AuthService implements IAuthService {
     return Promise.resolve();
   }
 
-  public async me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponseDTO> {
+  public async me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponse> {
     const { id } = args;
 
     const user = await prisma.user.findUnique({
@@ -385,5 +425,93 @@ export class AuthService implements IAuthService {
         updatedAt: user.updatedAt,
       },
     };
+  }
+
+  public async verifyEmail(args: IVerifyEmailDTO): Promise<{ success: boolean }> {
+    const { code, email } = args;
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.USER_NOT_FOUND,
+      });
+    }
+
+    const otpRecord = await prisma.otp.findFirst({
+      where: {
+        userId: user.id,
+        code,
+        action: OtpAction.VERIFY_EMAIL,
+      },
+    });
+
+    if (!otpRecord || otpRecord.isDeleted || new Date() > otpRecord.expiresAt) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.BAD_REQUEST,
+        message: ResponseMessages.INVALID_OTP,
+      });
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { isVerified: true },
+    });
+
+    await prisma.otp.update({
+      where: { id: otpRecord.id },
+      data: { isDeleted: true },
+    });
+
+    return { success: true };
+  }
+
+  public async resendVerificationEmail(args: IResendVerificationEmailDTO): Promise<{ success: boolean }> {
+    const { email } = args;
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.USER_NOT_FOUND,
+      });
+    }
+
+    if (user.isVerified) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.BAD_REQUEST,
+        message: 'User is already verified.',
+      });
+    }
+
+    const otp = generateOTP(4);
+
+    const OTP_EXPIRY_MINUTES = 15;
+    const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
+
+    await prisma.otp.create({
+      data: {
+        userId: user.id,
+        code: otp,
+        expiresAt: expiresAt,
+        action: OtpAction.VERIFY_EMAIL,
+      },
+    });
+
+    const verificationUrl = `${FRONTEND_URL}/email-verification/verify?code=${otp}&email=${email}`;
+    const emailHtml = getVerifyEmailTemplate(otp, verificationUrl);
+
+    try {
+      await sendEmail(email, 'Password Reset OTP', emailHtml);
+      logger.info('password reset email sent successfully');
+    } catch (error) {
+      logger.error('Error sending password reset email:', error);
+      throw new HttpError({
+        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        message: ResponseMessages.EMAIL_SEND_FAILED,
+      });
+    }
+
+    return { success: true };
   }
 }

@@ -9,15 +9,65 @@ import type {
   IGetPetAdopterProfileStatusDTO,
   IGetPetAdopterPublicProfileDTO,
   IUpdatePetAdopterProfileDTO,
+  ICheckUserNameExistsDTO,
+  IUpdateUserDTO,
 } from '@/services/interfaces/IUserService';
 
 import { prisma } from '@/config';
 import { HttpStatusCode } from '@/constants';
 import { Location } from '@/types/Location';
-import { PetAdopter } from '@/types/User';
+import { PetAdopter, User } from '@/types/User';
 import { HttpError } from '@/utils';
 
 export class UserService implements IUserService {
+  // --- user ---
+  public async checkUserNameExists(
+    data: ICheckUserNameExistsDTO,
+  ): Promise<{ exists: boolean; availableUsername?: string }> {
+    const { userName } = data;
+    const existingUser = await prisma.user.findUnique({
+      where: { userName },
+    });
+
+    if (existingUser) {
+      return { exists: true };
+    }
+
+    return { exists: false };
+  }
+
+  public async updateUser(data: IUpdateUserDTO): Promise<{ user: User | null }> {
+    const { id, ...updateData } = data;
+    const existingUser = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!existingUser) {
+      return { user: null };
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      //eslint-disable-next-line
+      //@ts-ignore
+      data: updateData,
+    });
+
+    if (!updatedUser) return { user: null };
+
+    return {
+      user: {
+        id: updatedUser.id,
+        userName: updatedUser.userName,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        phone: updatedUser.phone,
+        profileImage: updatedUser.profileImage,
+      },
+    } as { user: User | null };
+  }
+
+  // --- address ---
   public async addAddress(data: ICreateAddressDTO): Promise<{ location: Location }> {
     const { userId, ...addressData } = data;
 
@@ -97,6 +147,7 @@ export class UserService implements IUserService {
     return { location: deletedLocation };
   }
 
+  // --- pet adopter ---
   public async createPetAdopterProfile(data: ICreatePetAdopterProfileDTO): Promise<{ petAdopter: PetAdopter }> {
     const { userId, ...profileData } = data;
 
@@ -127,15 +178,43 @@ export class UserService implements IUserService {
     return { exists: !!profile };
   }
 
+  public async getPetAdopterProfile(data: IGetPetAdopterPublicProfileDTO): Promise<{ petAdopter: PetAdopter | null }> {
+    const { userId, id } = data;
+    let profile = null;
+    if (userId) {
+      profile = await prisma.pet_Adopter.findUnique({
+        where: { userId, isDeleted: false },
+      });
+    } else if (id) {
+      profile = await prisma.pet_Adopter.findUnique({
+        where: { id, isDeleted: false },
+      });
+    }
+
+    if (!profile) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: 'Pet adopter profile not found.',
+      });
+    }
+    return { petAdopter: profile as PetAdopter };
+  }
+
   public async getPetAdopterPublicProfile(
     data: IGetPetAdopterPublicProfileDTO,
   ): Promise<{ petAdopter: PetAdopter | null }> {
     const { userId, id } = data;
     let profile = null;
     if (userId) {
-      profile = await prisma.pet_Adopter.findFirst({ where: { userId, isDeleted: false } });
+      profile = await prisma.pet_Adopter.findFirst({
+        where: { userId, isDeleted: false },
+        include: { user: { select: { id: true, name: true, email: true } } },
+      });
     } else if (id) {
-      profile = await prisma.pet_Adopter.findFirst({ where: { id, isDeleted: false } });
+      profile = await prisma.pet_Adopter.findFirst({
+        where: { id, isDeleted: false },
+        include: { user: { select: { id: true, name: true, email: true } } },
+      });
     }
 
     if (!profile) {

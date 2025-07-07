@@ -12,6 +12,49 @@ export class UserController {
     this._userService = userService;
   }
 
+  public async checkUserNameExists(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { userName } = req.query as { userName: string };
+      if (!userName) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: 'Username is required',
+        });
+      }
+
+      const result = await this._userService.checkUserNameExists({ userName });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: 'Username availability checked successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async updateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: ResponseMessages.UNAUTHORIZED,
+        });
+      }
+      const result = await this._userService.updateUser({
+        id: userId,
+        ...req.body,
+      });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: 'User updated successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   // Address Methods
   public async addAddress(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -191,10 +234,30 @@ export class UserController {
     }
   }
 
+  async getPetAdopterProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.UNAUTHORIZED,
+          message: ResponseMessages.UNAUTHORIZED,
+        });
+      }
+      const result = await this._userService.getPetAdopterProfile({ userId });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: 'Pet adopter profile fetched successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getPetAdopterPublicProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { userId, id } = req.query;
-      const result = await this._userService.getPetAdopterPublicProfile({ userId: userId as string, id: id as string });
+      const id = req.params.id;
+      const result = await this._userService.getPetAdopterPublicProfile({ userId: id, id: id as string });
 
       res.status(HttpStatusCode.OK).json({
         status: 'success',

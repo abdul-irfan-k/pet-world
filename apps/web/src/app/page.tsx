@@ -1,11 +1,10 @@
 'use client';
 
-import { PetCard } from '@/components/pets';
+import { PetCard, PetSkeletonGrid } from '@/components/pets';
 import { Footer, Header } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { Video } from '@/components/ui/video';
 import { useGetAdoptionRequestedPetsQuery } from '@/lib/api/petsApi';
-import { dogs } from '@/lib/data/dummyDogs';
 
 export default function Home() {
   const { data: petsData, isLoading } = useGetAdoptionRequestedPetsQuery();
@@ -17,10 +16,16 @@ export default function Home() {
       <Header />
       <div className="block h-40 w-screen"></div>
 
-      <div className="grid grid-cols-1 gap-6 p-4 py-16 sm:grid-cols-2 lg:grid-cols-4">
-        {isLoading && dogs.map(dog => <PetCard key={dog.id} {...dog} />)}
-        {!isLoading && pets?.map(pet => <PetCard key={pet.id} {...pet} />)}
-      </div>
+      {(isLoading || !pets) && (
+        <div className="px-4 py-16">
+          <PetSkeletonGrid />
+        </div>
+      )}
+      {pets && (
+        <div className="grid grid-cols-1 gap-6 p-4 py-16 sm:grid-cols-2 lg:grid-cols-4">
+          {!isLoading && pets?.map(pet => <PetCard key={pet.id} {...pet} />)}
+        </div>
+      )}
 
       <div className="container mx-auto py-16">
         <div className="flex flex-col gap-6">

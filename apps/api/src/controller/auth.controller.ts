@@ -38,6 +38,50 @@ export class AuthController implements IAuthController {
     }
   }
 
+  public async verifyEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { code, email } = req.body;
+
+      if (!code) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: 'Verification code is required.',
+        });
+      }
+
+      const result = await this._authService.verifyEmail({ code, email });
+
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: 'Email verified successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async resendVerificationEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: 'Email is required to resend verification.',
+        });
+      }
+
+      const result = await this._authService.resendVerificationEmail({ email });
+      res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        data: result,
+        message: 'Verification email resent successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   public async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password } = req.body;
@@ -185,6 +229,7 @@ export class AuthController implements IAuthController {
 
       res.status(HttpStatusCode.OK).json({
         status: 'success',
+        data: result,
         message: result.message,
       });
     } catch (error) {

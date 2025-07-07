@@ -18,6 +18,7 @@ model User {
   address                Json?
   gender                 String?
   password               String
+  profileImage           String?
   isDisabled             Boolean   @default(false)
   isVerified             Boolean   @default(false)
   lastLogin              DateTime?
@@ -166,8 +167,11 @@ model Payment {
   currency              String
   stripePaymentIntentId String?
   stripeChargeId        String?
+  stripeTransferId      String?
 
   paymentStatus PaymentStatus @default(pending)
+  isTransferred Boolean       @default(false)
+  transferDate  DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @default(now())
   isDeleted     Boolean       @default(false)

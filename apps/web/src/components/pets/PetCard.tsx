@@ -10,7 +10,7 @@ import { Heart } from 'lucide-react';
 
 import { useAddPetToFavoritesMutation, useRemovePetFromFavoritesMutation } from '../../lib/api/petsApi';
 
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounceCallback } from '@/hooks/useDebouncedCallback';
 
 type PetCardProps = {
   id: string;
@@ -49,7 +49,7 @@ const PetCard = ({ id, name, breed, age, gender, images, adoptionRequest, tag, i
     },
   });
 
-  const debouncedFavorite = useDebounce((nextState: boolean) => {
+  const debouncedFavorite = useDebounceCallback((nextState: boolean) => {
     if (nextState) {
       addToFavorites(id);
     } else {

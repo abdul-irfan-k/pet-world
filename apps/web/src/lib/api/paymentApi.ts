@@ -50,3 +50,23 @@ export const useGetStripeAccountQuery = () => {
     queryFn: getStripeAccount,
   });
 };
+
+type EarningResponse = ApiResponse<{
+  totalEarnings: number;
+  inProgressEarnings: number;
+  earningsByPeriod: {
+    period: string;
+    earnings: number;
+  }[];
+}>;
+const getEarnings = async (): Promise<EarningResponse> => {
+  const { data } = await apiClient.get('/payments/earnings/me');
+  return data;
+};
+
+export const useGetEarningsQuery = () => {
+  return useQuery<EarningResponse, AxiosError>({
+    queryKey: ['earnings'],
+    queryFn: getEarnings,
+  });
+};

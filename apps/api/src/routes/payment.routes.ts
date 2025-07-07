@@ -25,6 +25,14 @@ export class PaymentRoutes {
       this._paymentController.getStripeAccount.bind(this._paymentController),
     );
 
+    router.post(
+      '/pet-care-requests/:requestId/initiate-payment',
+      authMiddleware,
+      this._paymentController.initiatePetCarePayment.bind(this._paymentController),
+    );
+
+    router.get('/earnings/me', authMiddleware, this._paymentController.getEarnings.bind(this._paymentController));
+
     return router;
   }
 }

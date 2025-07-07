@@ -66,11 +66,11 @@ const AdminDashboardSidebar = () => {
 
         <div className="space-y-0.5 pt-3">
           <Link
-            href="#"
+            href="/admin/dashboard/adopter/earnings"
             className="group flex items-center space-x-2.5 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
           >
             <CreditCard className="h-4 w-4 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
-            <span>Platform Earnings</span>
+            <span>Earnings</span>
           </Link>
           <Link
             href="#"

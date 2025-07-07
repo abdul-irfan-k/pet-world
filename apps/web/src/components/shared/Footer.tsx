@@ -1,9 +1,13 @@
 import Link from 'next/link';
-import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
+
+import Facebook from '@/assets/icons/facebook.svg';
+import Instagram from '@/assets/icons/instagram.svg';
+import X from '@/assets/icons/x.svg';
+import Youtube from '@/assets/icons/youtube.svg';
 
 const Footer = () => {
   return (
-    <footer className="bg-white py-12 text-gray-700 lg:py-24">
+    <footer className="mt-auto bg-white py-12 text-gray-700 lg:py-24">
       <div className="container mx-auto flex flex-col gap-8 border-b border-gray-200 pb-8 lg:flex-row lg:pb-12">
         <div className="flex w-full flex-col justify-between gap-8 md:flex-row lg:w-[50%] lg:flex-row lg:gap-0">
           <div>
@@ -35,9 +39,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="mb-4 text-sm font-medium uppercase leading-snug tracking-wider text-black lg:mb-6">
-              About
-            </h4>
+            <h4 className="mb-4 text-sm font-medium uppercase leading-snug tracking-wider text-black lg:mb-6">About</h4>
             <div className="space-y-2 text-sm font-medium text-gray-500">
               <div>
                 <Link href="/about" className="hover:text-gray-900">
@@ -122,9 +124,7 @@ const Footer = () => {
           <h4 className="mb-4 text-sm font-medium uppercase leading-snug tracking-wider text-black lg:mb-6">
             Stay Connected
           </h4>
-          <p className="mb-4 text-sm text-gray-500">
-            Subscribe to our newsletter for the latest updates and offers.
-          </p>
+          <p className="mb-4 text-sm text-gray-500">Subscribe to our newsletter for the latest updates and offers.</p>
           <form className="mb-6 flex flex-col gap-2 sm:flex-row">
             <input
               type="email"
@@ -140,16 +140,16 @@ const Footer = () => {
           </form>
           <div className="flex space-x-4">
             <Link href="#" className="text-gray-500 hover:text-gray-900">
-              <Facebook size={20} />
+              <Facebook style={{ width: '24px', height: '24px' }} />
             </Link>
             <Link href="#" className="text-gray-500 hover:text-gray-900">
-              <Twitter size={20} />
+              <X style={{ width: '24px', height: '24px' }} />
             </Link>
             <Link href="#" className="text-gray-500 hover:text-gray-900">
-              <Instagram size={20} />
+              <Instagram style={{ width: '24px', height: '24px' }} />
             </Link>
             <Link href="#" className="text-gray-500 hover:text-gray-900">
-              <Youtube size={20} />
+              <Youtube style={{ width: '24px', height: '24px' }} />
             </Link>
           </div>
         </div>

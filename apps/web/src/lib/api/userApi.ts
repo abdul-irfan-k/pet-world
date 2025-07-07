@@ -6,7 +6,7 @@ import { IAddAddressInput, IUpdateAddressInput } from '../schemas/userSchema';
 
 import { Location } from '@/types/Location';
 import { PetAdopterProfile } from '@/types/PetAdopter';
-import { PetAdopter } from '@/types/User';
+import { PetAdopter, User } from '@/types/User';
 
 type ApiResponse<T> = {
   data: T;
@@ -19,6 +19,37 @@ type AddressesResponse = ApiResponse<{ locations: Location[] }>;
 type PetAdopterProfileResponse = ApiResponse<{ petAdopter: PetAdopter }>;
 
 type AddressMutationOptions<TData, TVariables> = UseMutationOptions<TData, AxiosError, TVariables>;
+
+const checkUserNameAvailability = async (userName: string): Promise<ApiResponse<{ exists: boolean }>> => {
+  const { data } = await apiClient.get(`/users/check-username?userName=${userName}`);
+  return data;
+};
+
+export const useCheckUserNameAvailabilityQuery = (
+  username: string,
+  options?: UseQueryOptions<ApiResponse<{ exists: boolean }>, AxiosError, ApiResponse<{ exists: boolean }>>,
+) => {
+  return useQuery<ApiResponse<{ exists: boolean }>, AxiosError, ApiResponse<{ exists: boolean }>>({
+    queryKey: ['checkUserName', username],
+    queryFn: () => checkUserNameAvailability(username),
+    enabled: !!username,
+    ...options,
+  });
+};
+
+const updateUser = async (userData: object): Promise<ApiResponse<{ user: User }>> => {
+  const { data } = await apiClient.put('/users/me', userData);
+  return data;
+};
+
+export const useUpdateUserMutation = (
+  options?: UseMutationOptions<ApiResponse<{ user: User }>, AxiosError, object>,
+) => {
+  return useMutation<ApiResponse<{ user: User }>, AxiosError, object>({
+    mutationFn: updateUser,
+    ...options,
+  });
+};
 
 const createAddress = async (addressData: IAddAddressInput): Promise<AddressResponse> => {
   const { data } = await apiClient.post('/users/addresses', addressData);
@@ -106,5 +137,51 @@ export const useGetPetAdopterProfileStatusQuery = () => {
   return useQuery<PetAdopterProfileResponse, AxiosError, PetAdopterProfileResponse>({
     queryKey: ['petAdopterProfile'],
     queryFn: getPetAdopterProfileStatus,
+  });
+};
+
+const getPetAdopterPublicProfile = async (id: string): Promise<PetAdopterProfileResponse> => {
+  const { data } = await apiClient.get(`/users/pet-adopter-profile/${id}`);
+  return data;
+};
+
+export const useGetPetAdopterPublicProfileQuery = (
+  id: string,
+  options?: UseQueryOptions<PetAdopterProfileResponse, AxiosError, PetAdopterProfileResponse>,
+) => {
+  return useQuery<PetAdopterProfileResponse, AxiosError, PetAdopterProfileResponse>({
+    queryKey: ['petAdopterProfile', id],
+    queryFn: () => getPetAdopterPublicProfile(id),
+    enabled: !!id,
+    ...options,
+  });
+};
+
+const getMyPetAdopterProfile = async (): Promise<PetAdopterProfileResponse> => {
+  const { data } = await apiClient.get('/users/pet-adopter-profile/me');
+  return data;
+};
+
+export const useGetMyPetAdopterProfileQuery = (
+  options?: UseQueryOptions<PetAdopterProfileResponse, AxiosError, PetAdopterProfileResponse>,
+) => {
+  return useQuery<PetAdopterProfileResponse, AxiosError, PetAdopterProfileResponse>({
+    queryKey: ['myPetAdopterProfile'],
+    queryFn: getMyPetAdopterProfile,
+    ...options,
+  });
+};
+
+const updatePetAdopterProfile = async (profileData: object): Promise<CreatePetAdopterProfileResponse> => {
+  const { data } = await apiClient.put('/users/pet-adopter-profile', profileData);
+  return data;
+};
+
+export const useUpdatePetAdopterProfileMutation = (
+  options?: AddressMutationOptions<CreatePetAdopterProfileResponse, object>,
+) => {
+  return useMutation<CreatePetAdopterProfileResponse, AxiosError, object>({
+    mutationFn: updatePetAdopterProfile,
+    ...options,
   });
 };

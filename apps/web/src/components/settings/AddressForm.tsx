@@ -3,35 +3,17 @@ import React, { FC, useState, useMemo } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
-import {
-  Country,
-  State,
-  City,
-  IState,
-  ICity,
-  ICountry,
-} from 'country-state-city';
+import { Country, State, City, IState, ICity, ICountry } from 'country-state-city';
 import { X } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import {
-  useCreateAddressMutation,
-  useUpdateAddressMutation,
-} from '../../lib/api/userApi';
+import { useCreateAddressMutation, useUpdateAddressMutation } from '../../lib/api/userApi';
 import { Button, ButtonIcon } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { TextField, Label } from '../ui/form/inputs';
 import { ScrollArea } from '../ui/scroll-area';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select';
 
 import { IAddAddressInput, addAddressSchema } from '@/lib/schemas';
 import { Location } from '@/types/Location';
@@ -49,9 +31,7 @@ const AddressForm: FC<AddressFormProps> = ({
   initialData,
   mode = initialData?.id ? 'edit' : 'create',
 }) => {
-  const [isDefaultAddress, setIsDefaultAddress] = useState(
-    initialData?.isDefault || false,
-  );
+  const [isDefaultAddress, setIsDefaultAddress] = useState(initialData?.isDefault || false);
 
   const {
     register,
@@ -87,9 +67,7 @@ const AddressForm: FC<AddressFormProps> = ({
     //eslint-disable-next-line
     onError: (error: AxiosError<any>) => {
       const errorMessage =
-        error?.response?.data?.message ||
-        error?.message ||
-        'Failed to create address. Please try again.';
+        error?.response?.data?.message || error?.message || 'Failed to create address. Please try again.';
       toast.error(errorMessage);
     },
   });
@@ -104,9 +82,7 @@ const AddressForm: FC<AddressFormProps> = ({
     //eslint-disable-next-line
     onError: (error: AxiosError<any>) => {
       const errorMessage =
-        error?.response?.data?.message ||
-        error?.message ||
-        'Failed to update address. Please try again.';
+        error?.response?.data?.message || error?.message || 'Failed to update address. Please try again.';
       toast.error(errorMessage);
     },
   });
@@ -120,9 +96,7 @@ const AddressForm: FC<AddressFormProps> = ({
   }, [selectedCountry]);
 
   const cities: ICity[] = useMemo(() => {
-    return selectedCountry && selectedState
-      ? City.getCitiesOfState(selectedCountry, selectedState)
-      : [];
+    return selectedCountry && selectedState ? City.getCitiesOfState(selectedCountry, selectedState) : [];
   }, [selectedCountry, selectedState]);
 
   const handleFormSubmit = (data: IAddAddressInput) => {
@@ -143,8 +117,7 @@ const AddressForm: FC<AddressFormProps> = ({
 
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
   const formTitle = mode === 'create' ? 'Add Address' : 'Edit Address';
-  const submitButtonText =
-    mode === 'create' ? 'Save Address' : 'Update Address';
+  const submitButtonText = mode === 'create' ? 'Save Address' : 'Update Address';
 
   return (
     <div
@@ -157,26 +130,15 @@ const AddressForm: FC<AddressFormProps> = ({
       }}
     >
       <div className="relative w-full max-w-xl rounded-2xl bg-white py-8 shadow-xl sm:py-12">
-        <ScrollArea className="h-[90vh] px-6 sm:px-12">
+        <ScrollArea className="h-[85vh] px-6 sm:px-12">
           <div className="mb-6 flex items-center justify-between gap-2">
-            <h2 className="text-xl font-medium leading-7 sm:text-2xl">
-              {formTitle}
-            </h2>
-            <ButtonIcon
-              variant={'ghost'}
-              size={'lg'}
-              onClick={onClose}
-              className="h-10 w-10"
-              disabled={isSubmitting}
-            >
+            <h2 className="text-xl font-medium leading-7 sm:text-2xl">{formTitle}</h2>
+            <ButtonIcon variant={'ghost'} size={'lg'} onClick={onClose} className="h-10 w-10" disabled={isSubmitting}>
               <X className="h-6 w-6" />
             </ButtonIcon>
           </div>
 
-          <form
-            onSubmit={handleSubmit(handleFormSubmit)}
-            className="flex flex-col gap-6"
-          >
+          <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-6">
             <div>
               <TextField
                 placeholder="Home or Office"
@@ -230,10 +192,7 @@ const AddressForm: FC<AddressFormProps> = ({
                       <SelectGroup>
                         <SelectLabel>Country</SelectLabel>
                         {countries.map((country: ICountry) => (
-                          <SelectItem
-                            key={country.isoCode}
-                            value={country.isoCode}
-                          >
+                          <SelectItem key={country.isoCode} value={country.isoCode}>
                             {country.name}
                           </SelectItem>
                         ))}
@@ -242,11 +201,7 @@ const AddressForm: FC<AddressFormProps> = ({
                   </Select>
                 )}
               />
-              {errors.country && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.country.message as string}
-                </p>
-              )}
+              {errors.country && <p className="mt-1 text-xs text-red-500">{errors.country.message as string}</p>}
             </div>
 
             <div className="w-full">
@@ -261,9 +216,7 @@ const AddressForm: FC<AddressFormProps> = ({
                       field.onChange(value);
                       setValue('city', '');
                     }}
-                    disabled={
-                      !selectedCountry || states.length === 0 || isSubmitting
-                    }
+                    disabled={!selectedCountry || states.length === 0 || isSubmitting}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select State*" />
@@ -281,11 +234,7 @@ const AddressForm: FC<AddressFormProps> = ({
                   </Select>
                 )}
               />
-              {errors.state && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.state.message as string}
-                </p>
-              )}
+              {errors.state && <p className="mt-1 text-xs text-red-500">{errors.state.message as string}</p>}
             </div>
 
             <div className="w-full">
@@ -298,9 +247,7 @@ const AddressForm: FC<AddressFormProps> = ({
                     value={field.value}
                     onValueChange={value => {
                       field.onChange(value);
-                      const selectedCity = cities.find(
-                        city => city.name === value,
-                      );
+                      const selectedCity = cities.find(city => city.name === value);
                       setValue(
                         'longitude',
                         //eslint-disable-next-line
@@ -314,9 +261,7 @@ const AddressForm: FC<AddressFormProps> = ({
                         parseFloat(selectedCity?.latitude || 0),
                       );
                     }}
-                    disabled={
-                      !selectedState || cities.length === 0 || isSubmitting
-                    }
+                    disabled={!selectedState || cities.length === 0 || isSubmitting}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select City*" />
@@ -334,11 +279,7 @@ const AddressForm: FC<AddressFormProps> = ({
                   </Select>
                 )}
               />
-              {errors.city && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.city.message as string}
-                </p>
-              )}
+              {errors.city && <p className="mt-1 text-xs text-red-500">{errors.city.message as string}</p>}
             </div>
 
             <div>

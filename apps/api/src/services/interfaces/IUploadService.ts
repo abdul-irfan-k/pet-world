@@ -1,25 +1,25 @@
 export type ResourceType = 'image' | 'video' | 'raw';
 
-export interface IUploadFileDTO {
+export type IUploadFileDTO = {
   file: Express.Multer.File;
   resourceType: ResourceType;
   folder: string;
   tags: string[];
-}
+};
 
-export interface IUploadMultipleFilesDTO {
+export type IUploadMultipleFilesDTO = {
   files: Express.Multer.File[];
   resourceType: ResourceType;
   folder: string;
   tags: string[];
-}
+};
 
-export interface IDeleteFileDTO {
+export type IDeleteFileDTO = {
   publicId: string;
   resourceType: string;
-}
+};
 
-export interface UploadResult {
+export interface IUploadFileResponse {
   public_id: string;
   secure_url: string;
   format: string;
@@ -32,7 +32,7 @@ export interface UploadResult {
 }
 
 export interface IUploadService {
-  uploadFile(data: IUploadFileDTO): Promise<UploadResult>;
-  uploadMultipleFiles(data: IUploadMultipleFilesDTO): Promise<UploadResult[]>;
+  uploadFile(data: IUploadFileDTO): Promise<IUploadFileResponse>;
+  uploadMultipleFiles(data: IUploadMultipleFilesDTO): Promise<IUploadFileResponse[]>;
   deleteFile(data: IDeleteFileDTO): Promise<void>;
 }

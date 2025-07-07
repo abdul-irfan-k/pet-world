@@ -14,6 +14,9 @@ export class UserRoutes {
   public getRoutes(): Router {
     const router = Router();
 
+    router.get('/check-username', this._userController.checkUserNameExists.bind(this._userController));
+    router.put('/me', authMiddleware, this._userController.updateUser.bind(this._userController));
+
     router.post(
       '/addresses',
       authMiddleware,
@@ -25,7 +28,7 @@ export class UserRoutes {
 
     router.get('/addresses/:id', authMiddleware, this._userController.getAddressById.bind(this._userController));
 
-    router.patch(
+    router.put(
       '/addresses/:id',
       authMiddleware,
       schemaValidator(updateAddressSchema),
@@ -39,6 +42,11 @@ export class UserRoutes {
       authMiddleware,
       this._userController.getPetAdopterProfileStatus.bind(this._userController),
     );
+    router.get(
+      '/pet-adopter-profile/me',
+      authMiddleware,
+      this._userController.getPetAdopterProfile.bind(this._userController),
+    );
     router.get('/pet-adopter-profile/:id', this._userController.getPetAdopterPublicProfile.bind(this._userController));
 
     router.post(
@@ -47,7 +55,7 @@ export class UserRoutes {
       this._userController.createPetAdopterProfile.bind(this._userController),
     );
 
-    router.patch(
+    router.put(
       '/pet-adopter-profile',
       authMiddleware,
       this._userController.updatePetAdopterProfile.bind(this._userController),

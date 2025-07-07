@@ -1,22 +1,25 @@
 import { User } from '@/types/User';
 
-export interface ISignUpDTO {
+export type ISignUpDTO = {
   firstName: string;
   lastName: string;
   userName: string;
   email: string;
   password: string;
+};
+export interface ISignUpResponse {
+  user: Omit<User, 'password' | 'isVerified' | 'isDisabled'>;
 }
 
-export interface ISignInDTO {
+export type ISignInDTO = {
   email: string;
   password: string;
-}
+};
 
-export interface iSignInWithGoogleDTO {
+export type iSignInWithGoogleDTO = {
   idToken: string;
-}
-export interface ISignInResponseDTO {
+};
+export interface ISignInResponse {
   accessToken: string;
   refreshToken: string;
   user: Omit<User, 'password' | 'isVerified' | 'isDisabled'>;
@@ -26,49 +29,56 @@ export interface IRefreshTokenDTO {
   refreshToken: string;
 }
 
-export interface IRefreshTokenResponseDTO {
+export interface IRefreshTokenResponse {
   accessToken: string;
   refreshToken: string;
 }
 
-export interface IForgotPasswordDTO {
+export type IForgotPasswordDTO = {
   email: string;
-}
+};
 
-export interface IVerifyForgotPasswordDTO {
+export type IVerifyForgotPasswordDTO = {
   code: string;
   email: string;
   newPassword: string;
-}
+};
 
-export interface IVerifyForgotPasswordResponseDTO {
+export interface IVerifyForgotPasswordResponse {
   success: boolean;
   message: string;
 }
 
-export interface ISignUpResponseDTO {
+export type ILogoutDTO = {
+  id: string;
+};
+
+export type IGetUserDetailsDTO = {
+  id: string;
+};
+
+export interface IGetUserDetailsResponse {
   user: Omit<User, 'password' | 'isVerified' | 'isDisabled'>;
 }
 
-export interface ILogoutDTO {
-  id: string;
-}
+export type IVerifyEmailDTO = {
+  code: string;
+  email: string;
+};
 
-export interface IGetUserDetailsDTO {
-  id: string;
-}
-
-export interface IGetUserDetailsResponseDTO {
-  user: Omit<User, 'password' | 'isVerified' | 'isDisabled'>;
-}
-
+export type IResendVerificationEmailDTO = {
+  email: string;
+};
 export interface IAuthService {
-  signup(args: ISignUpDTO): Promise<ISignUpResponseDTO>;
-  signin(args: ISignInDTO): Promise<ISignInResponseDTO>;
-  signInWithGoogle(args: iSignInWithGoogleDTO): Promise<ISignInResponseDTO>;
-  refreshToken(args: IRefreshTokenDTO): Promise<IRefreshTokenResponseDTO>;
+  signup(args: ISignUpDTO): Promise<ISignUpResponse>;
+  signin(args: ISignInDTO): Promise<ISignInResponse>;
+  signInWithGoogle(args: iSignInWithGoogleDTO): Promise<ISignInResponse>;
+  refreshToken(args: IRefreshTokenDTO): Promise<IRefreshTokenResponse>;
   forgotPassword(args: IForgotPasswordDTO): Promise<void>;
-  verifyForgotPassword(args: IVerifyForgotPasswordDTO): Promise<IVerifyForgotPasswordResponseDTO>;
+  verifyForgotPassword(args: IVerifyForgotPasswordDTO): Promise<IVerifyForgotPasswordResponse>;
   logout(args: ILogoutDTO): Promise<void>;
-  me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponseDTO>;
+  me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponse>;
+
+  verifyEmail(args: IVerifyEmailDTO): Promise<{ success: boolean }>;
+  resendVerificationEmail(args: IResendVerificationEmailDTO): Promise<{ success: boolean }>;
 }

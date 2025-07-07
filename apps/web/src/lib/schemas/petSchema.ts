@@ -4,6 +4,7 @@ export const addPetSchema = z.object({
   name: z.string().trim().min(1, 'Name cannot be empty'),
   species: z.string().trim().min(1, 'Species cannot be empty'),
   breed: z.string().trim().min(1, 'Breed cannot be empty'),
+  petBiometricId: z.string().trim().optional(),
   age: z.number().int().positive('Age must be a positive integer'),
   profile: z.record(z.unknown()),
   images: z.array(z.string()).optional(),

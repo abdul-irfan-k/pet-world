@@ -2,6 +2,9 @@
 
 import React, { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
+import { useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm, FormProvider } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -17,7 +20,7 @@ import {
   Review,
 } from './adopter-profile-form';
 
-import { useCreatePetAdopterProfileMutation } from '@/lib/api/userApi';
+import { useCreatePetAdopterProfileMutation, useUpdatePetAdopterProfileMutation } from '@/lib/api/userApi';
 
 export interface FormStep {
   key: string;
@@ -49,7 +52,16 @@ const animationVariants = {
   }),
 };
 
-const PetAdopterForm = () => {
+interface PetAdopterFormProps {
+  mode?: 'create' | 'edit';
+  //eslint-disable-next-line
+  initialData?: any;
+}
+
+const PetAdopterForm = ({ mode = 'create', initialData = {} }: PetAdopterFormProps) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   const formMethods = useForm({
     defaultValues: {
       overview: {
@@ -57,11 +69,12 @@ const PetAdopterForm = () => {
           country: 'IN',
         },
       },
+      ...initialData,
     },
   });
+
   const [stepIndex, setStepIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState(0);
-
   const currentStep = formSteps[stepIndex];
 
   const goToNextStep = async () => {
@@ -77,16 +90,36 @@ const PetAdopterForm = () => {
     setStepIndex(prev => Math.max(prev - 1, 0));
   };
 
-  const { mutate, isPending } = useCreatePetAdopterProfileMutation({
-    //eslint-disable-next-line
-    onSuccess: _response => {
+  const { mutate: createProfileMutate, isPending: isCreating } = useCreatePetAdopterProfileMutation({
+    onSuccess: response => {
       formMethods.reset();
       setStepIndex(0);
       setSlideDirection(0);
-      toast.success('Congrajulation You now became pet adopter', {
+      toast.success('Congratulations You now became pet adopter', {
         description: 'Your profile has been submitted for review.',
         duration: 3000,
       });
+      router.push(`/users/${response.data.petAdopter.userId}/profile`);
+    },
+    onError: error => {
+      toast.error(`Error: ${error.message}`, {
+        description: 'Please try again later.',
+        duration: 3000,
+      });
+    },
+  });
+
+  const { mutate: updateProfileMutate, isPending: isUpdating } = useUpdatePetAdopterProfileMutation({
+    onSuccess: response => {
+      formMethods.reset();
+      setStepIndex(0);
+      setSlideDirection(0);
+      toast.success('Profile updated successfully', {
+        description: 'Your profile has been updated.',
+        duration: 3000,
+      });
+      queryClient.invalidateQueries({ queryKey: ['myPetAdopterProfile'] });
+      router.push(`/users/${response.data.petAdopter.userId}/profile`);
     },
     onError: error => {
       toast.error(`Error: ${error.message}`, {
@@ -98,7 +131,11 @@ const PetAdopterForm = () => {
 
   const handleSubmitForm = () => {
     const formData = formMethods.getValues();
-    mutate(formData);
+    if (mode === 'edit') {
+      updateProfileMutate(formData);
+    } else {
+      createProfileMutate(formData);
+    }
   };
 
   return (
@@ -140,9 +177,9 @@ const PetAdopterForm = () => {
             <Button
               variant="primary"
               onClick={stepIndex === formSteps.length - 1 ? handleSubmitForm : goToNextStep}
-              disabled={isPending}
+              disabled={isCreating || isUpdating}
             >
-              {stepIndex === formSteps.length - 1 ? 'Submit' : 'Next'}
+              {stepIndex === formSteps.length - 1 ? (mode === 'edit' ? 'Update' : 'Submit') : 'Next'}
             </Button>
           </div>
         </div>
