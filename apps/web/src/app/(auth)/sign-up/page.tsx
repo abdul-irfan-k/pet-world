@@ -1,7 +1,5 @@
 import React from 'react';
 
-import Image from 'next/image';
-
 import { SignUpForm } from '@/components/auth/SignUpForm';
 
 const SignUpPage = () => {

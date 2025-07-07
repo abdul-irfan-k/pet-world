@@ -96,3 +96,31 @@ export const useCurrentUserQuery = (options?: UseQueryOptions<AuthResponse, Axio
     ...options,
   });
 };
+
+const resendVerificationEmail = async (option: { email: string }): Promise<ApiResponse<{ success: boolean }>> => {
+  const { data } = await apiClient.post('/auth/verify-email/resend', { email: option.email });
+  return data;
+};
+
+export const useResendVerificationEmailMutation = (
+  option: UseMutationOptions<ApiResponse<{ success: boolean }>, AxiosError, { email: string }>,
+) => {
+  return useMutation<ApiResponse<{ success: boolean }>, AxiosError, { email: string }>({
+    mutationFn: resendVerificationEmail,
+    ...option,
+  });
+};
+
+const verifyEmail = async (option: { email: string; code: string }): Promise<ApiResponse<{ success: boolean }>> => {
+  const { data } = await apiClient.post('/auth/verify-email', { ...option });
+  return data;
+};
+
+export const useVerifyEmailMutation = (
+  option: UseMutationOptions<ApiResponse<{ success: boolean }>, AxiosError, { email: string; code: string }>,
+) => {
+  return useMutation<ApiResponse<{ success: boolean }>, AxiosError, { email: string; code: string }>({
+    mutationFn: verifyEmail,
+    ...option,
+  });
+};
