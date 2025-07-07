@@ -17,9 +17,11 @@ import type {
   IGetUserDetailsDTO,
   IGetUserDetailsResponse,
   iSignInWithGoogleDTO,
+  IVerifyEmailDTO,
+  IResendVerificationEmailDTO,
 } from './interfaces/IAuthService';
 
-import { GOOGLE_CLIENT_ID, logger, prisma } from '@/config';
+import { FRONTEND_URL, GOOGLE_CLIENT_ID, logger, NODE_ENV, prisma } from '@/config';
 import { HttpStatusCode, ResponseMessages, OtpAction } from '@/constants';
 import {
   verifyPassword,
@@ -32,6 +34,7 @@ import {
   getPasswordChangeTemplate,
   sendEmail,
   verifyRefreshToken,
+  getVerifyEmailTemplate,
 } from '@/utils';
 
 const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
@@ -66,6 +69,42 @@ export class AuthService implements IAuthService {
         name: `${firstName} ${lastName}`,
       },
     });
+
+    if (!newUser) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        message: 'User registration failed',
+      });
+    }
+
+    const isProduction = NODE_ENV === 'production';
+    if (isProduction) {
+      const otp = generateOTP(6);
+      const OTP_EXPIRY_MINUTES = 15;
+      const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
+
+      await prisma.otp.create({
+        data: {
+          userId: newUser.id,
+          code: otp,
+          expiresAt: expiresAt,
+          action: OtpAction.VERIFY_EMAIL,
+        },
+      });
+
+      const verificationUrl = `${FRONTEND_URL}/sign-up/verify-email?code=${otp}&email=${email}`;
+      const emailHtml = getVerifyEmailTemplate(verificationUrl);
+      try {
+        await sendEmail(email, 'Verify Your Email', emailHtml);
+        logger.info('Verification email sent successfully');
+      } catch (error) {
+        logger.error('Error sending verification email:', error);
+        throw new HttpError({
+          statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+          message: ResponseMessages.EMAIL_SEND_FAILED,
+        });
+      }
+    }
 
     return {
       user: {
@@ -386,5 +425,92 @@ export class AuthService implements IAuthService {
         updatedAt: user.updatedAt,
       },
     };
+  }
+
+  public async verifyEmail(args: IVerifyEmailDTO): Promise<{ success: boolean }> {
+    const { code, email } = args;
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.USER_NOT_FOUND,
+      });
+    }
+
+    const otpRecord = await prisma.otp.findFirst({
+      where: {
+        userId: user.id,
+        code,
+        action: OtpAction.VERIFY_EMAIL,
+      },
+    });
+
+    if (!otpRecord || otpRecord.isDeleted || new Date() > otpRecord.expiresAt) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.BAD_REQUEST,
+        message: ResponseMessages.INVALID_OTP,
+      });
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { isVerified: true },
+    });
+
+    await prisma.otp.update({
+      where: { id: otpRecord.id },
+      data: { isDeleted: true },
+    });
+
+    return { success: true };
+  }
+
+  public async resendVerificationEmail(args: IResendVerificationEmailDTO): Promise<{ success: boolean }> {
+    const { email } = args;
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.NOT_FOUND,
+        message: ResponseMessages.USER_NOT_FOUND,
+      });
+    }
+
+    if (user.isVerified) {
+      throw new HttpError({
+        statusCode: HttpStatusCode.BAD_REQUEST,
+        message: 'User is already verified.',
+      });
+    }
+
+    const otp = generateOTP(6);
+
+    const OTP_EXPIRY_MINUTES = 15;
+    const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
+
+    await prisma.otp.create({
+      data: {
+        userId: user.id,
+        code: otp,
+        expiresAt: expiresAt,
+        action: OtpAction.VERIFY_EMAIL,
+      },
+    });
+
+    const emailHtml = getVerifyEmailTemplate(otp);
+
+    try {
+      await sendEmail(email, 'Password Reset OTP', emailHtml);
+      logger.info('password reset email sent successfully');
+    } catch (error) {
+      logger.error('Error sending password reset email:', error);
+      throw new HttpError({
+        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        message: ResponseMessages.EMAIL_SEND_FAILED,
+      });
+    }
+
+    return { success: true };
   }
 }

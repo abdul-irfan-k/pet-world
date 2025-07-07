@@ -15,6 +15,13 @@ export class UserController {
   public async checkUserNameExists(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { userName } = req.query as { userName: string };
+      if (!userName) {
+        throw new HttpError({
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          message: 'Username is required',
+        });
+      }
+
       const result = await this._userService.checkUserNameExists({ userName });
       res.status(HttpStatusCode.OK).json({
         status: 'success',

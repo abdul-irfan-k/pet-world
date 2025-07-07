@@ -61,6 +61,14 @@ export interface IGetUserDetailsResponse {
   user: Omit<User, 'password' | 'isVerified' | 'isDisabled'>;
 }
 
+export type IVerifyEmailDTO = {
+  code: string;
+  email: string;
+};
+
+export type IResendVerificationEmailDTO = {
+  email: string;
+};
 export interface IAuthService {
   signup(args: ISignUpDTO): Promise<ISignUpResponse>;
   signin(args: ISignInDTO): Promise<ISignInResponse>;
@@ -70,4 +78,7 @@ export interface IAuthService {
   verifyForgotPassword(args: IVerifyForgotPasswordDTO): Promise<IVerifyForgotPasswordResponse>;
   logout(args: ILogoutDTO): Promise<void>;
   me(args: IGetUserDetailsDTO): Promise<IGetUserDetailsResponse>;
+
+  verifyEmail(args: IVerifyEmailDTO): Promise<{ success: boolean }>;
+  resendVerificationEmail(args: IResendVerificationEmailDTO): Promise<{ success: boolean }>;
 }
