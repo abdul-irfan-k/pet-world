@@ -28,7 +28,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd /home/${{ secrets.EC2_USER }}/pet-world
-            git pull origin main
+            git pull origin development
             docker compose -f infra/docker-compose.yml down
             docker compose -f infra/docker-compose.yml up -d --build
           EOF
