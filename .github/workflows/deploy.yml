@@ -1,17 +1,15 @@
 name: Deploy
 
 on:
-  # workflow_run:
-  #   workflows: ['CI']
-  #   types:
-  #     - 'completed'
-  push:
-    branches: [development]
+  workflow_run:
+    workflows: ['CI']
+    types:
+      - 'completed'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Setup SSH Key
@@ -28,6 +26,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd /home/${{ secrets.EC2_USER }}/pet-world
+            git checkout development
             git pull origin development
             docker compose -f infra/docker-compose.yml down
             docker compose -f infra/docker-compose.yml up -d --build
