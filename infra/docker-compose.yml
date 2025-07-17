@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  api:
+    image: pet-world-api:production
+    build:
+      context: ../
+      dockerfile: infra/api/Dockerfile
+    ports:
+      - '3001:3001'
+    env_file: ../apps/api/.env
